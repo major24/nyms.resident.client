@@ -1,0 +1,69 @@
+<p>enquiry-misc-edit works!</p>
+
+<form [formGroup]="enquiryMiscForm">
+
+  <div class="form-group">
+    <label for="moveInDate">Move In Date</label>
+    <div class="input-group">
+      <input class="form-control" placeholder="yyyy-mm-dd"
+        formControlName="moveInDate" name="moveInDate" (dateSelect)="onMoveInDateChange($event)" ngbDatepicker #d1="ngbDatepicker">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="familyHomeVisitDate">Family Home Visit Date</label>
+    <div class="input-group">
+      <input class="form-control" placeholder="yyyy-mm-dd"
+        formControlName="familyHomeVisitDate" name="familyHomeVisitDate" (dateSelect)="onFamilyHomeVisitDateChange($event)" ngbDatepicker #d2="ngbDatepicker">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="enquiryDate">Enquiry Date</label>
+    <div class="input-group">
+      <input class="form-control" placeholder="yyyy-mm-dd"
+        formControlName="enquiryDate" name="enquiryDate" (dateSelect)="onEnquiryDateChange($event)" ngbDatepicker #d3="ngbDatepicker">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary calendar" (click)="d3.toggle()" type="button"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="responseDate">Response Date</label>
+    <div class="input-group">
+      <input class="form-control" placeholder="yyyy-mm-dd"
+        formControlName="responseDate" name="responseDate" (dateSelect)="onResponseDateChange($event)" ngbDatepicker #d4="ngbDatepicker">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary calendar" (click)="d4.toggle()" type="button"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="response">Response</label>
+    <textarea matInput rows="4" class="form-control" id="response" name="response" formControlName="response" (change)="onResponseChange($event)" placeholder=""></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="comments">Comments</label>
+    <textarea rows="4" class="form-control" id="comments" name="comments" formControlName="comments" (change)="onCommentsChange($event)" placeholder=""></textarea>
+  </div>
+
+  <!-- <div class="form-group">
+    <label for="status">Status</label>
+    <select class="custom-select" name="status" id="status" (change)="onStatusChange($event)">
+      <option selected>Choose...</option>
+      <option value="open">Open</option>
+      <option value="admitted">Admitted</option>
+      <option value="closed">Closed</option>
+    </select>
+  </div> -->
+
+  </form>

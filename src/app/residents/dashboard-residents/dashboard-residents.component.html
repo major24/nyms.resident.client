@@ -1,0 +1,29 @@
+<!-- Residents - Dashboard page -->
+==>>==<p *ngIf="userFound"> {{ user.userName }} - {{user.firstName}}</p>
+
+<div class="container mt-5">
+
+  <div class="row">
+    <div class="col-md">
+      <div class="card" style="width: 18rem; height: 11rem;">
+        <div class="card-body">
+          <h5 class="card-title">Enquires</h5>
+          <p class="card-text">Manage enquiry to admission</p>
+          <button class="btn btn-primary" (click)="navToEnquires()">Enquires</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="card" style="width: 18rem; height: 11rem;">
+        <div class="card-body">
+          <h5 class="card-title">Residents</h5>
+          <p class="card-text">Manage residents information</p>
+          <button class="btn btn-primary" (click)="navToEnquires()">Residents</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+

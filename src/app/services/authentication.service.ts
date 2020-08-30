@@ -1,0 +1,152 @@
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Observable, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { environment } from '../../environments/environment'; // '@environments/environment';
+import { User } from '../models/index'; // '@app/models';
+import { ApiService } from './api.service';
+
+@Injectable({ providedIn: 'root' })
+export class AuthenticationService {
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private jwtHelper: JwtHelperService,
+    private apiService: ApiService
+  ) {}
+
+  login(username: string, password: string): Observable<User> {
+    return this.apiService.authenticateUser(username, password)
+    .pipe(
+      map((user) => {
+        this.setSession(user);
+        return user;
+      })
+    )
+  }
+
+  logout() {
+    this.http
+      .post<any>(
+        `${environment.apiDomainUrl}/api/authentication/revoke-token`,
+        {},
+        { withCredentials: true }
+      )
+      .subscribe();
+    this.clearSession();
+    this.router.navigate(['/login']);
+  }
+
+  setSession(authUserResult) {
+    localStorage.setItem('tokenId', authUserResult.jwtToken);
+  }
+
+  clearSession() {
+    localStorage.removeItem('tokenId');
+  }
+
+  public isLoggedIn() {
+    return !this.isTokenExpired();
+  }
+
+  public getToken(): string {
+    return localStorage.getItem('tokenId');
+  }
+
+  public hasToken(): boolean {
+    if (this.getToken()) {
+      return true;
+    }
+    return false;
+  }
+
+  public readToken(): any {
+    return this.jwtHelper.decodeToken(this.getToken());
+  }
+
+  public getTokenExpirationDate(): any {
+    return this.jwtHelper.getTokenExpirationDate(this.getToken());
+  }
+
+  public isTokenExpired(): boolean {
+    if (this.getTokenExpirationDate() != null) {
+      return !this.jwtHelper.isTokenExpired(this.getToken());
+    }
+    return true;
+  }
+
+  public getUserIdFromToken() {
+    const tkn = this.getToken();
+    if (tkn) {
+      const decToken = this.readToken();
+      return decToken.Id;
+    }
+    return throwError('Id not found in token');
+  }
+
+  public getUserReferenceIdFromToken() {
+    const tkn = this.getToken();
+    if (tkn) {
+      const decToken = this.readToken();
+      return decToken.ReferenceId;
+    }
+    return throwError('Reference Id not found in token');
+  }
+
+
+  refreshToken() {
+    console.log('>>> calling refresh token in auth service.');
+    return this.http
+      .post<any>(
+        `${environment.apiDomainUrl}/api/authentication/refresh-token`,
+        {},
+        { withCredentials: true }
+      )
+      .pipe(
+        map((user) => {
+          this.setSession(user);
+          return user;
+        })
+      );
+  }
+
+
+}
+
+
+
+
+
+
+
+
+
+/**
+ *
+ *   refreshToken() {
+    console.log('>>> calling refresh token in auth service.');
+    return this.http
+      .post<any>(
+        `${environment.apiDomainUrl}/api/authentication/refresh-token`,
+        {},
+        { withCredentials: true }
+      )
+      .pipe(
+        map((user) => {
+          this.setSession(user);
+          return user;
+        })
+      );
+  }
+
+  isLoggedInAtServer(username: string): Observable<boolean> {
+    return this.http.post<boolean>(
+      `${environment.apiDomainUrl}/api/authentication/logged-in-at-server`,
+      { username },
+      { withCredentials: true }
+    );
+  }
+ */

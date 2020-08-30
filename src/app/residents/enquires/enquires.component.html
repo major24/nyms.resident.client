@@ -1,0 +1,54 @@
+
+<div class="container mt-5">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md">
+        <div *ngIf="isLoading">loading...</div>
+      </div>
+      <div class="col-md">
+        <div class="float-right">
+          <button class="btn btn-primary" (click)="navToAddEnquiry()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-sm">
+        <div class="h6">ReferenceId</div>
+      </div>
+      <div class="col-sm">
+        <div class="h6">Fore Name</div>
+      </div>
+      <div class="col-sm">
+        <div class="h6">Sur Name</div>
+      </div>
+      <div class="col-sm">
+        <div class="h6">DOB</div>
+      </div>
+      <div class="col-sm">
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-md">
+        <enquires-list *ngFor="let enquiry of enquiryResidents$ | async"
+          [enquiryResident]="enquiry">
+        </enquires-list>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</div>
+
+
+
+
+<!-- <div *ngFor="let enquiry of enquiryResidents$ | async">
+  <div>{{enquiry.foreName}}</div>
+</div> -->

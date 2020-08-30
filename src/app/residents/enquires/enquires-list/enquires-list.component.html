@@ -1,0 +1,30 @@
+<!-- Enquires List page. Lists all active enquires -->
+<div class="container">
+
+
+
+  <div class="row">
+    <div class="col-sm">
+      {{enquiryResident.referenceId}}
+    </div>
+    <div class="col-sm">
+      {{enquiryResident.foreName}}
+    </div>
+    <div class="col-sm">
+      {{enquiryResident.surName}}
+    </div>
+    <div class="col-sm">
+      <div *ngIf="enquiryResident.dob">{{enquiryResident.dob | date}}</div>
+    </div>
+    <div class="col-sm">
+      <a [routerLink]="['/enquires-edit', enquiryResident.referenceId]">Edit</a>
+    </div>
+  </div>
+
+</div>
+<hr />
+<!-- <div>
+  ={{enquiryResident.referenceId}} - {{enquiryResident.foreName}} - {{enquiryResident.surName}}
+  ==<a [routerLink]="['/enquires-edit', enquiryResident.referenceId]">Edit</a>
+  <button (click)="remove(enquiryResident.referenceId)">X</button>
+</div> -->

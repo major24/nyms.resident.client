@@ -1,0 +1,135 @@
+<!-- <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0"> -->
+<div class="mt-5">
+
+  <ngb-accordion #acc="ngbAccordion" [activeIds]="activeIds">
+    <ngb-panel id="panel-profile" title="Profile">
+      <ng-template ngbPanelContent>
+
+        <div class="form-group">
+          <label *ngIf="enquiryResident.referenceId" for="referenceId">Reference Id: {{ enquiryResident.referenceId }}</label>
+        </div>
+
+        <resident-profile-edit
+          [foreName]="enquiryResident.foreName"
+          [surName]="enquiryResident.surName"
+          [middleName]="enquiryResident.middleName"
+          [dob]="enquiryResident.dob"
+          [gender]="enquiryResident.gender"
+          [martialStatus]="enquiryResident.martialStatus"
+          (foreNameUpdated)="onForeNameUpdated($event)"
+          (surNameUpdated)="onSurNameUpdated($event)"
+          (middleNameUpdated)="onMiddleNameUpdated($event)"
+          (dobUpdated)="onDobUpdated($event)"
+          (genderUpdated)="onGenderUpdated($event)"
+          (martialStatusUpdated)="onMartialStatusUpdated($event)"
+        >
+        </resident-profile-edit>
+      </ng-template>
+    </ngb-panel>
+
+    <ngb-panel id="panel-address" title="Address">
+      <ng-template ngbPanelContent>
+        <address-edit
+          [street1]="enquiryResident.address.street1"
+          [street2]="enquiryResident.address.street2"
+          [city]="enquiryResident.address.city"
+          [county]="enquiryResident.address.county"
+          [postCode]="enquiryResident.address.postCode"
+          (street1Updated)="onStreet1Updated($event)"
+          (street2Updated)="onStreet2Updated($event)"
+          (cityUpdated)="onCityUpdated($event)"
+          (countyUpdated)="onCountyUpdated($event)"
+          (postCodeUpdated)="onPostCodeUpdated($event)"
+        >
+        </address-edit>
+      </ng-template>
+    </ngb-panel>
+
+    <ngb-panel title="Social Worker">
+      <ng-template ngbPanelContent>
+        <social-worker-detail-edit
+          [foreName]="enquiryResident.socialWorker.foreName"
+          [surName]="enquiryResident.socialWorker.surName"
+          [phoneNumber]="enquiryResident.socialWorker.phoneNumber"
+          [email]="enquiryResident.socialWorker.email"
+          (swForeNameUpdated)="onSwForeNameUpdated($event)"
+          (swSurNameUpdated)="onSwSurNameUpdated($event)"
+          (swPhoneNumberUpdated)="onSwPhoneNumberUpdated($event)"
+          (swEmailUpdated)="onSwEmailUpdated($event)"
+        ></social-worker-detail-edit>
+      </ng-template>
+    </ngb-panel>
+
+    <ngb-panel title="Care Type Room Details">
+      <ng-template ngbPanelContent>
+        <care-type-edit
+          [careCategory]="enquiryResident.careCategory"
+          [careNeeds]="enquiryResident.careNeeds"
+          [stayType]="enquiryResident.stayType"
+          (careCategoryUpdated)="onCareCategoryUpdated($event)"
+          (careNeedsUpdated)="onCareNeedsUpdated($event)"
+          (stayTypeUpdated)="onStayTypeUpdated($event)">
+        </care-type-edit>
+
+        <room-location-edit
+          [roomLocations]="roomLocations"
+          [reservedRoomLocation]="enquiryResident.reservedRoomLocation"
+          [reservedRoomNumber]="enquiryResident.reservedRoomNumber"
+          (roomLocationUpdated)="onRoomLocationUpdated($event)"
+          (roomNumberUpdated)="onRoomNumberUpdated($event)"
+          >
+        </room-location-edit>
+      </ng-template>
+    </ngb-panel>
+
+    <ngb-panel title="Other">
+      <ng-template ngbPanelContent>
+        <enquiry-misc-edit
+          [moveInDate]="enquiryResident.moveInDate"
+          [familyHomeVisitDate]="enquiryResident.familyHomeVisitDate"
+          [enquiryDate]="enquiryResident.enquiryDate"
+          [responseDate]="enquiryResident.responseDate"
+          [response]="enquiryResident.comments"
+          (moveInDateUpdated)="onMoveInDateUpdated($event)"
+          (familyHomeVisitDateUpdated)="onFamilyHomeVisitDateUpdated($event)"
+          (enquiryDateUpdated)="onEnquiryDateUpdated($event)"
+          (responseDateUpdated)="onResponseDateUpdated($event)"
+          (responseUpdated)="onResponseUpdated($event)"
+          (commentsUpdated)="onCommentsUpdated($event)"
+        >
+        </enquiry-misc-edit>
+
+      </ng-template>
+    </ngb-panel>
+
+  </ngb-accordion>
+
+</div>
+
+<div>
+  <form [formGroup]="enquiryEditForm">
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select class="custom-select" name="status" id="status" formControlName="status" (change)="onStatusChange($event)">
+        <option value="" selected>Choose...</option>
+        <option *ngFor="let status of statuses;" [value]="status.key">
+          {{status.value}}
+        </option>
+      </select>
+    </div>
+  </form>
+</div>
+
+<div>
+  <div class="form-group">
+    <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+    <button class="btn btn-primary ml-5" (click)="onSubmit()">Submit</button>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- ==>>>{{ enquiryResident | json }} -->

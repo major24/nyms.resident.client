@@ -1,0 +1,26 @@
+<p>room-location-edit works!</p>
+
+<form [formGroup]="roomDetailForm">
+
+  <div class="form-group">
+    <label for="roomLocations">Room Location</label>
+    <select class="custom-select" name="roomLocations" id="roomLocations" formControlName="roomLocations" (change)="onRoomLocationChange($event)">
+      <option value="" selected>Choose...</option>
+      <option *ngFor="let rmloc of roomLocations;" [value]="rmloc.id">
+        {{rmloc.name}}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="rooms">Room Number</label>
+    <select class="custom-select" name="rooms" id="rooms" formControlName="rooms" (change)="onRoomChange($event)">
+      <option value="" selected>Choose...</option>
+      <option *ngFor="let room of roomNumbers;" [value]="room.id">
+        {{room.name}}
+      </option>
+    </select>
+  </div>
+
+</form>
+

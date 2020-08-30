@@ -1,0 +1,54 @@
+<p>social-worker-detail-edit works!</p>
+<form [formGroup]="socialWorkerForm">
+  <div class="form-group">
+    <label for="foreName">Fore Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="foreName"
+      name="foreName"
+      formControlName="foreName"
+      (change)="onSwForeNameChange($event)"
+      placeholder=""
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="surName">Sur Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="surName"
+      name="surName"
+      formControlName="surName"
+      (change)="onSwSurNameChange($event)"
+      placeholder=""
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="phoneNumber">Phone Number</label>
+    <input
+      type="text"
+      class="form-control"
+      id="phoneNumber"
+      name="phoneNumber"
+      formControlName="phoneNumber"
+      (change)="onSwPhoneNumberChange($event)"
+      placeholder=""
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="email">Phone Number</label>
+    <input
+      type="text"
+      class="form-control"
+      id="email"
+      name="email"
+      formControlName="email"
+      (change)="onSwEmailChange($event)"
+      placeholder=""
+    />
+  </div>
+</form>
