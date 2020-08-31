@@ -57,11 +57,35 @@ export class LoginComponent implements OnInit {
         this.loading = false;
         this.router.navigate([this.returnUrl]);
       },
-      error => console.log('>>Error loggin in ', error)
+      error => {
+        console.log('>>Error loggin in ', error);
+        this.error = error;
+      }
     );
+  }
 
 
-    // const url = '/api/authentication/authenticate';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // const url = '/api/authentication/authenticate';
     // const username: string = this.f.username.value;
     // const password: string = this.f.password.value;
     // this.loading = true;
@@ -85,8 +109,6 @@ export class LoginComponent implements OnInit {
     //       this.router.navigate([this.returnUrl]);
     //     },
     //     error => console.log('>>Error login user', error));
-  }
-
   // setStorage(authUserResult): Observable<User> {
   //   console.log('setting token');
   //   localStorage.setItem('tokenId', authUserResult.jwtToken);
