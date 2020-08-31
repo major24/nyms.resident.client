@@ -2,49 +2,96 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment'; // '@environments/environment';
-import { User } from '../models'; // '@app/models';
+import { User, CareHomeUser } from '../models'; // '@app/models';
 import { AuthenticationService } from './authentication.service';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, forkJoin, of } from 'rxjs';
+import { map, tap, concatMap, mergeMap, switchMap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { Store } from '../helpers/store';
+import { chainedInstruction } from '@angular/compiler/src/render3/view/util';
+import { userInfo } from 'os';
 
 @Injectable({ providedIn: 'root' })
-export class UserService extends Store<User> {
+export class UserService extends Store<CareHomeUser> {
 
   constructor(private apiService: ApiService, private authService: AuthenticationService) {
     super(null)
   }
 
-  public login(username: string, password: string) {
-    console.log('!!===', this.getValue());
-    return this.authService.login(username, password)
+  public login(username: string, password: string): Observable<CareHomeUser> {
+    console.log('>>initiate login for ', username);
+
+    return this.apiService.authenticateUser(username, password)
     .pipe(
-      map((user) => {
-        console.log('>>inUserService-ready to set user state', user);
-        this.setState(user);
-        //console.log('===', this.getValue());
-        //this.userSubject.next(user);
-        //this.setUserRoleValues(user);
-        return user;
-      })
+        tap(res => console.log('step1-login', res)),
+        mergeMap(guser => this.setLocalStorageToken(guser)),
+        mergeMap(guser => this.apiService.getCareHomeUserByReferenceId(guser.referenceId)),
+        mergeMap(guser => this.setStoreState(guser)),
+        map((u) => { return u } )
     );
   }
 
-  // API calls
-  public reloadUser() {
-    const referenceId = this.authService.getUserReferenceIdFromToken(); //.getUserIdFromToken();
-    return this.apiService.getUserByReferenceId(referenceId)       //.getUserById(id)
-    .pipe(
-      map((user) => {
-        //console.log('setting state', user);
-        this.setState(user);
-        return user;
-      })
-    )
+
+  setLocalStorageToken(authUserResult: User): Observable<User> {
+    console.log('setting token');
+    localStorage.setItem('tokenId', authUserResult.jwtToken);
+    return of(authUserResult);
   }
 
-  public getStoreUser(): User {
+  public setStoreState(user: CareHomeUser): Observable<CareHomeUser> {
+    console.log('setting CHUser state', user);
+    this.setState(user);
+    return of(user);
+  }
+
+
+  // public login(username: string, password: string) {
+  //   console.log('>>initiate login for ', username);
+  //   return this.authService.login(username, password)
+  //   .pipe(
+  //     map((user) => {
+  //       console.log('>>login is success.', user);
+  //       // this.setState(user);
+  //       // console.log('===refid', this.authService.getUserReferenceIdFromToken());
+  //       //this.userSubject.next(user);
+  //       //this.setUserRoleValues(user);
+  //       return user;
+  //     })
+  //   );
+  // }
+
+
+
+  // API calls
+  // used to be reloaduser()...
+  public reloadUser(): Observable<CareHomeUser> {
+    const referenceId = this.authService.getUserReferenceIdFromToken();
+    console.log('>>reloading carehomeuser for ', referenceId);
+
+    return this.apiService.getCareHomeUserByReferenceId(referenceId)
+    .pipe(
+        tap(res => console.log('step1-reload', res)),
+        mergeMap(guser => this.setStoreState(guser)),
+        map((u) => { return u } )
+    );
+  }
+
+  // public reloadUser() {     //loadCareHomeUser() {
+  //   const referenceId = this.authService.getUserReferenceIdFromToken(); //.getUserIdFromToken();
+  //   console.log('>>fetching carehomeuser');
+  //   return this.apiService.getCareHomeUserByReferenceId(referenceId)       //.getUserById(id)
+  //   .pipe(
+  //     map((user) => {
+  //       console.log('setting state with care home user', user);
+  //       this.setState(user);
+  //       return user;
+  //     })
+  //   )
+  // }
+
+
+
+  public getStoreUser(): CareHomeUser {
     return this.getValue();
   }
 
@@ -53,10 +100,19 @@ export class UserService extends Store<User> {
   }
 
   public logout(): void {
-    // this.userRolesSubject.next([]);
-    // this.userSubject.next(null);
+    this.setState(null);
     this.authService.logout();
   }
+
+  public isInRole(role: string): boolean {
+    if (this.getStoreUser()) {
+      return this.getStoreUser().careHomeRoles.some((r => r.roleName === role))
+    }
+    return false;
+  }
+
+
+
 
 }
 

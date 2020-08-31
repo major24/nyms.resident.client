@@ -14,7 +14,7 @@ export class ErrorInterceptorNoRefresh implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
-            console.log('>>>token expired.', err.status);
+            console.log('>>>errintnofresh:token expired.', err.status);
 
             if ([401, 403].includes(err.status)) {
                 console.log('>>>status includes [401, 403]:');

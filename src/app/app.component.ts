@@ -33,8 +33,8 @@ export class AppComponent implements OnInit {
   }
 
   get isAdmin() {
-    //return this.userService.isInRole('Admin');
-    return true;
+    return this.userService.isInRole('Admin');
+    // return true;
   }
 
   logout(): void {

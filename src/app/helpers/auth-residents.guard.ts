@@ -20,19 +20,11 @@ export class AuthResidentsGuard implements CanActivate {
         if (!this.userService.hasUserToken()) {
             this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
         }
-        // console.log('>>>==', this.userService.userRoleValues);
-        // if (this.userService.userRoleValues.length === 0) {
-        //     // this.router.navigate([''], { });
-        //     this.userService.reloadUser().subscribe(s => {
-        //         if (this.userService.isInRole('Manager')){
-        //             this.router.navigate([state.url], { });
-        //         }
-        //     });
-        // } else {
-        //     return this.userService.isInRole('Manager');
-        // }
+        console.log('>>>==', this.userService.getStoreUser());
+        if (this.userService.isInRole('Manager') || this.userService.isInRole('Admin')) {
+            return true;
+        }
 
-
-        return true; //temp
+        return false;
     }
 }

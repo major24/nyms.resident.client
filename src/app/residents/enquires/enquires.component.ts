@@ -26,8 +26,8 @@ export class EnquiresComponent implements OnInit {
   ngOnInit(): void {
     //console.log('ngonit-enq');
     this.enquiryResidents$ = this.enquiresService.getState();
-    // console.log('>>>', this.enquiresService.getValue());
-    // console.log('>>>', this.enquiryResidents$);
+    console.log('>>>', this.enquiresService.getValue());
+    console.log('>>>', this.enquiryResidents$);
     if (this.enquiresService.getValue() && this.enquiresService.getValue().length === 0) {
       this.isLoading = true;
       this.enquiresService.loadEnquiresAll()

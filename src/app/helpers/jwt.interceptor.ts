@@ -22,9 +22,10 @@ export class JwtInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     console.log('>>>>', request.url);
     // add auth header with jwt if user is logged in and request is to the api url
-    const isapiDomainUrl = request.url.startsWith(environment.apiDomainUrl);
-    
+    // const isapiDomainUrl = request.url.startsWith(environment.apiDomainUrl);
+
     const token = this.authService.getToken();
+    console.log('>>>>token', token);
     request = request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
