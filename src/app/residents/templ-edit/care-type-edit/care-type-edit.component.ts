@@ -20,6 +20,15 @@ export class CareTypeEditComponent implements OnInit {
     careNeeds: new FormControl(''),
     stayType: new FormControl(''),
   });
+
+  // <option value="high">High</option>
+  // <option value="medium">Medium</option>
+  // <option value="low">Low</option>
+
+  // staty type
+  // <option value="permanent">Permanent</option>
+  // <option value="respite">Respite</option>
+
   constructor() { }
 
   ngOnInit(): void {
@@ -43,38 +52,3 @@ export class CareTypeEditComponent implements OnInit {
   }
 }
 
-
-
-
-
-
-
-// ngOnInit(): void {
-//   // if (this.careType) {
-//   //   this._careType = this.careType;
-//   //   this.setCareTypeFields(this._careType);
-//   // }
-// }
-
-
-// onCareCategoryChange(event: any): void {
-//   this._careType.careCategory = event.target.value;
-//   this.onCareTypeInfoChange();
-// }
-// onCareNeedsChange(event: any): void {
-//   this._careType.careNeeds = event.target.value;
-//   this.onCareTypeInfoChange();
-// }
-// onStayTypeChange(event: any): void {
-//   this._careType.stayType = event.target.value;
-//   this.onCareTypeInfoChange();
-// }
-// onCareTypeInfoChange(): void {
-//   this.careTypeUpdated.emit(this._careType);
-// }
-
-// setCareTypeFields(data: CareType): void {
-//   this.careTypeForm.controls['careCategory'].setValue(data.careCategory);
-//   this.careTypeForm.controls['careNeeds'].setValue(data.careNeeds);
-//   this.careTypeForm.controls['stayType'].setValue(data.stayType);
-// }

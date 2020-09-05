@@ -28,7 +28,6 @@ export class EnquiryMiscEditComponent implements OnInit {
     responseDate: new FormControl(undefined),
     response: new FormControl(''),
     comments: new FormControl(''),
-    //status: new FormControl(''),
   });
   constructor() { }
 
@@ -78,51 +77,3 @@ export class EnquiryMiscEditComponent implements OnInit {
   }
 
 }
-
-
-
-
-
-
-  // onMoveInDateChange(event: any): void {
-  //   this._miscData.moveInDate = event.target.value;
-  //   this.onEnquiryMiscDataChange();
-  // }
-  // onFamilyHomeVisitDateChange(event: any): void {
-  //   this._miscData.familyHomeVisitDate = event.target.value;
-  //   this.onEnquiryMiscDataChange();
-  // }
-  // onEnquiryDateChange(event: any): void {
-  //   this._miscData.enquiryDate = event.target.value;
-  //   this.onEnquiryMiscDataChange();
-  // }
-  // onResponseDateChange(event: any): void {
-  //   this._miscData.responseDate = event.target.value;
-  //   this.onEnquiryMiscDataChange();
-  // }
-  // onResponseChange(event: any): void {
-  //   this._miscData.response = event.target.value;
-  //   this.onEnquiryMiscDataChange();
-  // }
-  // onCommentsChange(event: any): void {
-  //   this._miscData.comments = event.target.value;
-  //   this.onEnquiryMiscDataChange();
-  // }
-  // onStatusChange(event: any): void {
-  //   this._miscData.status = event.target.value;
-  //   this.onEnquiryMiscDataChange();
-  // }
-
-  // onEnquiryMiscDataChange(): void {
-  //   this.miscDataUpdated.emit(this._miscData);
-  // }
-
-  // setMiscDataFields(data: EnquiryMiscData): void {
-  //   this.enquiryMiscForm.controls['moveInDate'].setValue(data.moveInDate);
-  //   this.enquiryMiscForm.controls['familyHomeVisitDate'].setValue(data.familyHomeVisitDate);
-  //   this.enquiryMiscForm.controls['enquiryDate'].setValue(data.enquiryDate);
-  //   this.enquiryMiscForm.controls['responseDate'].setValue(data.responseDate);
-  //   this.enquiryMiscForm.controls['response'].setValue(data.response);
-  //   this.enquiryMiscForm.controls['comments'].setValue(data.comments);
-  //   this.enquiryMiscForm.controls['status'].setValue(data.status);
-  // }

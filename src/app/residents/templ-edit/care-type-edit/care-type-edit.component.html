@@ -6,9 +6,6 @@
     <label for="careCategory">Care Category</label>
     <select class="custom-select" name="careCategory" id="careCategory" formControlName="careCategory" (change)="onCareCategoryChange($event)">
       <option value="" selected>Choose...</option>
-      <option value="dementia">Dementia</option>
-      <option value="residential">Residential</option>
-      <option value="nursing">Nursing</option>
     </select>
   </div>
 
@@ -16,9 +13,7 @@
     <label for="careNeeds">Care Needs</label>
     <select class="custom-select" name="careNeeds" id="careNeeds" formControlName="careNeeds" (change)="onCareNeedsChange($event)">
       <option value="" selected>Choose...</option>
-      <option value="high">High</option>
-      <option value="medium">Medium</option>
-      <option value="low">Low</option>
+
     </select>
   </div>
 
@@ -26,8 +21,7 @@
     <label for="stayType">Stay Type</label>
     <select class="custom-select" name="stayType" id="stayType" formControlName="stayType" (change)="onStayTypeChange($event)">
       <option value="" selected>Choose...</option>
-      <option value="permanent">Permanent</option>
-      <option value="respite">Respite</option>
+
     </select>
   </div>
 

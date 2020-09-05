@@ -1,7 +1,28 @@
-<!-- <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0"> -->
+
+
+<!-- <p>=={{careHomeDetails | json }}</p> -->
+
 <div class="mt-5">
 
   <ngb-accordion #acc="ngbAccordion" [activeIds]="activeIds">
+    <ngb-panel id="panel-carehome" title="Care Home">
+      <ng-template ngbPanelContent>
+
+        <form [formGroup]="enquiryEditForm">
+          <div class="form-group">
+            <!-- <label for="careHome">Care Home</label> -->
+            <select class="custom-select" name="careHome" id="careHome" formControlName="careHome" (change)="oncareHomeChange($event)">
+              <option value="" selected>Choose...</option>
+              <option *ngFor="let careHome of careHomeDetails; let i = index" [value]="careHome.id">
+                {{careHome.name}}
+              </option>
+            </select>
+          </div>
+          </form>
+      </ng-template>
+    </ngb-panel>
+
+
     <ngb-panel id="panel-profile" title="Profile">
       <ng-template ngbPanelContent>
 
@@ -30,11 +51,11 @@
     <ngb-panel id="panel-address" title="Address">
       <ng-template ngbPanelContent>
         <address-edit
-          [street1]="enquiryResident.address.street1"
-          [street2]="enquiryResident.address.street2"
-          [city]="enquiryResident.address.city"
-          [county]="enquiryResident.address.county"
-          [postCode]="enquiryResident.address.postCode"
+          [street1]="enquiryResident.address?.street1"
+          [street2]="enquiryResident.address?.street2"
+          [city]="enquiryResident.address?.city"
+          [county]="enquiryResident.address?.county"
+          [postCode]="enquiryResident.address?.postCode"
           (street1Updated)="onStreet1Updated($event)"
           (street2Updated)="onStreet2Updated($event)"
           (cityUpdated)="onCityUpdated($event)"
@@ -48,10 +69,10 @@
     <ngb-panel title="Social Worker">
       <ng-template ngbPanelContent>
         <social-worker-detail-edit
-          [foreName]="enquiryResident.socialWorker.foreName"
-          [surName]="enquiryResident.socialWorker.surName"
-          [phoneNumber]="enquiryResident.socialWorker.phoneNumber"
-          [email]="enquiryResident.socialWorker.email"
+          [foreName]="enquiryResident.socialWorker?.foreName"
+          [surName]="enquiryResident.socialWorker?.surName"
+          [phoneNumber]="enquiryResident.socialWorker?.phoneNumber"
+          [email]="enquiryResident.socialWorker?.email"
           (swForeNameUpdated)="onSwForeNameUpdated($event)"
           (swSurNameUpdated)="onSwSurNameUpdated($event)"
           (swPhoneNumberUpdated)="onSwPhoneNumberUpdated($event)"
@@ -73,6 +94,7 @@
 
         <room-location-edit
           [roomLocations]="roomLocations"
+          [isRoomLocationChanged]="isRoomLocationChanged"
           [reservedRoomLocation]="enquiryResident.reservedRoomLocation"
           [reservedRoomNumber]="enquiryResident.reservedRoomNumber"
           (roomLocationUpdated)="onRoomLocationUpdated($event)"

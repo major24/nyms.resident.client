@@ -4,10 +4,8 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { throwError, BehaviorSubject } from 'rxjs';
 import { environment } from '../../environments/environment'; // '@environments/environment';
 import { AuthenticationService } from '../services/index'; // '@app/services';
 import { catchError } from 'rxjs/operators';
@@ -25,7 +23,7 @@ export class JwtInterceptor implements HttpInterceptor {
     // const isapiDomainUrl = request.url.startsWith(environment.apiDomainUrl);
 
     const token = this.authService.getToken();
-    console.log('>>>>token', token);
+    // console.log('>>>>token', token);
     request = request.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,

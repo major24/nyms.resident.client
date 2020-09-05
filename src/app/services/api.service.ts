@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser } from '../models/index';
-import { EnquiryResident } from '../residents/models/index';
+import { EnquiryResident, CareHome } from '../residents/models/index';
 
 @Injectable({
   providedIn: 'root',
@@ -45,42 +45,61 @@ export class ApiService {
     return this.http.get<EnquiryResident[]>(
       `/api/carehomes/enquires`
     );
-    //`${environment.apiDomainUrl}/api/carehomes/enquires`
   }
 
   getEnquiresByHome(careHomeId: number): Observable<EnquiryResident[]> {
     return this.http.get<EnquiryResident[]>(
-      `${environment.apiDomainUrl}/api/carehomes/${careHomeId}/enquires`
+      `/api/carehomes/${careHomeId}/enquires`
     );
   }
 
   getEnquiryByReferenceId(referenceId: string): Observable<EnquiryResident> {
     return this.http.get<EnquiryResident>(
-      `${environment.apiDomainUrl}/api/enquires/${referenceId}`
+      `/api/enquires/${referenceId}`
     );
   }
 
   createEnquiryResident(enqResident: EnquiryResident) {
     return this.http.post<any>(
-      `${environment.apiDomainUrl}/api/enquires`,
+      `/api/enquires`,
       enqResident
     );
   }
 
   updateEnquiryResident(enqResident: EnquiryResident) {
     return this.http.put<EnquiryResident>(
-      `${environment.apiDomainUrl}/api/enquires/${enqResident.referenceId}`,
+      `/api/enquires/${enqResident.referenceId}`,
       enqResident
     );
   }
-
-  // temp
-  // createEnquiryResident222(enqResident: EnquiryResident) {
-  //   console.log('>>=>>', enqResident);
-  //   return this.http.post<any>(`${environment.apiDomainUrl}/api/myfinace/tran`, enqResident
-  //     //{ id: 33, surName: "Nalliah" }
-  //   );
-  // }
-  //api/myfinace/tran
   // === endof enquires ===
+
+
+
+  // === resident related ===
+
+
+  // === endof resident related ===
+
+
+
+
+  // === care home lookup values ===
+  loadAllCareHomeDetails(): Observable<CareHome[]> {
+    return this.http.get<CareHome[]>(`/api/carehomes/details`);
+  }
+
+
+  // === endof carehome lookup values ===
+
+
+
+
+
+
+
+
+
+
+
 }

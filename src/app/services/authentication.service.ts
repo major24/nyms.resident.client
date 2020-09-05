@@ -18,32 +18,11 @@ export class AuthenticationService {
     private apiService: ApiService
   ) {}
 
-  // login(username: string, password: string): Observable<User> {
-  //   return this.apiService.authenticateUser(username, password)
-  //   .pipe(
-  //     map((user) => {
-  //       console.log('>>user received: ', user);
-  //       this.setStorage(user);
-  //       return user;
-  //     })
-  //   )
-  // }
 
   logout() {
-    // this.http
-    //   .post<any>(
-    //     `${environment.apiDomainUrl}/api/authentication/revoke-token`,
-    //     {},
-    //     { withCredentials: true }
-    //   )
-    //   .subscribe();
     this.clearStorage();
     this.router.navigate(['/login']);
   }
-
-  // setStorage(authUserResult) {
-  //   localStorage.setItem('tokenId', authUserResult.jwtToken);
-  // }
 
   clearStorage() {
     localStorage.removeItem('tokenId');
@@ -88,25 +67,10 @@ export class AuthenticationService {
     return throwError('Reference Id not found in token');
   }
 
-
-  // refreshToken() {
-  //   console.log('>>> calling refresh token in auth service.');
-  //   return this.http
-  //     .post<any>(
-  //       `${environment.apiDomainUrl}/api/authentication/refresh-token`,
-  //       {},
-  //       { withCredentials: true }
-  //     )
-  //     .pipe(
-  //       map((user) => {
-  //         this.setSession(user);
-  //         return user;
-  //       })
-  //     );
-  // }
-
-
 }
+
+
+
 
 
 

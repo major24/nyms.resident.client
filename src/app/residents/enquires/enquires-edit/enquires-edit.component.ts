@@ -3,13 +3,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {
   EnquiryResident,
   createInstanceofEnquiryResident,
+  CareHome,
 } from '../../models/index';
 import { EnquiresService } from '../../services';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, BehaviorSubject } from 'rxjs';
-// import { EnquiryService } from '@app/residents/services/enquiry.service';
-// import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import {  BehaviorSubject } from 'rxjs';
 import { RoomLocation, KeyPair } from '../../../models/index';
+import { CarehomeService } from '../../services/index';
 
 
 @Component({
@@ -18,23 +18,16 @@ import { RoomLocation, KeyPair } from '../../../models/index';
   styleUrls: ['./enquires-edit.component.css'],
 })
 export class EnquiresEditComponent implements OnInit {
-  private _enquiryResident: BehaviorSubject<
-    EnquiryResident
-  > = new BehaviorSubject<EnquiryResident>(createInstanceofEnquiryResident());
+  private _enquiryResident: BehaviorSubject<EnquiryResident> = new BehaviorSubject<EnquiryResident>(createInstanceofEnquiryResident());
   public enquiryResident$ = this._enquiryResident.asObservable();
   enquiryResident: EnquiryResident;
 
-  roomLocations: RoomLocation[] = [
-    { id: 1, name: "Main Floor",rooms: [
-      { id: 10, locationId: 1, name: "R-1" },
-      { id: 11, locationId: 1, name: "R-2" },
-    ]},
-    { id: 2, name: "First Floor", rooms: [
-      { id: 20, locationId: 2, name: "R-20" },
-      { id: 21, locationId: 2, name: "R-21" },
-      { id: 22, locationId: 2, name: "R-22" },
-    ]},
-  ];
+  private _careHomeDetails: BehaviorSubject<CareHome[]> = new BehaviorSubject<CareHome[]>([]);
+  public careHomeDetails$ = this._careHomeDetails.asObservable();
+  careHomeDetails: CareHome[] = [];
+  roomLocations: RoomLocation[] = [];
+  // to contorl roomlocation change in child componet
+  isRoomLocationChanged: boolean = false;
 
   statuses: KeyPair[] = [
     { key:'active', value:'Active'},
@@ -44,30 +37,32 @@ export class EnquiresEditComponent implements OnInit {
 
   enquiryEditForm = new FormGroup({
     status: new FormControl(''),
+    careHome: new FormControl('')
   });
 
-  activeIds: string[] = ['panel-profile'] // default to open profile //, 'panel-address']
+  activeIds: string[] = ['panel-profile', 'panel-carehome'] // default to open profile //, 'panel-address']
   constructor(
     private _Activatedroute: ActivatedRoute,
     private _router: Router,
-    private enquiresService: EnquiresService
+    private enquiresService: EnquiresService,
+    private careHomeService: CarehomeService
   ) {}
 
   ngOnInit(): void {
     // init subscription for observables
     this._enquiryResident.subscribe((enq) => (this.enquiryResident = enq));
+    this._careHomeDetails.subscribe((chd) => (this.careHomeDetails = chd));
+
+    this.loadAllCareHomeDetails();
 
     this._Activatedroute.paramMap.subscribe((params) => {
-      console.log(params);
+      // console.log(params);
       if (params && params.get('referenceId')) {
         let referenceId: string = params.get('referenceId');
-
-        setTimeout(() => {
           this.loadByReferenceId(referenceId);
-        }, 2000);
       } else {
-        // add new enquiry. get home details into drop down box
-        // onchange of home, load room locations and room numbers
+        // NEW Enquiry. get all care home details into drop down box
+        // onchange of care home, load room locations and room numbers
 
       }
     });
@@ -77,9 +72,10 @@ export class EnquiresEditComponent implements OnInit {
     if (referenceId === '' || referenceId === null) {
       throw new console.error('Reference not found');
     }
-    this.enquiresService.loadEnquiryByReferenceId(referenceId).subscribe({
+    this.enquiresService.loadEnquiryByReferenceId(referenceId)
+    .subscribe({
       next: (data) => {
-        console.log('>>>>', data);
+        // console.log('>>>>++', data);
         this._enquiryResident.next(data);
         // once data is available setup THIS form related with data
         this.setupEnquiryEditForm(data);
@@ -90,12 +86,30 @@ export class EnquiresEditComponent implements OnInit {
     });
   }
 
-  loadCareHomeDetails(): void {
-    
+  loadAllCareHomeDetails(): void {
+    this.careHomeService.loadAllCareHomeDetails()
+    .subscribe(data => {
+      // console.log('carehome details:', data);
+      this._careHomeDetails.next(data);
+    },
+    error => { console.log('>>>Error getting carehome details', error); }
+    );
   }
 
   setupEnquiryEditForm(data: EnquiryResident): void {
     if (data.status) { this.enquiryEditForm.controls['status'].setValue(data.status); }
+  }
+
+
+
+  //=====================================================
+  // === carehome dropdown change ===
+  oncareHomeChange(event: any): void {
+    const selCareHomeId = +event.target.value;
+    this.roomLocations.splice(0, this.roomLocations.length);
+    let x = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.roomLocations);
+    Object.assign(this.roomLocations, ...x);
+    this.isRoomLocationChanged = !this.isRoomLocationChanged;
   }
 
 
@@ -369,192 +383,5 @@ export class EnquiresEditComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //************************************************************************************************ */
-  // this.enquiryService.loadEnquiryByReferenceId(referenceId)
-  // .subscribe(
-  //   data => {
-  //     console.log('>>>>>', data);
-  //     this.enquiryResident = data;
-  //     // let clone = Object.assign(this.residentProfile, {forName: 'aaa'});
-  //     this.residentProfile = Object.assign({}, {forName: 'aaa', surName: 'bbb', middleName: '', dob: undefined, gender: '', martialStatus: '' });
-  //     console.log('>>--', this.residentProfile);
-  //     //this.residentProfile.foreName = this.enquiryResident.foreName;
-
-  //     this.setEnquiryFieldValues();
-  //   },
-  //   error => console.log(`Error getting enquiry resident for ${referenceId}`)
-  // )
-  //}
 }
 
-//   // enquiryResident$: Observable<EnquiryResident>;
-//   enquiryResident: EnquiryResident;
-//   isLoading: boolean;
-//   public isCollapsed = false;
-//   model: NgbDateStruct;
-
-//   address: Address = { street1: '', street2: '', city: '', postCode: '', county: ''};
-//   residentProfile: ResidentProfile = { foreName: 'mn', surName: '', middleName: '', dob: undefined, gender: '', martialStatus: '' };
-//   socialWorker: SocialWorker = { foreName: '', surName: '', socialWorkerPhoneNumber: '', socialWorkerEmail: '' };
-
-//   constructor(private _Activatedroute:ActivatedRoute,
-//     private _router:Router,
-//     private enquiryService: EnquiryService) {
-//      this.enquiryResident = {} as EnquiryResident;
-//      }
-
-//   ngOnInit(): void {
-//     this._Activatedroute.paramMap.subscribe(params => {
-//       console.log(params);
-//       if (params && params.get('referenceId')){
-//         let referenceId: string = params.get('referenceId');
-//         this.loadByReferenceId(referenceId);
-//       }
-//     });
-
-//     // temp
-//     // this.address = { street1: '37 ante', street2: '', city: '', postCode: '', county: ''}
-//     // this.residentProfile = { foreName: '', surName: '', middleName: '', dob: undefined, gender: '', martialStatus: '' };
-//     // this.socialWorker = { foreName: '', surName: '', socialWorkerPhoneNumber: '', socialWorkerEmail: '' };
-
-//     // bind observable
-//     // this.enquiryService.getState().subscribe(
-//     //   data => {
-//     //     this.enquiryResident = data;
-//     //     console.log('>>', data);
-//     //     //this.setEnquiryFieldValues(data);
-//     //   }
-//     // );
-//   }
-
-//   loadByReferenceId(referenceId: string): void {
-//     if (referenceId === '' || referenceId === null) {
-//       throw new console.error('Reference not found');
-//     }
-//     this.enquiryService.loadEnquiryByReferenceId(referenceId)
-//     .subscribe(
-//       data => {
-//         console.log('>>>>>', data);
-//         this.enquiryResident = data;
-//         // let clone = Object.assign(this.residentProfile, {forName: 'aaa'});
-//         this.residentProfile = Object.assign({}, {forName: 'aaa', surName: 'bbb', middleName: '', dob: undefined, gender: '', martialStatus: '' });
-//         console.log('>>--', this.residentProfile);
-//         //this.residentProfile.foreName = this.enquiryResident.foreName;
-
-//         this.setEnquiryFieldValues();
-//       },
-//       error => console.log(`Error getting enquiry resident for ${referenceId}`)
-//     )
-//   }
-
-//   onCreate() {
-//     // TODO: Use EventEmitter with form value
-//     // const fv = this.enquiryProfileForm.value;
-//     // console.log(fv);
-//     // // create a new enquiry resident obj and send it
-//     // let enq = createInstanceofEnquiryResident();
-//     // enq.referenceId = fv.referenceId;
-//     // enq.foreName = fv.foreName;
-//     // enq.surName = fv.surName;
-//     // console.log('>>create-post', enq);
-//   }
-
-//   onUpdate() {
-//         // TODO: Use EventEmitter with form value
-//         // const fv = this.enquiryProfileForm.value;
-//         // console.log(fv);
-//         // // create a new enquiry resident obj and send it
-//         // let enq = createInstanceofEnquiryResident();
-//         // let moveIndate: Date = new Date('2020-09-24');
-//         // enq.referenceId = fv.referenceId;
-//         // enq.foreName = fv.foreName;
-//         // enq.surName = fv.surName;
-//         // enq.moveInDate = moveIndate;
-//         // console.log('>>update-put', enq);
-//   }
-
-//   private setEnquiryFieldValues(): void {
-//     if (this.enquiryResident && this.enquiryResident !== null){
-//       // this.enquiryProfileForm.controls['referenceId'].setValue(this.enquiryResident.referenceId);
-//       // this.enquiryProfileForm.controls['foreName'].setValue(this.enquiryResident.foreName);
-//       // this.enquiryProfileForm.controls['surName'].setValue(this.enquiryResident.surName);
-//     }
-//   }
-
-//   onResidentProfileUpdated(event: any): void {
-//     console.log('>>InEdtCompResupd', event);
-//   }
-
-//   onAddressUpdated(event: any): void {
-//     console.log('InEnqEditForm=', event);
-//     this.enquiryResident.address = event;
-//   }
-
-//   onSocialWorkerUpdated(event: any): void {
-//     console.log('InEnqEditForm=', event);
-//   }
-
-//   onCareTypeUpdated(event: any): void {
-//     console.log('InEnqEditForm=', event);
-//   }
-
-//   onRoomDetailUpdated(event: any): void {
-//     console.log('InEnqEditForm=', event);
-//   }
-
-// }
-
-//     /**    console.log('ngonit-enq');
-//     this.enquiryResidents$ = this.enquiresService.getState();
-//     console.log('>>>', this.enquiresService.getValue());
-//     console.log('>>>', this.enquiryResidents$);
-//     if (this.enquiresService.getValue() && this.enquiresService.getValue().length === 0) {
-//       this.isLoading = true;
-//       this.enquiresService.loadEnquiresAll()
-//       .subscribe(data => {
-//           // console.log(data);
-//           this.isLoading = false;
-//         },
-//         error => { console.log('>>>Error getting all enquires'); }
-//       )
-//     } */
-//   //   this._Activatedroute.paramMap.subscribe(params => {
-//   //     console.log(params);
-//   //     let id: number = +params.get('id');
-//   //      // let enq = this.enquiresService.enquiryResidents;
-//   //      this.enquiryResident = this.enquiresService.getResident(id);
-//   //      // this.orderForm.controls['total'].setValue(price/ this.orderForm.value.amount);
-//   //      if(this.enquiryResident){
-//   //       this.profileForm.controls['id'].setValue(this.enquiryResident.id);
-//   //       //this.profileForm.controls['firstName'].setValue(this.enquiryResident.firstName);
-//   //       this.profileForm.controls['surName'].setValue(this.enquiryResident.surName);
-//   //      }
-//   //  });

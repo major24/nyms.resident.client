@@ -3,7 +3,6 @@ import { EnquiryResident } from '../models/enquiry.resident';;
 import { EnquiresService } from '../services';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-//import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-enquires',
@@ -13,26 +12,21 @@ import { Router } from '@angular/router';
 export class EnquiresComponent implements OnInit {
   enquiryResidents$: Observable<EnquiryResident[]>;
   isLoading: boolean;
-  // enquiryResidents: EnquiryResident;
-  //enquiryForm: FormGroup;
 
-  constructor(private enquiresService: EnquiresService, private router: Router) { //}, private formBuilder: FormBuilder) {
-    //this.enquiryForm = this.formBuilder.group({
-      // 'todo': ['', Validators.required]
-    //});
+  constructor(private enquiresService: EnquiresService, private router: Router) {
   }
 
 
   ngOnInit(): void {
     //console.log('ngonit-enq');
     this.enquiryResidents$ = this.enquiresService.getState();
-    console.log('>>>', this.enquiresService.getValue());
-    console.log('>>>', this.enquiryResidents$);
+    // console.log('>>>', this.enquiresService.getValue());
+    // console.log('>>>', this.enquiryResidents$);
     if (this.enquiresService.getValue() && this.enquiresService.getValue().length === 0) {
       this.isLoading = true;
       this.enquiresService.loadEnquiresAll()
       .subscribe(data => {
-          console.log(data);
+          // console.log('enquiries:', data);
           this.isLoading = false;
         },
         error => { console.log('>>>Error getting all enquires'); }

@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { EnquiryResident } from '../models';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { EnquiresEditComponent } from '../enquires/enquires-edit/enquires-edit.component';
+import { Observable } from 'rxjs';
 import { Store } from '../../helpers/store';
 import { ApiService } from '../../services/index';
 import { map } from 'rxjs/operators';
