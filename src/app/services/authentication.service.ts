@@ -18,33 +18,13 @@ export class AuthenticationService {
     private apiService: ApiService
   ) {}
 
-  login(username: string, password: string): Observable<User> {
-    return this.apiService.authenticateUser(username, password)
-    .pipe(
-      map((user) => {
-        this.setSession(user);
-        return user;
-      })
-    )
-  }
 
   logout() {
-    this.http
-      .post<any>(
-        `${environment.apiDomainUrl}/api/authentication/revoke-token`,
-        {},
-        { withCredentials: true }
-      )
-      .subscribe();
-    this.clearSession();
+    this.clearStorage();
     this.router.navigate(['/login']);
   }
 
-  setSession(authUserResult) {
-    localStorage.setItem('tokenId', authUserResult.jwtToken);
-  }
-
-  clearSession() {
+  clearStorage() {
     localStorage.removeItem('tokenId');
   }
 
@@ -78,43 +58,19 @@ export class AuthenticationService {
     return true;
   }
 
-  public getUserIdFromToken() {
-    const tkn = this.getToken();
-    if (tkn) {
-      const decToken = this.readToken();
-      return decToken.Id;
-    }
-    return throwError('Id not found in token');
-  }
-
   public getUserReferenceIdFromToken() {
     const tkn = this.getToken();
     if (tkn) {
       const decToken = this.readToken();
-      return decToken.ReferenceId;
+      return decToken.unique_name;
     }
     return throwError('Reference Id not found in token');
   }
 
-
-  refreshToken() {
-    console.log('>>> calling refresh token in auth service.');
-    return this.http
-      .post<any>(
-        `${environment.apiDomainUrl}/api/authentication/refresh-token`,
-        {},
-        { withCredentials: true }
-      )
-      .pipe(
-        map((user) => {
-          this.setSession(user);
-          return user;
-        })
-      );
-  }
-
-
 }
+
+
+
 
 
 

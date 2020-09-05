@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from '../../models/index';
+import { User, CareHomeUser } from '../../models/index';
 import { UserService } from '../../services/index';
 
 @Component({
@@ -10,7 +10,7 @@ import { UserService } from '../../services/index';
 })
 export class DashboardResidentsComponent implements OnInit {
   userFound: boolean;
-  user: User;
+  user: CareHomeUser;
 
   constructor(private router: Router, private userService: UserService) { }
 
@@ -20,16 +20,17 @@ export class DashboardResidentsComponent implements OnInit {
     // if user token found and userValue is null, must be reloading or refreshing the page
     // in-memory user is removed. so re-load user
     if (this.userService.hasUserToken() && this.userService.getStoreUser() == null) {
+      console.log('>>sesion found. user hit F5, so get user again.');
       this.userService.reloadUser().subscribe(u => {
-        this.user = u;
         this.userFound = true;
+        this.user = this.userService.getStoreUser();
       });
     } else {
       this.user = this.userService.getStoreUser();
     }
+
     this.userFound = this.userService.getStoreUser() != null;
     // ================================================================
-
 
   }
 

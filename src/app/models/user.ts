@@ -1,11 +1,18 @@
-import { Role } from './role';
+import { Role, CareHomeRole } from './role';
 
 export interface User {
-  id: number;
+  referenceId: string;
   userName: string;
   password: string;
   foreName: string;
   surName: string;
   jwtToken?: string;
   roles: Role[];
+}
+
+export interface CareHomeUser {
+  referenceId: string;
+  foreName: string;
+  surName: string;
+  careHomeRoles: CareHomeRole[];
 }

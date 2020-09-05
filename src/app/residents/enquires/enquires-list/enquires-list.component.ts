@@ -20,4 +20,4 @@ export class EnquiresListComponent implements OnInit {
   }
 
 }
-//<div *ngFor="let enquiry of enquiryResidents | async">
+

@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-//import { Address } from '../../models/index';
 
 @Component({
   selector: 'address-edit',
@@ -57,45 +56,3 @@ export class AddressEditComponent implements OnInit {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-  // onStreet1Change(event: any): void {
-  //   this._address.street1 = event.target.value;
-  //   this.onAddressChange();
-  // }
-  // onStreet2Change(event: any): void {
-  //   this._address.street2 = event.target.value;
-  //   this.onAddressChange();
-  // }
-  // onCityChange(event: any): void {
-  //   this._address.city = event.target.value;
-  //   this.onAddressChange();
-  // }
-  // onCountyChange(event: any): void {
-  //   this._address.county = event.target.value;
-  //   this.onAddressChange();
-  // }
-  // onPostCodeChange(event: any): void {
-  //   this._address.postCode = event.target.value;
-  //   this.onAddressChange();
-  // }
-
-  // onAddressChange(): void {
-  //   this.addressUpdated.emit(this._address);
-  // }
-
-  // setAddressFields(data: Address): void {
-  //   this.addressForm.controls['street1'].setValue(data.street1);
-  //   this.addressForm.controls['street2'].setValue(data.street2);
-  //   this.addressForm.controls['city'].setValue(data.city);
-  //   this.addressForm.controls['county'].setValue(data.county);
-  //   this.addressForm.controls['postCode'].setValue(data.postCode);
-  // }

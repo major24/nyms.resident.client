@@ -9,14 +9,15 @@ import { RoomLocation, Room } from '../../../models/index';
   styleUrls: ['./room-location-edit.component.css']
 })
 export class RoomLocationEditComponent implements OnInit {
-  @Input() roomLocations: RoomLocation[];
+  @Input() roomLocations: RoomLocation[] = [];
   @Input() reservedRoomLocation: number = 0;
   @Input() reservedRoomNumber: number = 0;
-  roomNumbers: Room[] = [];
-
-
+  rooms: Room[] = [];
   @Output() roomLocationUpdated = new EventEmitter<string>();
   @Output() roomNumberUpdated = new EventEmitter<string>();
+
+  // to contorl room number change from parent
+  @Input() isRoomLocationChanged: boolean = false;
 
   roomDetailForm =new FormGroup({
     roomLocations: new FormControl(''),
@@ -36,11 +37,18 @@ export class RoomLocationEditComponent implements OnInit {
         this.roomDetailForm.controls['rooms'].setValue(changes.reservedRoomNumber.currentValue);
       }
     }
+    if (changes.isRoomLocationChanged){
+      this.roomDetailForm.controls['roomLocations'].setValue('');
+      this.rooms.splice(0, this.rooms.length);
+    }
   }
 
 
   onRoomLocationChange(event: any): void {
-    this.loadRoomsByLocationId(event.target.value);
+    if (event.target.value) {
+      const locId: number = +event.target.value;
+      this.loadRoomsByLocationId(locId);
+    }
     this.roomLocationUpdated.emit(event);
   }
   onRoomChange(event: any): void {
@@ -48,29 +56,9 @@ export class RoomLocationEditComponent implements OnInit {
   }
 
   loadRoomsByLocationId(locId: number): void {
-    const selLoc = this.roomLocations.filter(loc => loc.id == locId);
-    this.roomNumbers = selLoc.map(x => x.rooms)[0];
+    const selLoc = this.roomLocations.filter(loc => loc.id === locId);
+    this.rooms = selLoc.map(x => x.rooms)[0];
   }
 
 }
 
-
-
-
-  // onRoomLocationChange(event: any): void {
-  //   this._roomDetail.roomLocation = event.target.value;
-  //   this.onRoomDetailInfoChange();
-  // }
-
-  // onRoomNumberChange(event: any): void {
-  //   this._roomDetail.roomNumber = event.target.value;
-  //   this.onRoomDetailInfoChange();
-  // }
-  // onRoomDetailInfoChange(): void {
-  //   this.roomDetailUpdated.emit(this._roomDetail);
-  // }
-
-  // setRoomDetailFields(data: RoomDetail): void {
-  //   this.roomDetailForm.controls['roomLocation'].setValue(data.roomLocation);
-  //   this.roomDetailForm.controls['roomNumber'].setValue(data.roomNumber);
-  // }
