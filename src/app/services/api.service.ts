@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser } from '../models/index';
 import { EnquiryResident, CareHome } from '../residents/models/index';
+import { Invoice } from '../admin/models/index';
 
 @Injectable({
   providedIn: 'root',
@@ -93,7 +94,10 @@ export class ApiService {
   // === endof carehome lookup values ===
 
 
-
+  // === invoice reports ===
+  loadInvoiceByDate(startDate: string, endDate: string): Observable<Invoice[]> {
+    return this.http.get<Invoice[]>(`/api/invoices/all/${startDate}/${endDate}`);
+  }
 
 
 

@@ -1,0 +1,77 @@
+<p>invoice works!</p>
+<div class="container mt-1">
+
+  <div class="container">
+    <form [formGroup]="invoiceForm">
+    <div class="row">
+      <div class="col-sm">
+        <div class="form-group">
+          <label for="billingStartDate">Billing Start</label>
+          <div class="input-group">
+            <input class="form-control" placeholder="yyyy-mm-dd"
+              formControlName="billingStartDate" name="billingStartDate" (dateSelect)="onBillingStartDateChange($event)" ngbDatepicker #d0="ngbDatepicker">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d0.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class="form-group">
+          <label for="billingEndDate">Billing End</label>
+          <div class="input-group">
+            <input class="form-control" placeholder="yyyy-mm-dd"
+              formControlName="billingEndDate" name="billingEndDate" (dateSelect)="onBillingEndDateChange($event)" ngbDatepicker #d1="ngbDatepicker">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm">
+        <div>&nbsp;</div>
+        <button class="btn btn-primary mt-1" (click)="getReportsByDate()">Go</button>
+      </div>
+    </div>
+    </form>
+  </div>
+
+  <!-- report -->
+   <div>
+
+    <div class="container">
+      <div *ngFor="let invoice of invoices">
+        <h5 class="text-primary">{{invoice.name}}</h5>
+
+        <div class="row border-bottom" *ngFor="let sch of invoice.schedules">
+          <div class="col-md" >
+            {{sch.paymentFromDesc}}
+          </div>
+          <div class="col-md">
+            {{sch.description}} <span style="font-size: small;">(@ {{sch.weeklyFee}})</span>
+          </div>
+          <div class="col-md text-right">
+            {{sch.amountDue | number : '1.2-2'}}
+          </div>
+        </div>
+
+        <div class="row border border-primary">
+          <div class="col-md">
+            &nbsp;
+          </div>
+          <div class="col-md">
+            <strong>Total La Fee:</strong>
+          </div>
+          <div class="col-md text-right">
+            <strong>{{invoice.totalLaFee | number : '1.2-2'}}</strong>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- =={{invoices | json}} -->
+  </div>
+
+</div>
