@@ -17,5 +17,6 @@ export interface Invoice {
   totalLaFee: number;
   residentWeeklyFee: number;
   grandTotal: number;
+  localAuthorityId?: number;
   schedules: Schedule[];
 }
