@@ -1,19 +1,21 @@
 export interface Schedule {
   residentId: number;
   localAuthorityId: number;
-  paymentType: string;
+  paymentTypeId: number;
   paymentFrom: string;
+  paymentFromName: string;
   description: string;
-  scheduleBeginDate: undefined;
-  scheduleEndDate: undefined;
+  scheduleBeginDate: string;
+  scheduleEndDate: string;
   weeklyFee: number;
   amountDue: number;
 }
 
 export interface Invoice {
   id: number;
-  referenceId: string;
   name: string;
-  schedules: Schedule[];
   totalLaFee: number;
+  residentWeeklyFee: number;
+  grandTotal: number;
+  schedules: Schedule[];
 }
