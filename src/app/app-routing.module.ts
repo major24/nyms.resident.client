@@ -6,6 +6,7 @@ import { HomeComponent } from './common/home/home.component';
 import { DashboardResidentsComponent } from './residents/dashboard-residents/dashboard-residents.component';
 import { EnquiresComponent } from './residents/enquires/enquires.component';
 import { EnquiresEditComponent } from './residents/enquires/enquires-edit/enquires-edit.component';
+import { InvoiceComponent } from './admin/reports/invoice/invoice.component';
 
 import { AuthGuard, AuthResidentsGuard, AuthAdminGuard } from './helpers';
 
@@ -43,6 +44,10 @@ const routes: Routes = [
         path: 'admin',
         loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
         canActivate: [AuthAdminGuard]
+    },
+    {
+        path: 'invoice',
+        component: InvoiceComponent
     },
     // // otherwise redirect to home
     { path: '**', redirectTo: '' }
