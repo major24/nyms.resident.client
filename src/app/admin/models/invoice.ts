@@ -1,7 +1,7 @@
 export interface Schedule {
   residentId: number;
   localAuthorityId: number;
-  paymentTypeId: number;
+  paymentType: string;
   paymentFrom: string;
   paymentFromName: string;
   description: string;
@@ -19,4 +19,5 @@ export interface Invoice {
   grandTotal: number;
   localAuthorityId?: number;
   schedules: Schedule[];
+  numberOfDays: number;
 }
