@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { InvoiceService } from '../../services/index';
 import { Invoice } from '../../models/index';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { KeyPair } from '../../../models/index';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'invoice',
@@ -14,8 +15,9 @@ import { KeyPair } from '../../../models/index';
 export class InvoiceComponent implements OnInit {
 
   invoiceForm = new FormGroup({
-    billingStartDate: new FormControl(''),
-    billingEndDate: new FormControl(''),
+    // billingStartDate: new FormControl(''),
+    billingStartDate: new FormControl('', [Validators.required]),
+    billingEndDate: new FormControl('', [Validators.required]),
     localAuthority: new FormControl('')
   });
 
@@ -368,7 +370,7 @@ export class InvoiceComponent implements OnInit {
     { key: '101', value:'Private'}
   ];
 
-  constructor(private invoiceService: InvoiceService) { }
+  constructor(private invoiceService: InvoiceService, private http: HttpClient) { }
 
   ngOnInit(): void {
   }
@@ -425,24 +427,47 @@ export class InvoiceComponent implements OnInit {
       let filtered = this.rawInvoices.filter(i => i.localAuthorityId === +event.target.value);
       Object.assign(this.invoices, [...filtered]);
     }
+    this.getSummaryTotals(this.invoices);
   }
 
 
   getSummaryTotals(invoices: Invoice[]): void {
     // LA id 1=Darby, 2=Manchester, 3=Tameside
+    this.summaryTotalLaDarby = 0;
+    this.summaryTotalLaManchester = 0;
+    this.summaryTotalLaTameside = 0;
+    this.summaryTotalCC = 0;
+    this.summaryTotalPrivate = 0;
+
     invoices.map(i => {
       if (i.localAuthorityId === 1) this.summaryTotalLaDarby += i.totalLaFee;
       if (i.localAuthorityId === 2) this.summaryTotalLaManchester += i.totalLaFee;
       if (i.localAuthorityId === 3) this.summaryTotalLaTameside += i.totalLaFee;
       // cc: PaymentTypeId - CC=2, Private=3
       i.schedules.map(s => {
-        if (s.paymentTypeId === 2) this.summaryTotalCC += s.amountDue;
-        if (s.paymentTypeId === 3) this.summaryTotalPrivate += s.amountDue;
+        if (s.paymentFrom === "CC") this.summaryTotalCC += s.amountDue;
+        if (s.paymentFrom === "PV") this.summaryTotalPrivate += s.amountDue;
       })
+
+      // if (i.localAuthorityId === 1) this.summaryTotalLaDarby += i.totalLaFee;
+      // if (i.localAuthorityId === 2) this.summaryTotalLaManchester += i.totalLaFee;
+      // if (i.localAuthorityId === 3) this.summaryTotalLaTameside += i.totalLaFee;
+      // // cc: PaymentTypeId - CC=2, Private=3
+      // i.schedules.map(s => {
+      //   if (s.paymentTypeId === 2) this.summaryTotalCC += s.amountDue;
+      //   if (s.paymentTypeId === 3) this.summaryTotalPrivate += s.amountDue;
+      // })
     })
   }
 
 
+
+  downloadReportsByDate() { //Observable<Blob> {
+    console.log('>>hre')
+    // return this.http.get<Blob>('http://localhost:4200/api/invoices/all/2020-04-29/2020-05-24/download', { responseType: 'blob' as 'json' });
+    // return this.http.get<Blob>('/api/invoices/all/2020-04-29/2020-05-24/download', { responseType: 'blob' as 'json' });
+    window.open('http://localhost:4200/api/invoices/all/2020-04-29/2020-05-24/download', '_blank');
+  }
 
 
   convertToJsDate(event: any): Date {
