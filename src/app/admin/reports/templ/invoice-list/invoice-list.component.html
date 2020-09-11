@@ -1,0 +1,43 @@
+<div class="container">
+  <div *ngFor="let invoice of invoices">
+    <h5 class="text-primary">{{invoice.name}}</h5>
+    <span style="font-size: small;">Weekly Fee (@ {{invoice.residentWeeklyFee}})</span>
+
+    <div class="row" *ngFor="let sch of invoice.schedules">
+      <div class="col-md" >
+        {{sch.paymentFromName}}
+      </div>
+      <div class="col-md">
+        {{sch.description}} <span style="font-size: small;">(@ {{sch.weeklyFee}})</span>
+      </div>
+      <div class="col-md text-right">
+        {{sch.amountDue | number : '1.2-2'}}
+      </div>
+    </div>
+
+    <div class="row border">
+      <div class="col-md">
+        &nbsp;
+      </div>
+      <div class="col-md">
+        <strong>Total La Fee:</strong>
+      </div>
+      <div class="col-md text-right">
+        <strong>{{invoice.totalLaFee | number : '1.2-2'}}</strong>
+      </div>
+    </div>
+    <div class="row border mb-4">
+      <div class="col-md">
+        &nbsp;
+      </div>
+      <div class="col-md">
+        <strong>Grand Total:</strong>
+      </div>
+      <div class="col-md text-right">
+        <strong>{{invoice.grandTotal | number : '1.2-2'}}</strong>
+      </div>
+    </div>
+
+  </div>
+</div>
+

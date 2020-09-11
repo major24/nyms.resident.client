@@ -25,11 +25,11 @@
       <li class="nav-item" *ngIf="isLoggedIn">
         <a class="nav-link" (click)="logout()">Logout</a>
       </li>
+
     </ul>
 
     <span class="navbar-text">
-      <!-- <span class="badge badge-warning" *ngIf="isAuthorized">Authorized</span>
-      <span class="badge badge-danger" *ngIf="isAdmin">Admin</span> -->
+      {{user?.foreName}} {{user?.surName}}
     </span>
 </header>
 

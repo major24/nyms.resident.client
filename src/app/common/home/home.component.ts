@@ -16,10 +16,6 @@ export class HomeComponent implements OnInit {
 
   constructor(private userService: UserService) {}
 
-  // ngOnInit(): void {
-  //   console.log('>>p>>p>>', this.userService.getStoreUser());
-  // }
-
   ngOnInit(): void {
     console.log('>>p>>p>>', this.userService.hasUserToken(), this.userService.getStoreUser());
     //=== reload user on refresh =====================================
@@ -37,7 +33,7 @@ export class HomeComponent implements OnInit {
     } else {
       this.user = this.userService.getStoreUser();
     }
-    
+
     this.userFound = this.userService.getStoreUser() != null;
     // ================================================================
 

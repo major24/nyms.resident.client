@@ -1,167 +1,18 @@
 <div class="container mt-1">
 
-  <div class="container">
-    <form [formGroup]="invoiceForm">
-    <div class="row">
-      <div class="col-sm">
-        <div class="form-group">
-          <label for="billingStartDate"><strong>Billing Start</strong></label>
-          <div class="input-group">
-            <input class="form-control" placeholder="yyyy-mm-dd"
-              formControlName="billingStartDate" name="billingStartDate" (dateSelect)="onBillingStartDateChange($event)" ngbDatepicker #d0="ngbDatepicker" required>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="d0.toggle()" type="button"></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-sm">
-        <div class="form-group">
-          <label for="billingEndDate"><strong>Billing End</strong></label>
-          <div class="input-group">
-            <input class="form-control" placeholder="yyyy-mm-dd"
-              formControlName="billingEndDate" name="billingEndDate" (dateSelect)="onBillingEndDateChange($event)" ngbDatepicker #d1="ngbDatepicker" required>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-sm">
-        <div class="form-group">
-          <label for="localAuthority"><strong>Local Authorities</strong></label>
-          <select class="custom-select" name="localAuthority" id="localAuthority" formControlName="localAuthority" (change)="onLocalAuthorityChange($event)">
-            <option *ngFor="let la of localAuthrities;" [value]="la.key">
-              {{la.value}}
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <div class="col-sm">
-        <div>&nbsp;</div>
-        <button class="btn btn-primary mt-1" [disabled]="!invoiceForm.valid" (click)="getReportsByDate()">Go</button>
-        <button class="btn btn-primary mt-1 ml-4" [disabled]="!invoiceForm.valid" (click)="downloadReportsByDate()">Download</button>
-      </div>
-    </div>
-    </form>
-  </div>
-
-  <!-- report header -->
-  <hr />
-  <div class="row">
-    <div class="col-md" >
-      <div>Start Date:</div>
-    </div>
-    <div class="col-md">
-      <div>End Date:</div>
-    </div>
-    <div class="col-md text-right">
-      <div>Num.Of Days:</div>
-    </div>
-  </div>
+  <billing-date-selection
+    (getReportEvent)="displayAllInvoices($event)"
+    (localAuthorityChangedEvent)="localAuthorityChanged($event)">
+  </billing-date-selection>
   <hr />
 
-  <div>
-    <div class="row" *ngIf="summaryTotalLaDarby > 0">
-      <div class="col-md" >
-        <div>Darbyshire</div>
-      </div>
-      <div class="col-md">
-        <div>{{summaryTotalLaDarby | number : '1.2-2'}}</div>
-      </div>
-    </div>
-    <div class="row" *ngIf="summaryTotalLaManchester > 0">
-      <div class="col-md" >
-        <div>Manchester</div>
-      </div>
-      <div class="col-md">
-        <div>{{summaryTotalLaManchester | number : '1.2-2'}}</div>
-      </div>
-    </div>
-    <div class="row" *ngIf="summaryTotalLaTameside > 0">
-      <div class="col-md" >
-        <div>Tameside</div>
-      </div>
-      <div class="col-md">
-        <div>{{summaryTotalLaTameside | number : '1.2-2'}}</div>
-      </div>
-    </div>
-    <div class="row" *ngIf="summaryTotalCC > 0">
-      <div class="col-md">
-        <div>Client Contribution</div>
-      </div>
-      <div class="col-md">
-        <div>{{summaryTotalCC | number : '1.2-2'}}</div>
-      </div>
-    </div>
-    <div class="row" *ngIf="summaryTotalLaTameside > 0">
-      <div class="col-md">
-        <div>Private</div>
-      </div>
-      <div class="col-md">
-        <div>{{summaryTotalPrivate | number : '1.2-2'}}</div>
-      </div>
-    </div>
-      <!-- <div *ngIf="summaryTotalLaDarby > 0">Derbyshire: {{summaryTotalLaDarby | number : '1.2-2'}}</div>
-      <div *ngIf="summaryTotalLaManchester > 0">Manchester: {{summaryTotalLaManchester | number : '1.2-2'}}</div>
-      <div *ngIf="summaryTotalLaTameside > 0">Tameside: {{summaryTotalLaTameside | number : '1.2-2'}}</div>
-      <div *ngIf="summaryTotalCC > 0">Client Cont: {{summaryTotalCC | number : '1.2-2'}}</div>
-      <div *ngIf="summaryTotalLaTameside > 0">Private:{{summaryTotalPrivate | number : '1.2-2'}}</div> -->
-  </div>
+  <summary-info
+    [invoicesSummary]="invoicesSummary">
+  </summary-info>
   <hr />
-
-  <!-- report -->
-   <div>
-
-    <div class="container">
-      <div *ngFor="let invoice of invoices">
-        <h5 class="text-primary">{{invoice.name}}</h5>
-        <span style="font-size: small;">Weekly Fee (@ {{invoice.residentWeeklyFee}})</span>
-
-        <div class="row" *ngFor="let sch of invoice.schedules">
-          <div class="col-md" >
-            {{sch.paymentFromName}}
-          </div>
-          <div class="col-md">
-            {{sch.description}} <span style="font-size: small;">(@ {{sch.weeklyFee}})</span>
-          </div>
-          <div class="col-md text-right">
-            {{sch.amountDue | number : '1.2-2'}}
-          </div>
-        </div>
-
-        <div class="row border">
-          <div class="col-md">
-            &nbsp;
-          </div>
-          <div class="col-md">
-            <strong>Total La Fee:</strong>
-          </div>
-          <div class="col-md text-right">
-            <strong>{{invoice.totalLaFee | number : '1.2-2'}}</strong>
-          </div>
-        </div>
-        <div class="row border mb-4">
-          <div class="col-md">
-            &nbsp;
-          </div>
-          <div class="col-md">
-            <strong>Grand Total:</strong>
-          </div>
-          <div class="col-md text-right">
-            <strong>{{invoice.grandTotal | number : '1.2-2'}}</strong>
-          </div>
-        </div>
-
-
-      </div>
-    </div>
-
-
-    <!-- =={{invoices | json}} -->
-  </div>
+  
+  <invoice-list
+    [invoices]="invoices">
+  </invoice-list>
 
 </div>

@@ -21,3 +21,8 @@ export interface Invoice {
   schedules: Schedule[];
   numberOfDays: number;
 }
+
+export interface InvoiceSummary {
+  localAuthority: string;
+  totalLaFee: number;
+}

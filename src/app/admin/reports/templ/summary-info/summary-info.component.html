@@ -1,0 +1,12 @@
+<div>
+    <div *ngIf="invoicesSummary">
+      <div class="row" *ngFor="let inv of invoicesSummary">
+        <div class="col-md">
+          <div><strong>{{inv.localAuthority}}</strong></div>
+        </div>
+        <div class="col-md text-right">
+          <div><strong>{{inv.totalLaFee | number : '1.2-2' }}</strong></div>
+        </div>
+      </div>
+    </div>
+</div>

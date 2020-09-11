@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from './services/index';
 import { UserService } from '../app/services/index';
-import { Observable } from 'rxjs';
+import { CareHomeUser } from './models';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   title = 'nyms-care-client';
+  user: CareHomeUser;
 
   constructor(private authenticationService: AuthenticationService,
     private userService: UserService) {}
@@ -20,24 +21,22 @@ export class AppComponent implements OnInit {
 
   get isLoggedIn() {
     if (this.authenticationService.getToken()){
+      this.user = this.userService.getStoreUser();
       return true;
     }
     return false;
   }
 
   get isAuthorized() {
-    //if (this.userService.isInRole('Manager') || this.userService.isInRole('Admin')) {
-      return true;
-    //}
-    //return false;
+    return this.userService.isInRole('Admin') || this.userService.isInRole('Manager');;
   }
 
   get isAdmin() {
     return this.userService.isInRole('Admin');
-    // return true;
   }
 
   logout(): void {
+    this.user = null;
     this.userService.logout();
   }
 

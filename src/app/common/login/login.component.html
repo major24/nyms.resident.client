@@ -1,10 +1,7 @@
 <div class="col-md-6 offset-md-3 mt-5">
-  <div class="alert alert-info">
-    ==## UserLogged: {{user | json }}
-  </div>
   <div class="card">
-      <h4 class="card-header">NYMS-Resident Care System</h4>
-      <div class="card-body">
+      <h4 class="card-header bg-info text-white">NYMS-Resident Care System</h4>
+      <div class="card-body bg-light">
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
               <div class="form-group">
                   <label for="username">Username</label>
@@ -20,7 +17,7 @@
                       <div *ngIf="f.password.errors.required">Password is required</div>
                   </div>
               </div>
-              <button [disabled]="loading" class="btn btn-primary">
+              <button [disabled]="loading" [disabled]="!loginForm.valid" class="btn btn-primary">
                   <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                   Login
               </button>
