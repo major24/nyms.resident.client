@@ -7,13 +7,13 @@
       </li>
 
       <!-- Authorized only -->
-      <li class="nav-item" *ngIf="isAuthorized">
-        <a class="nav-link" [routerLink]="['residents']">Residents</a>
+      <li class="nav-item" *ngIf="isLoggedIn">
+        <a class="nav-link" [routerLink]="['residents-dashboard']">Residents</a>
       </li>
 
       <!-- Admin only -->
       <li class="nav-item" *ngIf="isAdmin && isLoggedIn">
-        <a class="nav-link" [routerLink]="['admin']">Admin</a>
+        <a class="nav-link" [routerLink]="['admin-dashboard']">Admin</a>
       </li>
 
       <!-- Anonymous only -->

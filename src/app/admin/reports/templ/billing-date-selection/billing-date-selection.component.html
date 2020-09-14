@@ -41,7 +41,9 @@
     <div class="col-sm">
       <div>&nbsp;</div>
       <button class="btn btn-primary mt-1" [disabled]="!invoiceForm.valid" (click)="getReportsByDate()">Go</button>
-      <button class="btn btn-primary mt-1 ml-4" [disabled]="!invoiceForm.valid" (click)="downloadReportsByDate()">Download</button>
+      <button class="btn btn-primary mt-1 ml-4" [disabled]="!invoiceForm.valid" (click)="downloadReportsByDate()">Download
+        <span *ngIf="downloading" class="spinner-border spinner-border-sm mr-1"></span>
+      </button>
     </div>
   </div>
   </form>

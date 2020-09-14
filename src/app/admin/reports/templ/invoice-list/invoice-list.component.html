@@ -1,4 +1,5 @@
 <div class="container">
+  <hr *ngIf="invoices.length > 0" />
   <div *ngFor="let invoice of invoices">
     <h5 class="text-primary">{{invoice.name}}</h5>
     <span style="font-size: small;">Weekly Fee (@ {{invoice.residentWeeklyFee}})</span>
@@ -15,7 +16,7 @@
       </div>
     </div>
 
-    <div class="row border">
+    <div class="row">
       <div class="col-md">
         &nbsp;
       </div>

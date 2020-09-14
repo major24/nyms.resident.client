@@ -68,7 +68,7 @@ export class UserService extends Store<CareHomeUser> {
 
   public isInRole(role: string): boolean {
     if (this.getStoreUser()) {
-      return this.getStoreUser().careHomeRoles.some((r => r.roleName === role))
+      return this.getStoreUser().careHomeRoles.some((r => r.name === role))
     }
     return false;
   }

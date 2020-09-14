@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { InvoiceService } from '../../services/index';
 import { Invoice, InvoiceSummary } from '../../models/index';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { KeyPair } from '../../../models/index';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -14,8 +12,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class InvoiceComponent implements OnInit {
 
-  private _invoices: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>([]);
-  public invoices$ = this._invoices.asObservable();
+  //private _invoices: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>([]);
+  //public invoices$ = this._invoices.asObservable();
   rawInvoices: Invoice[] = [];
   invoices: Invoice[] = [];
   invoicesSummary: InvoiceSummary[] = [];
@@ -39,11 +37,9 @@ export class InvoiceComponent implements OnInit {
     this.invoiceService.loadInvoiceByDate(startDate, endDate)
     .subscribe({
       next: (data) => {
-        console.log('>>>>>>', data);
         Object.assign(this.invoices, [...data]);
         Object.assign(this.rawInvoices, [...data]);
         // prepare summary
-        // // this.getSummaryTotals(this.invoices);
         this.makeSummaryTotals(this.invoices);
       },
       error: (error) => console.log('Error getting invoice:', error)
@@ -62,17 +58,6 @@ export class InvoiceComponent implements OnInit {
     }
     this.makeSummaryTotals(this.invoices);
   }
-
-  // onLocalAuthorityChange(event: any): void {
-  //   this.invoices.splice(0, this.invoices.length);
-  //   if (event.target.value === 'all'){
-  //     Object.assign(this.invoices, [...this.rawInvoices]);
-  //   } else {
-  //     let filtered = this.rawInvoices.filter(i => i.localAuthorityId === +event.target.value);
-  //     Object.assign(this.invoices, [...filtered]);
-  //   }
-  //   this.getSummaryTotals(this.invoices);
-  // }
 
   getLaTotal(invoices: Invoice[], la: string): number {
     const x = invoices.map(i => i.schedules.filter(s => s.paymentFromName === la && s.paymentFrom == 'LA'));

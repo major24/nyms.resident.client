@@ -1,0 +1,87 @@
+<div class="container mt-3">
+
+  <h1 class="display-4">Residents</h1>
+
+  <div class="row bg-primary text-white mb-3">
+    <!-- <div class="col-sm">
+      <div><strong>RefId</strong></div>
+    </div> -->
+    <div class="col-sm">
+      <div><strong>Name</strong></div>
+    </div>
+    <div class="col-sm">
+      <div><strong>Dob</strong></div>
+    </div>
+    <div class="col-sm">
+      <div><strong>PO Id</strong></div>
+    </div>
+    <div class="col-sm">
+      <div><strong>LA Id</strong></div>
+    </div>
+    <div class="col-sm">
+      <div><strong>Admission</strong></div>
+    </div>
+    <div class="col-sm">
+      <div><strong>Exit</strong></div>
+    </div>
+  </div>
+
+  <div class="row" *ngFor="let res of residents">
+    <!-- <div class="col-sm">
+      <div>{{res.referenceId}}</div>
+    </div> -->
+    <div class="col-sm">
+      <div>{{res.foreName}} {{res.surName}}</div>
+    </div>
+    <div class="col-sm">
+      <div>{{res.dob | date}}</div>
+    </div>
+    <div class="col-sm">
+      <div>{{res.poNumber}}</div>
+    </div>
+    <div class="col-sm">
+      <div>{{res.laId}}</div>
+    </div>
+    <div class="col-sm">
+      <div>{{res.admissionDate | date}}</div>
+    </div>
+    <div class="col-sm">
+      <div *ngIf="res.exitDate < '9999-11-30T00:00:00'">{{res.exitDate | date}}</div>
+      <div *ngIf="res.exitDate > '9999-11-30T00:00:00'">
+        <button type="button" class="btn btn-outline-dark btn-sm" (click)="openModal(content, res.referenceId)">X</button>
+      </div>
+    </div>
+    <div class="h-divider"></div>
+  </div>
+
+  <div class="mt-4"></div>
+
+
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Profile Exit - {{selectedName}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+          <label for="dateOfBirth">Exit Date</label>
+          <div class="input-group">
+            <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" (dateSelect)="onExitDateChange($event)" ngbDatepicker #dp="ngbDatepicker">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar"  (click)="dp.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="saveExitDate()">Save</button>
+    </div>
+  </ng-template>
+  <button type="button" class="btn btn-outline-dark btn-sm" (click)="open(content)">X</button>
+
+
+</div>

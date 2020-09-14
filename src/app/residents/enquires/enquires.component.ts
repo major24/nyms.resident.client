@@ -13,6 +13,8 @@ export class EnquiresComponent implements OnInit {
   enquiryResidents$: Observable<EnquiryResident[]>;
   isLoading: boolean;
 
+  residents: string[] = [];
+
   constructor(private enquiresService: EnquiresService, private router: Router) {
   }
 
@@ -32,6 +34,7 @@ export class EnquiresComponent implements OnInit {
         error => { console.log('>>>Error getting all enquires'); }
       )
     }
+    this.residents = ['aaa', 'bbb']
   }
 
   navToAddEnquiry(): void {

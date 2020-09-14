@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { JwtModule } from "@auth0/angular-jwt";
 
@@ -29,6 +30,7 @@ import { SocialWorkerDetailEditComponent } from './residents/templ-edit/social-w
 import { CareTypeEditComponent } from './residents/templ-edit/care-type-edit/care-type-edit.component';
 import { RoomLocationEditComponent } from './residents/templ-edit/room-location-edit/room-location-edit.component';
 import { EnquiryMiscEditComponent } from './residents/templ-edit/enquiry-misc-edit/enquiry-misc-edit.component';
+import { ResidentsListComponent } from './residents/residents-list/residents-list.component';
 
 export function tokenGetter() {
   return localStorage.getItem('id_token');
@@ -39,6 +41,7 @@ export function tokenGetter() {
     BrowserModule,
     NgbModule,
     AppRoutingModule,
+    FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     JwtModule.forRoot({
@@ -61,7 +64,8 @@ export function tokenGetter() {
     SocialWorkerDetailEditComponent,
     CareTypeEditComponent,
     RoomLocationEditComponent,
-    EnquiryMiscEditComponent
+    EnquiryMiscEditComponent,
+    ResidentsListComponent
   ],
   providers: [
     //{ provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

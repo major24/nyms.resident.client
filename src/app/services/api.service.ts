@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser } from '../models/index';
-import { EnquiryResident, CareHome } from '../residents/models/index';
+import { EnquiryResident, CareHome, Resident } from '../residents/models/index';
 import { Invoice } from '../admin/models/index';
 
 @Injectable({
@@ -78,8 +78,13 @@ export class ApiService {
 
 
   // === resident related ===
+  getAllResidents(careHomeId: number): Observable<Resident[]> {
+    return this.http.get<Resident[]>(`/api/carehomes/${careHomeId}/residents/active`);
+  }
 
-
+  updateExitDate(referenceId: string, exitDate: string): Observable<any> {
+    return this.http.put<any>(`/api/residents/${referenceId}/exit-date`, {referenceId: referenceId, exitDate: exitDate });
+  }
   // === endof resident related ===
 
 
@@ -100,6 +105,10 @@ export class ApiService {
   }
 
 
+  downloadFile(billingStart: string, billingEnd: string): Observable<any> {
+    const url = `/api/invoices/all/${billingStart}/${billingEnd}/download`;
+    return this.http.get(url, { responseType: 'blob'} );
+  }
 
 
 

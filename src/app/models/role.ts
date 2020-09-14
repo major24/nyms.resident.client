@@ -4,7 +4,7 @@ export class Role {
 }
 
 export class CareHomeRole {
-  roleName: string;
+  name: string;
   careHomeName: string;
   careHomeReferenceId: string;
 }

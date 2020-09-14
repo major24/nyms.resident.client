@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
       console.log('>>sesion found. user hit F5, so get user again.');
       this.isLoading = true;
       this.userService.reloadUser().subscribe(u => {
-        this.user = u;
+        // this.user = u;
         this.userFound = true;
         this.isLoading = false;
         this.user = this.userService.getStoreUser();
@@ -39,5 +39,7 @@ export class HomeComponent implements OnInit {
 
     // do other init for home page
   }
+
+
 
 }
