@@ -47,9 +47,11 @@
     </div>
     <div class="col-sm">
       <div *ngIf="res.exitDate < '9999-11-30T00:00:00'">{{res.exitDate | date}}</div>
-      <div *ngIf="res.exitDate > '9999-11-30T00:00:00'">
+
+      <div *ngIf="res.exitDate > '9999-11-30T00:00:00' && showExitButton">
         <button type="button" class="btn btn-outline-dark btn-sm" (click)="openModal(content, res.referenceId)">X</button>
       </div>
+
     </div>
     <div class="h-divider"></div>
   </div>

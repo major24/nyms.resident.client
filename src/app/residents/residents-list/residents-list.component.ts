@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ResidentsService } from '../services/residents.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Resident } from '../models';
+import { UserService } from  '../../services/index';
+import { CareHomeUser } from '../../models/index';
 
 @Component({
   selector: 'app-residents-list',
@@ -9,20 +11,36 @@ import { Resident } from '../models';
   styleUrls: ['./residents-list.component.css']
 })
 export class ResidentsListComponent implements OnInit {
-
+  userFound: boolean;
+  user: CareHomeUser;
   residents: Resident[] = [];
   closeResult = '';
   selectedRefId = '';
   selectedName = '';
   exitDate: string;
+  showExitButton: boolean = false;
 
-  constructor(private residentService: ResidentsService, private modalService: NgbModal) { }
+  constructor(private residentService: ResidentsService, private modalService: NgbModal, private userService: UserService) { }
 
   ngOnInit(): void {
-    setTimeout(x => {
-      this.loadResidnets(1);
-    }, 200)
+    //=== reload user on refresh =====================================
+    // if user token found and userValue is null, must be reloading or refreshing the page
+    // in-memory user is removed. so re-load user
+    if (this.userService.hasUserToken() && this.userService.getStoreUser() == null) {
+      console.log('>>sesion found. user hit F5, so get user again.');
+      this.userService.reloadUser().subscribe(u => {
+        this.userFound = true;
+        this.user = this.userService.getStoreUser();
+      });
+    } else {
+      this.user = this.userService.getStoreUser();
+    }
+    this.userFound = this.userService.getStoreUser() != null;
+    // ================================================================
 
+    // Do other work
+    this.loadResidnets(1); // Hardcoding to Pennine care id=1
+    this.showExitButton = this.userService.isInRole('Super Admin');
   }
 
   loadResidnets(careHomeId: number): void {
@@ -42,7 +60,6 @@ export class ResidentsListComponent implements OnInit {
   }
 
   openModal(content: any, refId: string) {
-    console.log('>>>>', refId);
     this.selectedRefId = refId;
     // get name by refid
     this.selectedName = this.residents.filter(r => r.referenceId === refId).map(k => { return k.foreName + ' ' + k.surName })[0];
@@ -51,7 +68,6 @@ export class ResidentsListComponent implements OnInit {
   }
 
   saveExitDate(): void {
-    console.log('>>>saving exit date to db');
     this.residentService.updateExitDate(this.selectedRefId, this.exitDate)
     .subscribe({
       next: (data) => {
@@ -66,7 +82,6 @@ export class ResidentsListComponent implements OnInit {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
-      console.log('>>>', reason)
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
@@ -77,7 +92,6 @@ export class ResidentsListComponent implements OnInit {
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
       return 'by clicking on a backdrop';
     } else {
-      console.log('>>>>>hre')
       return `with: ${reason}`;
     }
   }

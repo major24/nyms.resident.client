@@ -1,26 +1,26 @@
-
-
 <!-- <p>=={{careHomeDetails | json }}</p> -->
 
 <div class="mt-5">
 
   <ngb-accordion #acc="ngbAccordion" [activeIds]="activeIds">
-    <ngb-panel id="panel-carehome" title="Care Home">
-      <ng-template ngbPanelContent>
 
-        <form [formGroup]="enquiryEditForm">
-          <div class="form-group">
-            <!-- <label for="careHome">Care Home</label> -->
-            <select class="custom-select" name="careHome" id="careHome" formControlName="careHome" (change)="oncareHomeChange($event)">
-              <option value="" selected>Choose...</option>
-              <option *ngFor="let careHome of careHomeDetails; let i = index" [value]="careHome.id">
-                {{careHome.name}}
-              </option>
-            </select>
-          </div>
-          </form>
-      </ng-template>
-    </ngb-panel>
+      <ngb-panel id="panel-carehome" title="Care Home" class="bg-info">
+        <ng-template ngbPanelContent>
+
+          <form [formGroup]="enquiryEditForm">
+            <div class="form-group">
+              <!-- <label for="careHome">Care Home</label> -->
+              <select class="custom-select" name="careHome" id="careHome" formControlName="careHome" (change)="oncareHomeChange($event)">
+                <option value="" selected>Choose...</option>
+                <option *ngFor="let careHome of careHomeDetails; let i = index" [value]="careHome.id">
+                  {{careHome.name}}
+                </option>
+              </select>
+            </div>
+            </form>
+        </ng-template>
+      </ngb-panel>
+
 
 
     <ngb-panel id="panel-profile" title="Profile">
