@@ -20,7 +20,7 @@ export class AuthResidentsGuard implements CanActivate {
         if (!this.userService.hasUserToken()) {
             this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
         }
-        console.log('>>store user:', this.userService.getStoreUser().foreName);
+        console.log('>>store user:', this.userService.getStoreUser());
         if (this.userService.isInRole('Manager') || this.userService.isInRole('Admin')) {
             return true;
         }

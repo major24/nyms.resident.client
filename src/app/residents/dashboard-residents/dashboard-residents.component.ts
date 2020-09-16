@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { User, CareHomeUser } from '../../models/index';
+import { CareHomeUser } from '../../models/index';
 import { UserService } from '../../services/index';
 
 @Component({
@@ -28,14 +28,17 @@ export class DashboardResidentsComponent implements OnInit {
     } else {
       this.user = this.userService.getStoreUser();
     }
-
     this.userFound = this.userService.getStoreUser() != null;
     // ================================================================
 
   }
 
   navToEnquires(): void {
-    this.router.navigate(['/enquires', {} ]);
+    this.router.navigate(['/enquires', {}]);
+  }
+
+  navToResidents(): void {
+    this.router.navigate(['/residents', {}])
   }
 
 }

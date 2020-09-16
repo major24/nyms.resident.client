@@ -1,19 +1,15 @@
 <!-- Home page -->
 <div class="container mt-5">
 
-  <div class="row">
-    <div class="col-md">
-      <div *ngIf="isLoading">loading...</div>
-    </div>
-  </div>
+  <div *ngIf="isLoading">loading...</div>
 
-  <div>
-    <p>home page</p>
-    ==UserLogged: {{user | json }}
-  </div>
-
-  <div class="row">
-    ==UserLogged: <p *ngIf="userFound"> {{ user.userName }} - {{user.firstName}}</p>
+  <div class="jumbotron">
+    <h1 class="display-5 text-dark">NYMS - Resident Care System</h1>
+    <p class="lead"></p>
+    <hr class="my-4">
+    <p>Manage resident and enquires for our care homes</p>
+    <p class="lead">
+    </p>
   </div>
 
 </div>

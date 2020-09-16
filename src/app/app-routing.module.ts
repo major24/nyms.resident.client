@@ -9,7 +9,8 @@ import { EnquiresEditComponent } from './residents/enquires/enquires-edit/enquir
 import { InvoiceComponent } from './admin/reports/invoice/invoice.component';
 
 import { AuthGuard, AuthResidentsGuard, AuthAdminGuard } from './helpers';
-
+// import { ResidentsComponent } from './residents/residents/residents.component';
+import { ResidentsListComponent } from './residents/residents-list/residents-list.component';
 
 const routes: Routes = [
     {
@@ -18,15 +19,22 @@ const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'residents',
+        path: 'residents-dashboard',
         component: DashboardResidentsComponent,
-        canActivate: [AuthResidentsGuard],
-        //resolve: { mydata: AuthResidentsResolver }
+        canActivate: [AuthGuard]
+        // canActivate: [AuthResidentsGuard],
+        // resolve: { mydata: AuthResidentsResolver }
+    },
+    {
+        path: 'residents',
+        component: ResidentsListComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'enquires',
         component: EnquiresComponent,
-        canActivate: [AuthResidentsGuard]
+        canActivate: [AuthGuard]
+        // canActivate: [AuthResidentsGuard]
     },
     {
         path: 'enquires-edit/:referenceId',
@@ -41,13 +49,14 @@ const routes: Routes = [
         component: LoginComponent
     },
     {
-        path: 'admin',
+        path: 'admin-dashboard',
         loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
         canActivate: [AuthAdminGuard]
     },
     {
         path: 'invoice',
-        component: InvoiceComponent
+        component: InvoiceComponent,
+        canActivate: [AuthAdminGuard]
     },
     // // otherwise redirect to home
     { path: '**', redirectTo: '' }

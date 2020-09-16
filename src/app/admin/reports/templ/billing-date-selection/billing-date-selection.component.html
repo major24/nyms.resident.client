@@ -1,0 +1,50 @@
+<div class="container">
+  <form [formGroup]="invoiceForm">
+  <div class="row">
+    <div class="col-sm">
+      <div class="form-group">
+        <label for="billingStartDate"><strong>Billing Start</strong></label>
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd"
+            formControlName="billingStartDate" name="billingStartDate" (dateSelect)="onBillingStartDateChange($event)" ngbDatepicker #d0="ngbDatepicker" required>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="d0.toggle()" type="button"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div class="form-group">
+        <label for="billingEndDate"><strong>Billing End</strong></label>
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd"
+            formControlName="billingEndDate" name="billingEndDate" (dateSelect)="onBillingEndDateChange($event)" ngbDatepicker #d1="ngbDatepicker" required>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div class="form-group">
+        <label for="localAuthority"><strong>Local Authorities</strong></label>
+        <select class="custom-select" name="localAuthority" id="localAuthority" formControlName="localAuthority" (change)="onLocalAuthorityChange($event)">
+          <option *ngFor="let la of localAuthrities;" [value]="la.key">
+            {{la.value}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="col-sm">
+      <div>&nbsp;</div>
+      <button class="btn btn-primary mt-1" [disabled]="!invoiceForm.valid" (click)="getReportsByDate()">Go</button>
+      <button class="btn btn-primary mt-1 ml-4" [disabled]="!invoiceForm.valid" (click)="downloadReportsByDate()">Download
+        <span *ngIf="downloading" class="spinner-border spinner-border-sm mr-1"></span>
+      </button>
+    </div>
+  </div>
+  </form>
+</div>
