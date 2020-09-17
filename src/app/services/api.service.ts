@@ -14,21 +14,13 @@ export class ApiService {
 
   // === User related ===
   authenticateUser(username: string, password: string): Observable<User> {
-    //console.log('in api service. authenticateUser');
     return this.http.post<any>(
       `/api/authentication/authenticate`,
       { username, password },
       { withCredentials: true }
     );
-    // .post<any>(
-    //   `${environment.apiDomainUrl}/api/authentication/authenticate`,
-    //   { username, password },
-    //   { withCredentials: true }
-    // );
   }
 
-  // change to ref id later
-  // getUserById(id: number): Observable<User> {
   getCareHomeUserByReferenceId(referenceId: string): Observable<CareHomeUser> {
     return this.http.get<CareHomeUser>(
       `/api/users/carehomeusers/${referenceId}`,

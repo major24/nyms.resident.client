@@ -40,7 +40,7 @@ export class ResidentsListComponent implements OnInit {
 
     // Do other work
     this.loadResidnets(1); // Hardcoding to Pennine care id=1
-    this.showExitButton = this.userService.isInRole('Super Admin');
+    this.showExitButton = this.userService.isInRoleFromToken('Super Admin');
   }
 
   loadResidnets(careHomeId: number): void {

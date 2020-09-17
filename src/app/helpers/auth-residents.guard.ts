@@ -21,10 +21,12 @@ export class AuthResidentsGuard implements CanActivate {
             this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
         }
         console.log('>>store user:', this.userService.getStoreUser());
-        if (this.userService.isInRole('Manager') || this.userService.isInRole('Admin')) {
+        const tokenRoles = this.userService.getUserRolesFromToken();
+        console.log('>>localstorage user roles:', tokenRoles);
+
+        if (tokenRoles.includes('Admin') || tokenRoles.includes('Manager')) {
             return true;
         }
-
         return false;
     }
 }

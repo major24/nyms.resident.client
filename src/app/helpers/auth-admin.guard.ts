@@ -15,6 +15,12 @@ export class AuthAdminGuard implements CanActivate {
             this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
         }
         console.log('>>store user:', this.userService.getStoreUser());
-        return this.userService.isInRole('Admin');
+        const tokenRoles = this.userService.getUserRolesFromToken();
+        console.log('>>localstorage user roles:', tokenRoles);
+
+        if (tokenRoles.includes('Admin')) {
+            return true;
+        }
+        return false;
     }
 }

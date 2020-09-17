@@ -2,20 +2,14 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import { environment } from '../../environments/environment'; // '@environments/environment';
-import { User } from '../models/index'; // '@app/models';
+import { throwError } from 'rxjs';
 import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   constructor(
     private router: Router,
-    private http: HttpClient,
-    private jwtHelper: JwtHelperService,
-    private apiService: ApiService
+    private jwtHelper: JwtHelperService
   ) {}
 
 
@@ -66,6 +60,19 @@ export class AuthenticationService {
     }
     return throwError('Reference Id not found in token');
   }
+
+  public getUserRolesFromToken() {
+    const tkn = this.getToken();
+    if (tkn) {
+      const decToken = this.readToken();
+      if (decToken) {
+        return JSON.parse(decToken.Roles);
+      }
+      return [];
+    }
+    return throwError('Roles not found in');
+  }
+
 
 }
 
