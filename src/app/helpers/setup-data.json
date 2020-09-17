@@ -1,0 +1,19 @@
+[
+  {
+    "home": "Pennine Care Centre",
+    "carecategories": [
+      { "name": "Dementia", "code": "dementia" },
+      { "name": "Residential", "code": "residential" },
+      { "name": "Nursing", "code": "nursing" }
+    ],
+    "careneeds": [
+      { "name": "High", "code": "high" },
+      { "name": "Medium", "code": "medium" },
+      { "name": "Low", "code": "low" }
+    ],
+    "staytypes": [
+      { "name": "Permanent", "code": "permanent" },
+      { "name": "Respite", "code": "respite" }
+    ]
+  }
+]

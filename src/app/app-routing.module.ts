@@ -9,7 +9,6 @@ import { EnquiresEditComponent } from './residents/enquires/enquires-edit/enquir
 import { InvoiceComponent } from './admin/reports/invoice/invoice.component';
 
 import { AuthGuard, AuthResidentsGuard, AuthAdminGuard } from './helpers';
-// import { ResidentsComponent } from './residents/residents/residents.component';
 import { ResidentsListComponent } from './residents/residents-list/residents-list.component';
 
 const routes: Routes = [
@@ -21,8 +20,7 @@ const routes: Routes = [
     {
         path: 'residents-dashboard',
         component: DashboardResidentsComponent,
-        canActivate: [AuthGuard]
-        // canActivate: [AuthResidentsGuard],
+        canActivate: [AuthResidentsGuard],
         // resolve: { mydata: AuthResidentsResolver }
     },
     {
@@ -34,7 +32,6 @@ const routes: Routes = [
         path: 'enquires',
         component: EnquiresComponent,
         canActivate: [AuthGuard]
-        // canActivate: [AuthResidentsGuard]
     },
     {
         path: 'enquires-edit/:referenceId',

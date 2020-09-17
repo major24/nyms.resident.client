@@ -28,11 +28,23 @@ export class AppComponent implements OnInit {
   }
 
   get isAuthorized() {
-    return this.userService.isInRole('Admin') || this.userService.isInRole('Manager');;
+    const tokenRoles = this.userService.getUserRolesFromToken();
+    if (Array.isArray(tokenRoles) && tokenRoles.length > 0) {
+      if (tokenRoles.includes('Admin') || tokenRoles.includes('Manager')) {
+        return true;
+      }
+    }
+    return false;
   }
 
   get isAdmin() {
-    return this.userService.isInRole('Admin');
+    const tokenRoles = this.userService.getUserRolesFromToken();
+    if (Array.isArray(tokenRoles) && tokenRoles.length > 0) {
+      if (tokenRoles.includes('Admin')) {
+        return true;
+      }
+    }
+    return false;
   }
 
   logout(): void {

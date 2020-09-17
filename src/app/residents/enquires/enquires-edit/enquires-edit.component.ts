@@ -10,7 +10,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import {  BehaviorSubject } from 'rxjs';
 import { RoomLocation, KeyPair } from '../../../models/index';
 import { CarehomeService } from '../../services/index';
-
+// import setupData from '../../../helpers/setup-data.json';
 
 @Component({
   selector: 'app-enquires-edit',
@@ -34,6 +34,12 @@ export class EnquiresEditComponent implements OnInit {
     { key: 'admit', value: 'Admit'},
     { key: 'closed', value:'Closed'}
   ];
+
+
+
+
+
+
 
   enquiryEditForm = new FormGroup({
     status: new FormControl(''),
@@ -66,6 +72,7 @@ export class EnquiresEditComponent implements OnInit {
 
       }
     });
+
   }
 
   loadByReferenceId(referenceId: string): void {

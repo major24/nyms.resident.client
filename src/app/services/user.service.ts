@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { environment } from '../../environments/environment'; // '@environments/environment';
-import { User, CareHomeUser } from '../models'; // '@app/models';
+import { User, CareHomeUser } from '../models';
 import { AuthenticationService } from './authentication.service';
 import { Observable, of } from 'rxjs';
 import { map, tap, mergeMap } from 'rxjs/operators';
@@ -72,6 +71,21 @@ export class UserService extends Store<CareHomeUser> {
     }
     return false;
   }
+
+  public getUserRolesFromToken() {
+    return this.authService.getUserRolesFromToken();
+  }
+
+  public isInRoleFromToken(role: string): boolean {
+    const tokenRoles = this.getUserRolesFromToken();
+    if (Array.isArray(tokenRoles) && tokenRoles.length > 0) {
+      if (tokenRoles.includes(role)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
 }
 
