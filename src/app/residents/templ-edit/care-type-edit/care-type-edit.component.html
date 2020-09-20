@@ -1,25 +1,35 @@
 <form [formGroup]="careTypeForm">
 
   <div class="form-group">
-    <label for="careCategory">Care Category</label>
-    <select class="custom-select" name="careCategory" id="careCategory" formControlName="careCategory" (change)="onCareCategoryChange($event)">
+    <label for="careCategoryId">Care Category</label>
+    <select class="custom-select" name="careCategoryId" id="careCategoryId" formControlName="careCategoryId"
+      (change)="onCareCategoryChange($event)">
       <option value="" selected>Choose...</option>
+      <option *ngFor="let item of careCategories;" [value]="item.id">
+        {{item.name}}
+      </option>
     </select>
   </div>
 
   <div class="form-group">
-    <label for="careNeeds">Care Needs</label>
-    <select class="custom-select" name="careNeeds" id="careNeeds" formControlName="careNeeds" (change)="onCareNeedsChange($event)">
+    <label for="careNeed">Care Needs</label>
+    <select class="custom-select" name="careNeed" id="careNeed" formControlName="careNeed"
+      (change)="oncareNeedChange($event)">
       <option value="" selected>Choose...</option>
-
+      <option *ngFor="let item of careNeeds;" [value]="item.key">
+        {{item.value}}
+      </option>
     </select>
   </div>
 
   <div class="form-group">
     <label for="stayType">Stay Type</label>
-    <select class="custom-select" name="stayType" id="stayType" formControlName="stayType" (change)="onStayTypeChange($event)">
+    <select class="custom-select" name="stayType" id="stayType" formControlName="stayType"
+      (change)="onStayTypeChange($event)">
       <option value="" selected>Choose...</option>
-
+      <option *ngFor="let item of stayTypes;" [value]="item.key">
+        {{item.value}}
+      </option>
     </select>
   </div>
 

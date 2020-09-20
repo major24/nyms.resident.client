@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { KeyPair } from '../../../models/index';
 
 @Component({
   selector: 'care-type-edit',
@@ -7,27 +8,30 @@ import { FormGroup, FormControl } from '@angular/forms';
   styleUrls: ['./care-type-edit.component.css']
 })
 export class CareTypeEditComponent implements OnInit {
-  @Input() careCategory: string;
-  @Input() careNeeds: string;
+  @Input() careCategories: any[] = [];
+  @Input() careCategoryId: string;
+  @Input() careNeed: string;
   @Input() stayType: string;
 
   @Output() careCategoryUpdated = new EventEmitter<string>();
-  @Output() careNeedsUpdated = new EventEmitter<string>();
+  @Output() careNeedUpdated = new EventEmitter<string>();
   @Output() stayTypeUpdated = new EventEmitter<string>();
 
   careTypeForm = new FormGroup({
-    careCategory: new FormControl(''),
-    careNeeds: new FormControl(''),
+    careCategoryId: new FormControl(''),
+    careNeed: new FormControl(''),
     stayType: new FormControl(''),
   });
 
-  // <option value="high">High</option>
-  // <option value="medium">Medium</option>
-  // <option value="low">Low</option>
-
-  // staty type
-  // <option value="permanent">Permanent</option>
-  // <option value="respite">Respite</option>
+  careNeeds: KeyPair[] = [
+    { key: 'high', value: 'High' },
+    { key: 'medium', value: 'Medium' },
+    { key: 'low', value: 'Low' }
+  ];
+  stayTypes: KeyPair[] = [
+    { key: 'permanent', value: 'Permanent' },
+    { key: 'respite', value: 'Respite' }
+  ];
 
   constructor() { }
 
@@ -36,16 +40,23 @@ export class CareTypeEditComponent implements OnInit {
 
   ngOnChanges(changes: any): void {
     console.log('ChangesCareType:', changes);
-    if (changes.careCategory) { this.careTypeForm.controls['careCategory'].setValue(changes.careCategory.currentValue); }
-    if (changes.careNeeds) { this.careTypeForm.controls['careNeeds'].setValue(changes.careNeeds.currentValue); }
+    if (changes.careCategoryId) { this.careTypeForm.controls['careCategoryId'].setValue(changes.careCategoryId.currentValue); }
+    if (changes.careNeed) { this.careTypeForm.controls['careNeed'].setValue(changes.careNeed.currentValue); }
     if (changes.stayType) { this.careTypeForm.controls['stayType'].setValue(changes.stayType.currentValue); }
+
+    if (changes.isCareHomeSelectionChanged) {
+      this.careTypeForm.controls['careCategoryId'].setValue('');
+      this.careCategories.splice(0, this.careCategories.length);
+      this.careTypeForm.controls['careNeed'].setValue('');
+      this.careTypeForm.controls['stayType'].setValue('');
+    }
   }
 
   onCareCategoryChange(event: any): void {
     this.careCategoryUpdated.emit(event);
   }
-  onCareNeedsChange(event: any): void {
-    this.careNeedsUpdated.emit(event);
+  oncareNeedChange(event: any): void {
+    this.careNeedUpdated.emit(event);
   }
   onStayTypeChange(event: any): void {
     this.stayTypeUpdated.emit(event);

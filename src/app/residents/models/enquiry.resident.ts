@@ -1,14 +1,11 @@
 import { Address } from '../../models/address';
+import { SocialWorker } from './social-worker';
 
-export interface SocialWorker {
-  foreName: string;
-  surName: string;
-  phoneNumber: string;
-  email: string;
-}
 
 export interface EnquiryResident {
   referenceId: string;
+  careHomeId: number;
+  localAuthorityId: number;
   foreName: string;
   surName: string;
   middleName: string;
@@ -17,11 +14,11 @@ export interface EnquiryResident {
   martialStatus: string;
   address: Address;
   socialWorker: SocialWorker;
-  careCategory: string;
-  careNeeds: string;
+  careCategoryId: string;
+  careNeed: string;
   stayType: string;
-  roomLocation: string;
-  roomNumber: string;
+  reservedRoomLocation: string;
+  reservedRoomNumber: string;
   moveInDate: Date;
   familyHomeVisitDate: Date;
   enquiryDate: Date;
@@ -34,6 +31,8 @@ export interface EnquiryResident {
 export function createInstanceofEnquiryResident() {
   let model: EnquiryResident = {
     referenceId: '',
+    careHomeId: 0,
+    localAuthorityId: 0,
     foreName: '',
     surName: '',
     middleName: '',
@@ -41,26 +40,17 @@ export function createInstanceofEnquiryResident() {
     gender: '',
     martialStatus: '',
     address: { street1: '', street2: '', city: '', county: '', postCode: '' },
-    // street1: '',
-    // street2: '',
-    // city: '',
-    // county: '',
-    // postCode: '',
     socialWorker: {
       foreName: '',
       surName: '',
       phoneNumber: '',
       email: '',
     },
-    // socialWorkerForeName: '',
-    // socialWorkerSurName: '',
-    // phoneNumber: '',
-    // email: '',
-    careCategory: '',
-    careNeeds: '',
+    careCategoryId: '',
+    careNeed: '',
     stayType: '',
-    roomLocation: '',
-    roomNumber: '',
+    reservedRoomLocation: '',
+    reservedRoomNumber: '',
     moveInDate: undefined,
     familyHomeVisitDate: undefined,
     enquiryDate: undefined,

@@ -1,20 +1,10 @@
-export class Room {
-  id: number;
-  roomLocationId: number;
-  name: string;
-  status: string;
-}
-
-export class RoomLocation {
-  id: number;
-  name: string;
-  careHomeId: number;
-  rooms: Room[];
-}
+import { RoomLocation } from './room-location';
 
 export class CareHome {
   id: number;
   referenceId: string;
   name: string;
   roomLocations: RoomLocation[];
+  careCategories: any[];
+  localAuthorities: any[];
 }

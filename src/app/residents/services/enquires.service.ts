@@ -40,7 +40,9 @@ export class EnquiresService extends Store<EnquiryResident[]> {
     );
   }
 
-  // loadCareHomeDetails(): Observable<
+  createEnquiryResident(careHomeId: number, enqResident: EnquiryResident): Observable<EnquiryResident> {
+    return this.apiService.createEnquiryResident(careHomeId, enqResident);
+  }
 
 
 

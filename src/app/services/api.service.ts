@@ -34,12 +34,15 @@ export class ApiService {
   //=== endof user related ===
 
   // === enquires related ===
+  // try to deprecate
   getEnquiresAll(): Observable<EnquiryResident[]> {
     return this.http.get<EnquiryResident[]>(
-      `/api/carehomes/enquires`
+      `/api/enquires`
     );
   }
 
+  // All records for ADMIN, SUPER
+  // Manager: only permitted - [0, 1, n] 0 = ALL
   getEnquiresByHome(careHomeId: number): Observable<EnquiryResident[]> {
     return this.http.get<EnquiryResident[]>(
       `/api/carehomes/${careHomeId}/enquires`
@@ -52,10 +55,9 @@ export class ApiService {
     );
   }
 
-  createEnquiryResident(enqResident: EnquiryResident) {
+  createEnquiryResident(careHomeId: number, enqResident: EnquiryResident) {
     return this.http.post<any>(
-      `/api/enquires`,
-      enqResident
+      `/api/carehomes/${careHomeId}/enquires`, enqResident
     );
   }
 
@@ -65,6 +67,15 @@ export class ApiService {
       enqResident
     );
   }
+
+  XXXgetEnquiresAll(): Observable<EnquiryResident[]> {
+    return this.http.get<EnquiryResident[]>(
+      `/api/carehomes/enquires`
+    );
+  }
+  // try to deprecate below
+
+
   // === endof enquires ===
 
 

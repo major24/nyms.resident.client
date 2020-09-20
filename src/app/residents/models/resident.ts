@@ -17,7 +17,7 @@ export interface Resident {
       swEmailAddress: string;
       swPhoneNumber: string;
       careCategoryId: string;
-      careNeeds: string;
+      careNeed: string;
       stayType: string;
       roomLocation: number
       roomNumber: number

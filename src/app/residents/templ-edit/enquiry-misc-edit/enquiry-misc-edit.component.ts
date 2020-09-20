@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-//import { EnquiryMiscData } from '../models';
 
 @Component({
   selector: 'enquiry-misc-edit',

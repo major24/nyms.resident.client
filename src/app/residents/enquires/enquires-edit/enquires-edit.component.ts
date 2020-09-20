@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import {
-  EnquiryResident,
-  createInstanceofEnquiryResident,
-  CareHome,
-} from '../../models/index';
+import { EnquiryResident, createInstanceofEnquiryResident, CareHome } from '../../models/index';
 import { EnquiresService } from '../../services';
 import { FormGroup, FormControl } from '@angular/forms';
-import {  BehaviorSubject } from 'rxjs';
-import { RoomLocation, KeyPair } from '../../../models/index';
+import { BehaviorSubject } from 'rxjs';
+import { KeyPair } from '../../../models/index';
+import { RoomLocation } from '../../models/index';
+
 import { CarehomeService } from '../../services/index';
 // import setupData from '../../../helpers/setup-data.json';
 
@@ -25,25 +23,28 @@ export class EnquiresEditComponent implements OnInit {
   private _careHomeDetails: BehaviorSubject<CareHome[]> = new BehaviorSubject<CareHome[]>([]);
   public careHomeDetails$ = this._careHomeDetails.asObservable();
   careHomeDetails: CareHome[] = [];
+
   roomLocations: RoomLocation[] = [];
   // to contorl roomlocation change in child componet
-  isRoomLocationChanged: boolean = false;
+  isCareHomeSelectionChanged: number = 0; //boolean = false;
+
+  careCategories: any[] = [];
+  localAuthorities: any[] = [];
 
   statuses: KeyPair[] = [
-    { key:'active', value:'Active'},
-    { key: 'admit', value: 'Admit'},
-    { key: 'closed', value:'Closed'}
+    { key: 'active', value: 'Active' },
+    { key: 'admit', value: 'Admit' },
+    { key: 'closed', value: 'Closed' }
   ];
 
-
-
-
-
-
+  errors: string[] = [];
+  saving: boolean = false;
 
   enquiryEditForm = new FormGroup({
     status: new FormControl(''),
-    careHome: new FormControl('')
+    careHome: new FormControl(''),
+    localAuthority: new FormControl(''),
+    isPrivate: new FormControl('')
   });
 
   activeIds: string[] = ['panel-profile', 'panel-carehome'] // default to open profile //, 'panel-address']
@@ -52,7 +53,7 @@ export class EnquiresEditComponent implements OnInit {
     private _router: Router,
     private enquiresService: EnquiresService,
     private careHomeService: CarehomeService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // init subscription for observables
@@ -65,7 +66,7 @@ export class EnquiresEditComponent implements OnInit {
       // console.log(params);
       if (params && params.get('referenceId')) {
         let referenceId: string = params.get('referenceId');
-          this.loadByReferenceId(referenceId);
+        this.loadByReferenceId(referenceId);
       } else {
         // NEW Enquiry. get all care home details into drop down box
         // onchange of care home, load room locations and room numbers
@@ -80,27 +81,27 @@ export class EnquiresEditComponent implements OnInit {
       throw new console.error('Reference not found');
     }
     this.enquiresService.loadEnquiryByReferenceId(referenceId)
-    .subscribe({
-      next: (data) => {
-        // console.log('>>>>++', data);
-        this._enquiryResident.next(data);
-        // once data is available setup THIS form related with data
-        this.setupEnquiryEditForm(data);
-      },
-      error: (error) => {
-        console.log('ERROR:', error);
-      },
-    });
+      .subscribe({
+        next: (data) => {
+          // console.log('>>>>++', data);
+          this._enquiryResident.next(data);
+          // once data is available setup THIS form related with data
+          this.setupEnquiryEditForm(data);
+        },
+        error: (error) => {
+          console.log('ERROR:', error);
+        },
+      });
   }
 
   loadAllCareHomeDetails(): void {
     this.careHomeService.loadAllCareHomeDetails()
-    .subscribe(data => {
-      // console.log('carehome details:', data);
-      this._careHomeDetails.next(data);
-    },
-    error => { console.log('>>>Error getting carehome details', error); }
-    );
+      .subscribe(data => {
+        // console.log('carehome details:', data);
+        this._careHomeDetails.next(data);
+      },
+        error => { console.log('>>>Error getting carehome details', error); }
+      );
   }
 
   setupEnquiryEditForm(data: EnquiryResident): void {
@@ -113,16 +114,59 @@ export class EnquiresEditComponent implements OnInit {
   // === carehome dropdown change ===
   oncareHomeChange(event: any): void {
     const selCareHomeId = +event.target.value;
+    // RoomLocations
     this.roomLocations.splice(0, this.roomLocations.length);
     let x = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.roomLocations);
     Object.assign(this.roomLocations, ...x);
-    this.isRoomLocationChanged = !this.isRoomLocationChanged;
+    this.isCareHomeSelectionChanged = selCareHomeId;
+
+    // CareCategories
+    this.careCategories.splice(0, this.careCategories.length);
+    let y = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.careCategories);
+    Object.assign(this.careCategories, ...y);
+
+    // LA
+    let z = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.localAuthorities);
+    Object.assign(this.localAuthorities, ...z);
+
+    // update store object
+    this.updateCareHomeId(selCareHomeId);
+  }
+
+  onLocalAuthorityChange(event: any): void {
+    let newState = {
+      ...this._enquiryResident.getValue(),
+      localAuthorityId: +event.target.value,
+    };
+    this.updateState(newState);
+  }
+
+  onIsPrivateChange(event: any): void {
+    // private id = 101
+    let privateId = 0; // default
+    if (event.target.checked) {
+      privateId = 101;
+      this.enquiryEditForm.controls['localAuthority'].setValue('');
+    }
+    let newState = {
+      ...this._enquiryResident.getValue(),
+      localAuthorityId: privateId
+    };
+    this.updateState(newState);
   }
 
 
-
-
-
+  //======================================================
+  // === Update care home id
+  updateCareHomeId(id: number): void {
+    let newState = {
+      ...this._enquiryResident.getValue(),
+      careHomeId: id,
+    };
+    // this._enquiryResident.next(newState);
+    this.updateState(newState);
+  }
+  //======================================================
 
 
   //======================================================
@@ -260,14 +304,14 @@ export class EnquiresEditComponent implements OnInit {
   onCareCategoryUpdated(event: any): void {
     let newState = {
       ...this._enquiryResident.getValue(),
-      careCategory: event.target.value,
+      careCategoryId: event.target.value,
     };
     this.updateState(newState);
   }
-  onCareNeedsUpdated(event: any): void {
+  oncareNeedUpdated(event: any): void {
     let newState = {
       ...this._enquiryResident.getValue(),
-      careNeeds: event.target.value,
+      careNeed: event.target.value,
     };
     this.updateState(newState);
   }
@@ -367,10 +411,34 @@ export class EnquiresEditComponent implements OnInit {
   }
   onSubmit(): void {
     // validation...
-    console.log('>>>Ready to submit', this.enquiryResident);
+    this.errors = [];
+    console.log(this.enquiryResident.careHomeId)
+    if (this.enquiryResident.careHomeId === 0) {
+      this.errors.push('Care home id is required');
+    }
+    if (this.enquiryResident.foreName === '' && this.enquiryResident.surName === '') {
+      this.errors.push('Fore name and sur name are required');
+    }
+
+    if (this.errors.length <= 0) {
+      console.log('>>>Ready to submit', this.enquiryResident);
+      this.saving = true;
+      this.enquiresService.createEnquiryResident(this.enquiryResident.careHomeId, this.enquiryResident)
+        .subscribe({
+          next: (response) => {
+            this.saving = false;
+            console.log('Data saved');
+          },
+          error: (error) => {
+            console.log('Error saving data');
+            this.saving = false;
+          }
+        });
+    }
   }
+
   onCancel(): void {
-    this._router.navigate(['/enquires', {} ]);
+    this._router.navigate(['/enquires', {}]);
   }
 
 
@@ -386,7 +454,7 @@ export class EnquiresEditComponent implements OnInit {
   convertToJsDate(event: any): Date {
     return new Date(event.year, event.month - 1, event.day);
   }
- // =============================================
+  // =============================================
 
 
 

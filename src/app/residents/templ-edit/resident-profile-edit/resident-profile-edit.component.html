@@ -19,7 +19,7 @@
     <label for="dob">DOB</label>
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd"
-        formControlName="dob" name="dob" (dateSelect)="onDobChange($event)" ngbDatepicker #d="ngbDatepicker">
+        formControlName="dob" name="dob" [startDate]="{year: 1950, month: 01}" (dateSelect)="onDobChange($event)" [placement]="placement" ngbDatepicker #d="ngbDatepicker">
       <div class="input-group-append">
         <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
       </div>

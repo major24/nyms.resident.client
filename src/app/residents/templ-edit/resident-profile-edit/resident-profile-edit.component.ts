@@ -21,6 +21,8 @@ export class ResidentProfileEditComponent implements OnInit {
   @Output() genderUpdated = new EventEmitter<string>();
   @Output() martialStatusUpdated = new EventEmitter<string>();
 
+  placement: string = 'top';
+
   profileForm = new FormGroup({
     foreName: new FormControl(''),
     surName: new FormControl(''),
