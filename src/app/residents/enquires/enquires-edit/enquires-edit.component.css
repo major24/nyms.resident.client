@@ -1,3 +1,7 @@
-/* /deep/ .card-header{
-  background-color: lightskyblue;
-} */
+/deep/ .card-header{
+  background-color: #17a2b8;
+}
+/deep/ .btn-link {
+  color: white;
+  font-weight: bold;
+}

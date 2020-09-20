@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { RoomLocation, Room } from '../../../models/index';
+import { RoomLocation, Room } from '../../models/index';
 
 
 @Component({
@@ -17,27 +17,20 @@ export class RoomLocationEditComponent implements OnInit {
   @Output() roomNumberUpdated = new EventEmitter<string>();
 
   // to contorl room number change from parent
-  @Input() isRoomLocationChanged: boolean = false;
+  @Input() isCareHomeSelectionChanged: number;
 
-  roomDetailForm =new FormGroup({
+  roomDetailForm = new FormGroup({
     roomLocations: new FormControl(''),
     rooms: new FormControl(''),
   });
-  constructor() {}
+
+  constructor() { }
 
   ngOnInit(): void {
   }
 
   ngOnChanges(changes: any): void {
-    console.log('ngonchg==', changes);
-    if (changes.reservedRoomLocation) { this.roomDetailForm.controls['roomLocations'].setValue(changes.reservedRoomLocation.currentValue); }
-    if (changes.reservedRoomNumber) {
-      if (this.reservedRoomLocation > 0) {
-        this.loadRoomsByLocationId(this.reservedRoomLocation);
-        this.roomDetailForm.controls['rooms'].setValue(changes.reservedRoomNumber.currentValue);
-      }
-    }
-    if (changes.isRoomLocationChanged){
+    if (changes.isCareHomeSelectionChanged) {
       this.roomDetailForm.controls['roomLocations'].setValue('');
       this.rooms.splice(0, this.rooms.length);
     }
@@ -51,6 +44,7 @@ export class RoomLocationEditComponent implements OnInit {
     }
     this.roomLocationUpdated.emit(event);
   }
+
   onRoomChange(event: any): void {
     this.roomNumberUpdated.emit(event);
   }
