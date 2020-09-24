@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { EnquiryResident } from '../models/enquiry.resident';;
 import { EnquiresService } from '../services';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+//import { setTimeout } from 'timers';
 
 @Component({
   selector: 'app-enquires',
@@ -10,29 +11,62 @@ import { Router } from '@angular/router';
   styleUrls: ['./enquires.component.css']
 })
 export class EnquiresComponent implements OnInit {
-  enquiryResidents$: Observable<EnquiryResident[]>;
-  isLoading: boolean;
+  //private _enquiryResidents$: BehaviorSubject<EnquiryResident[]> = new BehaviorSubject<EnquiryResident[]>([]);
+  //public enquiryResidents$ = this._enquiryResidents$.asObservable();
+  enquiryResidents: EnquiryResident[] = [];
+  // enquiryResidents$: Observable<EnquiryResident[]>;
+  isLoading: boolean = false;
 
   constructor(private enquiresService: EnquiresService, private router: Router) {
   }
 
-
   ngOnInit(): void {
-    //console.log('ngonit-enq');
-    this.enquiryResidents$ = this.enquiresService.getState();
-    // console.log('>>>', this.enquiresService.getValue());
-    // console.log('>>>', this.enquiryResidents$);
-    if (this.enquiresService.getValue() && this.enquiresService.getValue().length === 0) {
-      this.isLoading = true;
-      this.enquiresService.loadEnquiresAll()
-      .subscribe(data => {
-          // console.log('enquiries:', data);
+    console.log('>>ngonit-enqcomp ', this.enquiryResidents.length);
+    this.isLoading = true;
+    // console.log('>>>>', this._enquiryResidents$.getValue());
+    // todo: need to build in flexibility to get enq by home id.
+    // for now return all enqs
+    // in server, validate user role and return only allowed carehomes
+    setTimeout(() => {
+
+      this.enquiresService.getEnquiresByHomeId(1)
+      .subscribe({
+        next: (data) => {
+          console.log('>>', data);
+          //this._enquiryResidents$.next(data);
+          this.enquiryResidents = data;
           this.isLoading = false;
         },
-        error => { console.log('>>>Error getting all enquires'); }
-      )
-    }
+        error: (error) => {
+          this.isLoading = false;
+          console.log('Error loading enquires');
+        }
+      });
+
+
+    }, 3000);
+
+
+
+
   }
+
+  // ngOnInit(): void {
+  //   //console.log('ngonit-enq');
+  //   this.enquiryResidents$ = this.enquiresService.getState();
+  //   // console.log('>>>', this.enquiresService.getValue());
+  //   // console.log('>>>', this.enquiryResidents$);
+  //   if (this.enquiresService.getValue() && this.enquiresService.getValue().length === 0) {
+  //     this.isLoading = true;
+  //     this.enquiresService.loadEnquiresAll()
+  //     .subscribe(data => {
+  //         // console.log('enquiries:', data);
+  //         this.isLoading = false;
+  //       },
+  //       error => { console.log('>>>Error getting all enquires'); }
+  //     )
+  //   }
+  // }
 
   navToAddEnquiry(): void {
     this.router.navigate(['/enquires-add']);

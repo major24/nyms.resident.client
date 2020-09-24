@@ -12,7 +12,7 @@ export class ResidentProfileEditComponent implements OnInit {
   @Input() middleName: string;
   @Input() dob: undefined;
   @Input() gender: string;
-  @Input() martialStatus: string;
+  @Input() maritalStatus: string;
 
   @Output() foreNameUpdated = new EventEmitter<string>();
   @Output() surNameUpdated = new EventEmitter<string>();
@@ -29,7 +29,7 @@ export class ResidentProfileEditComponent implements OnInit {
     middleName: new FormControl(''),
     dob: new FormControl(undefined),
     gender: new FormControl(''),
-    martialStatus: new FormControl(''),
+    maritalStatus: new FormControl(''),
   });
 
   constructor() { }
@@ -43,12 +43,13 @@ export class ResidentProfileEditComponent implements OnInit {
     if (changes.surName) { this.profileForm.controls['surName'].setValue(changes.surName.currentValue); }
     if (changes.middleName) { this.profileForm.controls['middleName'].setValue(changes.middleName.currentValue); }
     if (changes.dob) {
-      if (changes.dob.currentValue){
+      if (changes.dob.currentValue) {
         const d = new Date(changes.dob.currentValue);
-        this.profileForm.controls['dob'].setValue({year:d.getFullYear(),month:d.getMonth()+1,day:d.getDate()});
+        this.profileForm.controls['dob'].setValue({ year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() });
       }
     }
     if (changes.gender) { this.profileForm.controls['gender'].setValue(changes.gender.currentValue); }
+    if (changes.maritalStatus) { this.profileForm.controls['maritalStatus'].setValue(changes.maritalStatus.currentValue); }
   }
 
   onForeNameChange(event: any): void {

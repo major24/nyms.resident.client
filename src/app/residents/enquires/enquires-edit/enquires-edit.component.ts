@@ -3,11 +3,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EnquiryResident, createInstanceofEnquiryResident, CareHome } from '../../models/index';
 import { EnquiresService } from '../../services';
 import { FormGroup, FormControl } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { KeyPair } from '../../../models/index';
 import { RoomLocation } from '../../models/index';
 
 import { CarehomeService } from '../../services/index';
+import { concatMap, map, switchMap, mergeMap } from 'rxjs/operators';
 // import setupData from '../../../helpers/setup-data.json';
 
 @Component({
@@ -27,6 +28,7 @@ export class EnquiresEditComponent implements OnInit {
   roomLocations: RoomLocation[] = [];
   // to contorl roomlocation change in child componet
   isCareHomeSelectionChanged: number = 0; //boolean = false;
+  //roomLocationString: string = '';
 
   careCategories: any[] = [];
   localAuthorities: any[] = [];
@@ -60,13 +62,14 @@ export class EnquiresEditComponent implements OnInit {
     this._enquiryResident.subscribe((enq) => (this.enquiryResident = enq));
     this._careHomeDetails.subscribe((chd) => (this.careHomeDetails = chd));
 
-    this.loadAllCareHomeDetails();
+    // this.loadAllCareHomeDetails();
 
     this._Activatedroute.paramMap.subscribe((params) => {
       // console.log(params);
       if (params && params.get('referenceId')) {
         let referenceId: string = params.get('referenceId');
-        this.loadByReferenceId(referenceId);
+        // this.loadByReferenceId(referenceId);
+        this.loadCareHomeDetailsAndEnquiryByReferenceId(referenceId);
       } else {
         // NEW Enquiry. get all care home details into drop down box
         // onchange of care home, load room locations and room numbers
@@ -76,35 +79,80 @@ export class EnquiresEditComponent implements OnInit {
 
   }
 
-  loadByReferenceId(referenceId: string): void {
+  // loadByReferenceId(referenceId: string): void {
+  //   if (referenceId === '' || referenceId === null) {
+  //     throw new console.error('Reference not found');
+  //   }
+  //   this.enquiresService.loadEnquiryByReferenceId(referenceId)
+  //     .subscribe({
+  //       next: (data) => {
+  //         console.log('>>>>++', data);
+  //         this._enquiryResident.next(data);
+  //         // once data is available setup THIS form related with data
+  //         this.setupEnquiryEditForm(data);
+  //       },
+  //       error: (error) => {
+  //         console.log('ERROR:', error);
+  //       },
+  //     });
+  // }
+
+  loadCareHomeDetailsAndEnquiryByReferenceId(referenceId: string): void {
+    this.loadAllCareHomeDetails().subscribe(
+      data => {
+        console.log('>>1', data);
+        this._careHomeDetails.next(data);
+
+        //---------------------------------------------
+        this.loadByReferenceId(referenceId).subscribe(
+          data2 => {
+            console.log('>>2', data2);
+            this._enquiryResident.next(data2);
+            this.setupEnquiryEditForm(data2);
+            // this.roomLocationString = data2.reservedRoomLocation.toString();
+          },
+          error2 => {
+            console.log('Error getting enquiry', error2)
+          }
+        )
+        //---------------------------------------------
+
+      },
+      error => { console.log('Error getting care home details', error); })
+  }
+
+  loadAllCareHomeDetails(): Observable<CareHome[]> {
+    return this.careHomeService.loadAllCareHomeDetails();
+  }
+
+  loadByReferenceId(referenceId: string): Observable<EnquiryResident> {
     if (referenceId === '' || referenceId === null) {
       throw new console.error('Reference not found');
     }
-    this.enquiresService.loadEnquiryByReferenceId(referenceId)
-      .subscribe({
-        next: (data) => {
-          // console.log('>>>>++', data);
-          this._enquiryResident.next(data);
-          // once data is available setup THIS form related with data
-          this.setupEnquiryEditForm(data);
-        },
-        error: (error) => {
-          console.log('ERROR:', error);
-        },
-      });
+    return this.enquiresService.loadEnquiryByReferenceId(referenceId);
   }
 
-  loadAllCareHomeDetails(): void {
-    this.careHomeService.loadAllCareHomeDetails()
-      .subscribe(data => {
-        // console.log('carehome details:', data);
-        this._careHomeDetails.next(data);
-      },
-        error => { console.log('>>>Error getting carehome details', error); }
-      );
-  }
+
+
+  // loadAllCareHomeDetails(): void {
+  //   this.careHomeService.loadAllCareHomeDetails()
+  //     .subscribe(data => {
+  //       // console.log('carehome details:', data);
+  //       this._careHomeDetails.next(data);
+  //     },
+  //       error => { console.log('>>>Error getting carehome details', error); }
+  //     );
+  // }
 
   setupEnquiryEditForm(data: EnquiryResident): void {
+    if (data.careHomeId) {
+      this.enquiryEditForm.controls['careHome'].setValue(data.careHomeId);
+      this.careHomeChanged(data.careHomeId);
+    }
+    // to load la, you need which care it belongs to?
+    if (data.careHomeId && data.careHomeId > 0 && data.localAuthorityId && data.localAuthorityId > 0) {
+      if (data.localAuthorityId) { this.enquiryEditForm.controls['localAuthority'].setValue(data.localAuthorityId); }
+    }
     if (data.status) { this.enquiryEditForm.controls['status'].setValue(data.status); }
   }
 
@@ -114,6 +162,10 @@ export class EnquiresEditComponent implements OnInit {
   // === carehome dropdown change ===
   oncareHomeChange(event: any): void {
     const selCareHomeId = +event.target.value;
+    this.careHomeChanged(selCareHomeId);
+  }
+  careHomeChanged(selCareHomeId: number): void {
+    // const selCareHomeId = +event.target.value;
     // RoomLocations
     this.roomLocations.splice(0, this.roomLocations.length);
     let x = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.roomLocations);
@@ -214,7 +266,7 @@ export class EnquiresEditComponent implements OnInit {
   onMartialStatusUpdated(event: any): void {
     let newState = {
       ...this._enquiryResident.getValue(),
-      martialStatus: event.target.value,
+      maritalStatus: event.target.value,
     };
     this.updateState(newState);
   }

@@ -10,7 +10,7 @@ import { RoomLocation, Room } from '../../models/index';
 })
 export class RoomLocationEditComponent implements OnInit {
   @Input() roomLocations: RoomLocation[] = [];
-  @Input() reservedRoomLocation: number = 0;
+  @Input() reservedRoomLocation: string;
   @Input() reservedRoomNumber: number = 0;
   rooms: Room[] = [];
   @Output() roomLocationUpdated = new EventEmitter<string>();
@@ -30,10 +30,16 @@ export class RoomLocationEditComponent implements OnInit {
   }
 
   ngOnChanges(changes: any): void {
+    console.log('>>ngchgroomloc=', changes)
     if (changes.isCareHomeSelectionChanged) {
       this.roomDetailForm.controls['roomLocations'].setValue('');
       this.rooms.splice(0, this.rooms.length);
     }
+    if (changes.reservedRoomLocation) {
+      this.roomDetailForm.controls['roomLocations'].setValue(changes.reservedRoomLocation.currentValue);
+      this.loadRoomsByLocationId(changes.reservedRoomLocation.currentValue);
+    }
+    if (changes.reservedRoomNumber) this.roomDetailForm.controls['rooms'].setValue(changes.reservedRoomNumber.currentValue);
   }
 
 

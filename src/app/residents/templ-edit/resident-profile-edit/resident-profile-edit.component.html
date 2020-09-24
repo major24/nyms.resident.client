@@ -2,24 +2,28 @@
 
   <div class="form-group">
     <label for="foreName">Fore Name</label>
-    <input type="text" class="form-control" id="foreName" name="foreName" formControlName="foreName" (change)="onForeNameChange($event)" placeholder="">
+    <input type="text" class="form-control" id="foreName" name="foreName" formControlName="foreName"
+      (change)="onForeNameChange($event)" placeholder="">
   </div>
 
   <div class="form-group">
     <label for="foreName">Sur Name</label>
-    <input type="text" class="form-control" id="surName" name="surName" formControlName="surName" (change)="onSurNameChange($event)" placeholder="">
+    <input type="text" class="form-control" id="surName" name="surName" formControlName="surName"
+      (change)="onSurNameChange($event)" placeholder="">
   </div>
 
   <div class="form-group">
     <label for="middleName">Middle Name</label>
-    <input type="text" class="form-control" id="middleName" name="middleName" formControlName="middleName" (change)="onMiddleNameChange($event)" placeholder="">
+    <input type="text" class="form-control" id="middleName" name="middleName" formControlName="middleName"
+      (change)="onMiddleNameChange($event)" placeholder="">
   </div>
 
   <div class="form-group">
     <label for="dob">DOB</label>
     <div class="input-group">
-      <input class="form-control" placeholder="yyyy-mm-dd"
-        formControlName="dob" name="dob" [startDate]="{year: 1950, month: 01}" (dateSelect)="onDobChange($event)" [placement]="placement" ngbDatepicker #d="ngbDatepicker">
+      <input class="form-control" placeholder="yyyy-mm-dd" formControlName="dob" name="dob"
+        [startDate]="{year: 1950, month: 01}" (dateSelect)="onDobChange($event)" [placement]="placement" ngbDatepicker
+        #d="ngbDatepicker">
       <div class="input-group-append">
         <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
       </div>
@@ -33,20 +37,20 @@
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="genderMale"
-        formControlName="gender" name="gender" (change)="onGenderChange($event)" value="male">
+      <input type="radio" class="custom-control-input" id="genderMale" formControlName="gender" name="gender"
+        (change)="onGenderChange($event)" value="male">
       <label class="custom-control-label" for="genderMale">Male</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="genderFemale"
-        formControlName="gender" name="gender" (change)="onGenderChange($event)" value="female">
+      <input type="radio" class="custom-control-input" id="genderFemale" formControlName="gender" name="gender"
+        (change)="onGenderChange($event)" value="female">
       <label class="custom-control-label" for="genderFemale">Female</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="genderNotDisclosed"
-        formControlName="gender" name="gender" (change)="onGenderChange($event)" value="notdisclosed">
+      <input type="radio" class="custom-control-input" id="genderNotDisclosed" formControlName="gender" name="gender"
+        (change)="onGenderChange($event)" value="notdisclosed">
       <label class="custom-control-label" for="genderNotDisclosed">Not Disclosed</label>
     </div>
   </div>
@@ -57,26 +61,26 @@
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="maritalStatusMarried"
-        formControlName="martialStatus" name="martialStatus" (change)="onMartialStatusChange($event)" value="married">
+      <input type="radio" class="custom-control-input" id="maritalStatusMarried" formControlName="maritalStatus"
+        name="maritalStatus" (change)="onMartialStatusChange($event)" value="married">
       <label class="custom-control-label" for="maritalStatusMarried">Married</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="maritalStatusDivorced"
-      formControlName="martialStatus" name="martialStatus" (change)="onMartialStatusChange($event)" value="divorced">
+      <input type="radio" class="custom-control-input" id="maritalStatusDivorced" formControlName="maritalStatus"
+        name="maritalStatus" (change)="onMartialStatusChange($event)" value="divorced">
       <label class="custom-control-label" for="maritalStatusDivorced">Divorced</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="maritalStatusWidower"
-      formControlName="martialStatus" name="martialStatus" (change)="onMartialStatusChange($event)" value="widower">
+      <input type="radio" class="custom-control-input" id="maritalStatusWidower" formControlName="maritalStatus"
+        name="maritalStatus" (change)="onMartialStatusChange($event)" value="widower">
       <label class="custom-control-label" for="maritalStatusWidower">Widower</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="maritalStatusSingle"
-      formControlName="martialStatus" name="martialStatus" (change)="onMartialStatusChange($event)" value="single">
+      <input type="radio" class="custom-control-input" id="maritalStatusSingle" formControlName="maritalStatus"
+        name="maritalStatus" (change)="onMartialStatusChange($event)" value="single">
       <label class="custom-control-label" for="maritalStatusSingle">Single</label>
     </div>
   </div>

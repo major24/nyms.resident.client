@@ -16,28 +16,30 @@ export class EnquiresService extends Store<EnquiryResident[]> {
     super([]);
   }
 
-  loadEnquiresAll(): Observable<EnquiryResident[]> {
-    return this.apiService.getEnquiresAll()
-    .pipe(
-      map((enqs) => {
-        this.setState(enqs);
-        return enqs;
-      })
-    );
-  }
+  // loadEnquiresAll(): Observable<EnquiryResident[]> {
+  //   return this.apiService.getEnquiresAll();
+  //   // .pipe(
+  //   //   map((enqs) => {
+  //   //     this.setState(enqs);
+  //   //     return enqs;
+  //   //   })
+  //   // );
+  // }
 
   loadEnquiryByReferenceId(referenceId: string): Observable<EnquiryResident> {
     return this.apiService.getEnquiryByReferenceId(referenceId);
   }
 
-  loadEnquiresAllByCareHomeId(careHomeId: number): Observable<EnquiryResident[]> {
-    return this.apiService.getEnquiresByHome(careHomeId)
-    .pipe(
-      map((enqs) => {
-        this.setState(enqs);
-        return enqs;
-      })
-    );
+  getEnquiresByHomeId(careHomeId: number): Observable<EnquiryResident[]> {
+      return this.apiService.getEnquiresByHomeId(careHomeId);
+      
+    //return this.apiService.getEnquiresByHomeId(careHomeId);
+    // .pipe(
+    //   map((enqs) => {
+    //     this.setState(enqs);
+    //     return enqs;
+    //   })
+    // );
   }
 
   createEnquiryResident(careHomeId: number, enqResident: EnquiryResident): Observable<EnquiryResident> {
