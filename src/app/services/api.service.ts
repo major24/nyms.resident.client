@@ -35,15 +35,15 @@ export class ApiService {
 
   // === enquires related ===
   // try to deprecate
-  getEnquiresAll(): Observable<EnquiryResident[]> {
-    return this.http.get<EnquiryResident[]>(
-      `/api/enquires`
-    );
-  }
+  // getEnquiresAll(): Observable<EnquiryResident[]> {
+  //   return this.http.get<EnquiryResident[]>(
+  //     `/api/enquires`
+  //   );
+  // }
 
   // All records for ADMIN, SUPER
   // Manager: only permitted - [0, 1, n] 0 = ALL
-  getEnquiresByHome(careHomeId: number): Observable<EnquiryResident[]> {
+  getEnquiresByHomeId(careHomeId: number): Observable<EnquiryResident[]> {
     return this.http.get<EnquiryResident[]>(
       `/api/carehomes/${careHomeId}/enquires`
     );

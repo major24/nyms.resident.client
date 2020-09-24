@@ -1,4 +1,4 @@
-<!-- <p>=={{careHomeDetails | json }}</p> -->
+<p>=={{careHomeDetails | json }}</p>
 <!-- <p>=={{roomLocations | json}}</p> -->
 <div class="mt-5">
 
@@ -51,7 +51,7 @@
 
         <resident-profile-edit [foreName]="enquiryResident.foreName" [surName]="enquiryResident.surName"
           [middleName]="enquiryResident.middleName" [dob]="enquiryResident.dob" [gender]="enquiryResident.gender"
-          [martialStatus]="enquiryResident.martialStatus" (foreNameUpdated)="onForeNameUpdated($event)"
+          [maritalStatus]="enquiryResident.maritalStatus" (foreNameUpdated)="onForeNameUpdated($event)"
           (surNameUpdated)="onSurNameUpdated($event)" (middleNameUpdated)="onMiddleNameUpdated($event)"
           (dobUpdated)="onDobUpdated($event)" (genderUpdated)="onGenderUpdated($event)"
           (martialStatusUpdated)="onMartialStatusUpdated($event)">

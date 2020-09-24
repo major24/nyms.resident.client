@@ -11,7 +11,7 @@ export interface EnquiryResident {
   middleName: string;
   dob: Date;
   gender: string;
-  martialStatus: string;
+  maritalStatus: string;
   address: Address;
   socialWorker: SocialWorker;
   careCategoryId: string;
@@ -38,7 +38,7 @@ export function createInstanceofEnquiryResident() {
     middleName: '',
     dob: undefined,
     gender: '',
-    martialStatus: '',
+    maritalStatus: '',
     address: { street1: '', street2: '', city: '', county: '', postCode: '' },
     socialWorker: {
       foreName: '',
