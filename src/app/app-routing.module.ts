@@ -7,6 +7,8 @@ import { DashboardResidentsComponent } from './residents/dashboard-residents/das
 import { EnquiresComponent } from './residents/enquires/enquires.component';
 import { EnquiresEditComponent } from './residents/enquires/enquires-edit/enquires-edit.component';
 import { InvoiceComponent } from './admin/reports/invoice/invoice.component';
+import { ScheduleEditComponent } from './admin/schedules/schedule-edit/schedule-edit.component';
+import { ScheduleListComponent } from './admin/schedules/schedule-list/schedule-list.component';
 
 import { AuthGuard, AuthResidentsGuard, AuthAdminGuard } from './helpers';
 import { ResidentsListComponent } from './residents/residents-list/residents-list.component';
@@ -53,6 +55,16 @@ const routes: Routes = [
     {
         path: 'invoice',
         component: InvoiceComponent,
+        canActivate: [AuthAdminGuard]
+    },
+    {
+        path: 'schedule-list',
+        component: ScheduleListComponent,
+        canActivate: [AuthAdminGuard]
+    },
+    {
+        path: 'schedule-edit/:referenceId',
+        component: ScheduleEditComponent,
         canActivate: [AuthAdminGuard]
     },
     // // otherwise redirect to home
