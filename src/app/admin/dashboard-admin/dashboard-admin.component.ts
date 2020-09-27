@@ -8,13 +8,17 @@ import { Router } from '@angular/router';
 })
 export class DashboardAdminComponent implements OnInit {
 
-  constructor(private router: Router,) { }
+  constructor(private router: Router, ) { }
 
   ngOnInit(): void {
   }
 
   navToInvoice(): void {
-    this.router.navigate(['/invoice', {} ]);
+    this.router.navigate(['/invoice', {}]);
+  }
+
+  navToSchedules(): void {
+    this.router.navigate(['/schedule-list', {}]);
   }
 
 }

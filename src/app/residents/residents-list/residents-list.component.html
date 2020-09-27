@@ -2,7 +2,7 @@
 
   <h1 class="display-4">Residents</h1>
 
-  <div class="row bg-primary text-white mb-3">
+  <div class="row bg-info text-white mb-3">
     <!-- <div class="col-sm">
       <div><strong>RefId</strong></div>
     </div> -->
@@ -49,7 +49,7 @@
       <div *ngIf="res.exitDate < '9999-11-30T00:00:00'">{{res.exitDate | date}}</div>
 
       <div *ngIf="res.exitDate > '9999-11-30T00:00:00' && showExitButton">
-        <button type="button" class="btn btn-outline-dark btn-sm" (click)="openModal(content, res.referenceId)">X</button>
+        <button type="button" class="btn btn-outline-dark btn-sm" (click)="openModal(content, res.referenceId)">Move Out</button>
       </div>
 
     </div>
@@ -83,7 +83,5 @@
       <button type="button" class="btn btn-outline-dark" (click)="saveExitDate()">Save</button>
     </div>
   </ng-template>
-  <button type="button" class="btn btn-outline-dark btn-sm" (click)="open(content)">X</button>
-
 
 </div>

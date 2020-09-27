@@ -1,0 +1,47 @@
+<div class="container mt-4">
+
+  <h1 class="display-4">Schedules</h1>
+  <div class="font-sm">
+    Note: When a resident move out or passed away, update exit date in [residents] tab.
+  </div>
+  <div *ngFor="let residentSchedule of residentSchedules">
+    <div class="row mt-4">
+      <div class="col-md" >
+        <h5 class="text-primary text-lg font-weight-bold">
+          {{residentSchedule.foreName}} {{residentSchedule.surName}}
+        </h5>
+        <div class="font-italic text-info">{{residentSchedule.paymentFromName}}</div>
+      </div>
+      <div class="col-md d-flex justify-content-end">
+        <a [routerLink]="['/schedule-edit', residentSchedule.referenceId]">Edit</a>
+      </div>
+    </div>
+
+    <div class="row mt-1" *ngFor="let schedule of residentSchedule.schedules">
+      <div class="col-md" >
+        {{schedule.paymentFrom}}
+        <!-- <span *ngIf="schedule.paymentFromName" style="font-size: .8rem;">{{schedule.paymentFromName | slice:0:8}}...</span> -->
+      </div>
+      <div class="col-md">
+        {{schedule.description}}
+      </div>
+      <div class="col-md">
+        <span *ngIf="(schedule?.scheduleBeginDate | date: 'yyyy-mm-dd') > ('1900-01-01' | date: 'yyyy-mm-dd')">
+          {{schedule?.scheduleBeginDate | date}}
+        </span>
+        <!-- <span>{{schedule?.scheduleBeginDate | date: 'yyyy-mm-d'}}</span> -->
+      </div>
+      <div class="col-md">
+        <span *ngIf="(schedule?.scheduleEndDate | date: 'yyyy-mm-dd') > ('1900-01-01' | date: 'yyyy-mm-dd')">
+          {{schedule?.scheduleEndDate | date}}
+        </span>
+      </div>
+      <div class="col-md text-right">
+        {{schedule.weeklyFee | number : '1.2-2'}}
+      </div>
+    </div>
+    <hr />
+
+  </div>
+
+</div>

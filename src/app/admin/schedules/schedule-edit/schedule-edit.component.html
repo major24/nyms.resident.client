@@ -1,0 +1,181 @@
+<div class="container mt-4">
+
+  <h1 class="display-4">Edit Schedules</h1>
+
+  <div *ngIf="error">{{error}}</div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md">
+        <h5 class="text-primary text-lg font-weight-bold">
+          {{residentSchedules?.foreName}} {{residentSchedules?.surName}}
+        </h5>
+      </div>
+      <div class="col-md text-right">
+        <button class="btn btn-primary btn-sm" (click)="openModal(contentAdd, 0)">Add</button>
+      </div>
+    </div>
+  </div>
+  <hr />
+
+  <div class="container" *ngIf="residentSchedules.schedules.length > 0">
+    <div class="row bg-info text-white mb-3">
+      <div class="col-md">
+        <div><strong>From</strong></div>
+      </div>
+      <div class="col-md">
+        <div><strong>Description</strong></div>
+      </div>
+      <div class="col-lg">
+        <div><strong>ScheduleBeginDate</strong></div>
+      </div>
+      <div class="col-lg">
+        <div><strong>ScheduleEndDate</strong></div>
+      </div>
+      <div class="col-sm text-right">
+        <div><strong>WeeklyFee</strong></div>
+      </div>
+      <div class="col-sm text-right">
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-4">
+    <div class="row mt-1" *ngFor="let schedule of residentSchedules.schedules">
+      <div class="col-md">
+        {{schedule.paymentFrom}}
+        <span *ngIf="schedule.paymentFromName" style="font-size: .8rem;">{{schedule.paymentFromName | slice:0:8}}...</span>
+      </div>
+      <div class="col-lg">
+        {{schedule.description}}
+      </div>
+      <div class="col-lg">
+        {{schedule.scheduleBeginDate | date}}
+      </div>
+      <div class="col-md">
+        {{schedule.scheduleEndDate | date}}
+      </div>
+      <div class="col-md text-right">
+        {{schedule.weeklyFee | number : '1.2-2'}}
+      </div>
+      <div class="col-md text-right">
+        <button type="button" class="btn btn-outline-dark btn-sm"
+          (click)="openModal(content, schedule.id)">Expire</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- set schedule end date modal -->
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Schedule End</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+          <label for="dateOfExit">Exit Date</label>
+          <div class="input-group">
+            <input id="dateOfExit" class="form-control" placeholder="yyyy-mm-dd" name="dp" (dateSelect)="onScheduleEndDateChange_1($event)" ngbDatepicker #dp="ngbDatepicker">
+             <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar"  (click)="dp.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="updateScheduleEndDate()">Save</button>
+    </div>
+  </ng-template>
+  <!-- endof schedule end date -->
+
+
+
+  <ng-template #contentAdd let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Create Schedule</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <form [formGroup]="createScheduleForm">
+        <div class="form-group">
+          <label for="paymentFrom">Payment From</label>
+          <div class="input-group">
+            <select id="paymentFrom" class="form-control" (change)="onPaymentFromChange($event)">
+              <option value='' selected>Choose</option>
+              <option *ngFor="let pf of paymentFromList; let i = index" [value]="pf.key">
+                {{pf.value}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="paymentType">Payment Type</label>
+          <div class="input-group">
+            <select id="paymentType" class="form-control" (change)="onPaymentTypeChange($event)">
+              <option value='' selected>Choose</option>
+              <option *ngFor="let pt of paymentTypeList; let i = index" [value]="pt.key">
+                {{pt.value}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="description" name="description" (change)="onDescriptionChange($event)" placeholder="">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="scheduleBeginDate">Schedule Begin Date</label>
+          <div class="input-group">
+            <input id="scheduleBeginDate" class="form-control" placeholder="yyyy-mm-dd" name="scheduleBeginDate" (dateSelect)="onScheduleBeginDateChange($event)" ngbDatepicker #scheduleBeginDate="ngbDatepicker">
+              <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar"  (click)="scheduleBeginDate.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dpScheduleEndDate_2">Schedule End Date</label>
+          <div class="input-group">
+            <input id="dpScheduleEndDate_2" class="form-control" placeholder="yyyy-mm-dd" name="dpScheduleEndDate_2" formControlName="dpScheduleEndDate_2" (dateSelect)="onScheduleEndDateChange_2($event)" ngbDatepicker #dpScheduleEndDate_2="ngbDatepicker" [startDate]="{year: 9999, month: 12}">
+              <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar"  (click)="dpScheduleEndDate_2.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Weekly Fee</label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="weeklyFee" name="weeklyFee" (change)="onWeeklyFeeChange($event)" placeholder="">
+          </div>
+        </div>
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="createNewSchdule()">Save</button>
+    </div>
+  </ng-template>
+
+
+  <div class="font-sm mt-5">
+    <hr />
+    Note: When a resident move out or passed away, update exit date in [residents] tab.
+    <hr />
+  </div>
+
+</div>

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 import { InvoiceService } from '../../services/index';
 import { Invoice, InvoiceSummary } from '../../models/index';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -11,9 +10,6 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./invoice.component.css']
 })
 export class InvoiceComponent implements OnInit {
-
-  //private _invoices: BehaviorSubject<Invoice[]> = new BehaviorSubject<Invoice[]>([]);
-  //public invoices$ = this._invoices.asObservable();
   rawInvoices: Invoice[] = [];
   invoices: Invoice[] = [];
   invoicesSummary: InvoiceSummary[] = [];
@@ -122,14 +118,6 @@ export class InvoiceComponent implements OnInit {
     Object.assign(this.invoicesSummary, [...invSummary]);
     // console.log('***', this.invoicesSummary);
   }
-
-  // downloadReportsByDate() { //Observable<Blob> {
-  //   console.log('>>hre')
-  //   // return this.http.get<Blob>('http://localhost:4200/api/invoices/all/2020-04-29/2020-05-24/download', { responseType: 'blob' as 'json' });
-  //   // return this.http.get<Blob>('/api/invoices/all/2020-04-29/2020-05-24/download', { responseType: 'blob' as 'json' });
-  //   window.open('http://localhost:4200/api/invoices/all/2020-04-29/2020-05-24/download', '_blank');
-  // }
-
 
   convertToJsDate(event: any): Date {
     return new Date(event.year, event.month-1, event.day);

@@ -25,6 +25,10 @@ import { CareTypeEditComponent } from './residents/templ-edit/care-type-edit/car
 import { RoomLocationEditComponent } from './residents/templ-edit/room-location-edit/room-location-edit.component';
 import { EnquiryMiscEditComponent } from './residents/templ-edit/enquiry-misc-edit/enquiry-misc-edit.component';
 import { ResidentsListComponent } from './residents/residents-list/residents-list.component';
+import { MainPipe } from './main-pipe.module';
+// import { SplitPipe } from './common/split.pipe';
+// import { ModalSetExitComponent } from './common/modal-set-exit/modal-set-exit.component';
+// import { MainPipe } from
 
 export function tokenGetter() {
   return localStorage.getItem('id_token');
@@ -38,6 +42,7 @@ export function tokenGetter() {
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MainPipe,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -59,7 +64,8 @@ export function tokenGetter() {
     CareTypeEditComponent,
     RoomLocationEditComponent,
     EnquiryMiscEditComponent,
-    ResidentsListComponent
+    ResidentsListComponent,
+    // SplitPipe
   ],
   providers: [
     //{ provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

@@ -4,7 +4,8 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser } from '../models/index';
 import { EnquiryResident, CareHome, Resident } from '../residents/models/index';
-import { Invoice } from '../admin/models/index';
+import { Invoice, Schedule } from '../admin/models/index';
+import { ResidentSchedule } from '../admin/models/index';
 
 @Injectable({
   providedIn: 'root',
@@ -34,13 +35,6 @@ export class ApiService {
   //=== endof user related ===
 
   // === enquires related ===
-  // try to deprecate
-  // getEnquiresAll(): Observable<EnquiryResident[]> {
-  //   return this.http.get<EnquiryResident[]>(
-  //     `/api/enquires`
-  //   );
-  // }
-
   // All records for ADMIN, SUPER
   // Manager: only permitted - [0, 1, n] 0 = ALL
   getEnquiresByHomeId(careHomeId: number): Observable<EnquiryResident[]> {
@@ -68,11 +62,11 @@ export class ApiService {
     );
   }
 
-  XXXgetEnquiresAll(): Observable<EnquiryResident[]> {
-    return this.http.get<EnquiryResident[]>(
-      `/api/carehomes/enquires`
-    );
-  }
+  // XXXgetEnquiresAll(): Observable<EnquiryResident[]> {
+  //   return this.http.get<EnquiryResident[]>(
+  //     `/api/carehomes/enquires`
+  //   );
+  // }
   // try to deprecate below
 
 
@@ -114,8 +108,22 @@ export class ApiService {
   }
 
 
+  // === schedules ===
+  loadSchedules(): Observable<ResidentSchedule[]> {
+    return this.http.get<ResidentSchedule[]>(`/api/residents/schedules`);
+  }
 
+  loadSchedulesByReferenceId(referenceId: string): Observable<ResidentSchedule> {
+    return this.http.get<ResidentSchedule>(`/api/residents/${referenceId}/schedules`);
+  }
 
+  updateScheduleEndDate(id: number, scheduleEndDate: string): Observable<any> {
+    return this.http.put<any>(`/api/residents/schedules/${id}/end-date`, {id: id, scheduleEndDate: scheduleEndDate })
+  }
+
+  createSchedule(referenceId: string, schedule: Schedule): Observable<any> {
+    return this.http.post<any>(`/api/residents/${referenceId}/schedules`, schedule);
+  }
 
 
 }
