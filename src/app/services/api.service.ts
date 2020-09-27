@@ -62,13 +62,6 @@ export class ApiService {
     );
   }
 
-  // XXXgetEnquiresAll(): Observable<EnquiryResident[]> {
-  //   return this.http.get<EnquiryResident[]>(
-  //     `/api/carehomes/enquires`
-  //   );
-  // }
-  // try to deprecate below
-
 
   // === endof enquires ===
 
