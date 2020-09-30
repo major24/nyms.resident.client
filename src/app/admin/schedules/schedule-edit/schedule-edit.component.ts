@@ -135,7 +135,7 @@ export class ScheduleEditComponent implements OnInit {
     this.scheduleService.updateScheduleEndDate(this.selectedScheduleId, this.scheduleEndDate)
     .subscribe({
       next: (data) => {
-        console.log('>>updated');
+        console.log('>>updated', data);
         this.modalService.dismissAll();
         // reload data
         this.loadSchedules(this.referenceId);
@@ -145,6 +145,21 @@ export class ScheduleEditComponent implements OnInit {
       }
     });
   }
+
+  inactivateSchedule(id: number): void {
+    this.scheduleService.inactivateSchedule(id)
+    .subscribe({
+      next: (data) => {
+        console.log('>>updated-inactivated', data);
+        this.loadSchedules(this.referenceId);
+      },
+      error: (error) => {
+        console.log('Error saving schedule end date in schedules ', error);
+      }
+    });
+  }
+
+
 
   // open from template
   openModal(content: any, id: number) {

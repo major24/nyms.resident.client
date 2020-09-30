@@ -118,5 +118,9 @@ export class ApiService {
     return this.http.post<any>(`/api/residents/${referenceId}/schedules`, schedule);
   }
 
+  inactivateSchedule(id: number): Observable<any> {
+    return this.http.put<any>(`/api/residents/schedules/${id}/inactivate`, {});
+  }
+
 
 }

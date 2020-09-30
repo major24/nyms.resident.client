@@ -26,4 +26,8 @@ export class ScheduleService {
   createSchedule(referenceId: string, schedule: Schedule): Observable<any> {
     return this.apiService.createSchedule(referenceId, schedule);
   }
+
+  inactivateSchedule(id: number): Observable<any> {
+    return this.apiService.inactivateSchedule(id);
+  }
 }
