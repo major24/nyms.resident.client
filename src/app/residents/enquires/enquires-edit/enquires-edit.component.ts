@@ -73,7 +73,13 @@ export class EnquiresEditComponent implements OnInit {
       } else {
         // NEW Enquiry. get all care home details into drop down box
         // onchange of care home, load room locations and room numbers
-
+        this.loadAllCareHomeDetails().subscribe({
+          next: (data) => {
+            this._careHomeDetails.next(data);
+            console.log('>>>', this.careHomeDetails);
+          },
+          error: (error) => { console.log('Error loading carehome details'); }
+        })
       }
     });
 
@@ -102,7 +108,7 @@ export class EnquiresEditComponent implements OnInit {
       data => {
         console.log('>>1', data);
         this._careHomeDetails.next(data);
-
+        console.log('>>>', this.careHomeDetails);
         //---------------------------------------------
         this.loadByReferenceId(referenceId).subscribe(
           data2 => {

@@ -13,6 +13,7 @@ export class InvoiceComponent implements OnInit {
   rawInvoices: Invoice[] = [];
   invoices: Invoice[] = [];
   invoicesSummary: InvoiceSummary[] = [];
+  loading: boolean = false;
 
   constructor(private invoiceService: InvoiceService, private http: HttpClient) { }
 
@@ -30,6 +31,7 @@ export class InvoiceComponent implements OnInit {
       throw new console.error('Date not selected');
     }
 
+    this.loading = true;
     this.invoiceService.loadInvoiceByDate(startDate, endDate)
     .subscribe({
       next: (data) => {
@@ -37,8 +39,12 @@ export class InvoiceComponent implements OnInit {
         Object.assign(this.rawInvoices, [...data]);
         // prepare summary
         this.makeSummaryTotals(this.invoices);
+        this.loading = false;
       },
-      error: (error) => console.log('Error getting invoice:', error)
+      error: (error) => {
+        console.log('Error getting invoice:', error);
+        this.loading = false;
+      }
     });
 
   }

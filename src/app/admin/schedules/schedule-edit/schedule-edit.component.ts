@@ -20,6 +20,8 @@ export class ScheduleEditComponent implements OnInit {
   scheduleEndDate: string = '';
   referenceId: string = '';
   error: string = '';
+  loading: boolean = false;
+  saving: boolean = false;
 
   paymentFromList: KeyPair[] = [
     { key: 'LA', value: 'Local Authority' },
@@ -52,23 +54,25 @@ export class ScheduleEditComponent implements OnInit {
       if (params && params.get('referenceId')) {
         // let referenceId: string = params.get('referenceId');
         this.referenceId = params.get('referenceId');
-        console.log('>>=', this.referenceId);
-        this.loadSchedules(this.referenceId);
+        console.log('>>>', this.referenceId);
+          this.loadSchedules(this.referenceId);
       }
     });
   }
 
   loadSchedules(referenceId: string): void {
     if (!referenceId) return;
+    this.loading = true;
     this.scheduleService.loadSchedulesByReferenceId(referenceId)
     .subscribe({
       next: (data) => {
-        console.log('>>**', data);
         Object.assign(this.residentSchedules, data);
+        this.loading = false;
       },
       error: (error) => {
         console.log('Error fetching schedules ', error);
         this.error = error;
+        this.loading = false;
       }
     });
   }
@@ -94,7 +98,6 @@ export class ScheduleEditComponent implements OnInit {
     this.newSchedule = Object.assign(this.newSchedule, { weeklyFee: +event.target.value });
   }
   createNewSchdule(): void {
-    console.log('>>', this.newSchedule);
     if (!this.referenceId) {
       this.error = 'Error: Reference Id not found';
       return;
@@ -107,16 +110,18 @@ export class ScheduleEditComponent implements OnInit {
       this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: new Date('9999-12-31') });
     }
 
+    this.saving = true;
     this.scheduleService.createSchedule(this.referenceId, this.newSchedule)
     .subscribe({
       next: (data) => {
-        console.log('>>saved new');
         this.modalService.dismissAll();
+        this.saving = false;
         // reload data
         this.loadSchedules(this.referenceId);
       },
       error: (error) => {
         console.log('Error saving new schedule end date in schedules ', error);
+        this.saving = false;
       }
     });
   }
@@ -131,24 +136,24 @@ export class ScheduleEditComponent implements OnInit {
     }
   }
   updateScheduleEndDate(): void {
-    console.log('>>', this.scheduleEndDate)
+    this.saving = true;
     this.scheduleService.updateScheduleEndDate(this.selectedScheduleId, this.scheduleEndDate)
     .subscribe({
       next: (data) => {
-        console.log('>>updated');
         this.modalService.dismissAll();
+        this.saving = false;
         // reload data
         this.loadSchedules(this.referenceId);
       },
       error: (error) => {
         console.log('Error saving schedule end date in schedules ', error);
+        this.saving = false;
       }
     });
   }
 
   // open from template
   openModal(content: any, id: number) {
-    console.log('>>>', id);
     this.selectedScheduleId = +id;
     this.open(content);
   }

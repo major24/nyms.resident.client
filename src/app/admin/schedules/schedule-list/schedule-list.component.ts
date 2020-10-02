@@ -10,6 +10,7 @@ import { ScheduleService } from '../../services/index';
 })
 export class ScheduleListComponent implements OnInit {
   residentSchedules: ResidentSchedule[] = [];
+  loading: boolean = false;
 
   constructor(private scheduleService: ScheduleService) { }
 
@@ -18,13 +19,17 @@ export class ScheduleListComponent implements OnInit {
   }
 
   loadSchedules(): void {
+    this.loading = true;
     this.scheduleService.loadSchedules()
     .subscribe({
       next: (data) => {
-        console.log('>>>', data);
         Object.assign(this.residentSchedules, [...data]);
+        this.loading = false;
       },
-      error: (error) => { console.log('Error fetching schedules ', error); }
+      error: (error) => {
+        console.log('Error fetching schedules ', error);
+        this.loading = false;
+      }
     });
   }
 

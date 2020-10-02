@@ -6,6 +6,8 @@
   </billing-date-selection>
   <hr />
 
+  <div *ngIf="loading" class="spinner-border"></div>
+  
   <summary-info
     [invoicesSummary]="invoicesSummary">
   </summary-info>

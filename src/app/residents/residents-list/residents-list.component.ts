@@ -19,6 +19,7 @@ export class ResidentsListComponent implements OnInit {
   selectedName = '';
   exitDate: string;
   showExitButton: boolean = false;
+  loading: boolean = false;
 
   constructor(private residentService: ResidentsService, private modalService: NgbModal, private userService: UserService) { }
 
@@ -44,12 +45,17 @@ export class ResidentsListComponent implements OnInit {
   }
 
   loadResidnets(careHomeId: number): void {
+    this.loading = true;
     this.residentService.getAllResidents(careHomeId)
     .subscribe({
       next: (data) => {
         Object.assign(this.residents, [...data]);
+        this.loading = false;
       },
-      error: (error) => { console.log('Error loading residents ', error); }
+      error: (error) => {
+        console.log('Error loading residents ', error);
+        this.loading = false;
+       }
     });
   }
 

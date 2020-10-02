@@ -2,6 +2,8 @@
 
   <h1 class="display-4">Edit Schedules</h1>
 
+  <div *ngIf="loading" class="spinner-border"></div>
+
   <div *ngIf="error">{{error}}</div>
 
   <div class="container">
@@ -89,7 +91,10 @@
         </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="updateScheduleEndDate()">Save</button>
+      <button type="button" [disabled]="saving" class="btn btn-primary" (click)="updateScheduleEndDate()">
+        <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+        Save
+      </button>
     </div>
   </ng-template>
   <!-- endof schedule end date -->
@@ -167,7 +172,10 @@
 
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="createNewSchdule()">Save</button>
+      <button type="button" [disabled]="saving" class="btn btn-primary" (click)="createNewSchdule()">
+        <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+        Save
+      </button>
     </div>
   </ng-template>
 
