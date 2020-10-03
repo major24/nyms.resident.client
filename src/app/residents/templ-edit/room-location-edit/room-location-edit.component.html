@@ -1,7 +1,9 @@
 <form [formGroup]="roomDetailForm">
 
   <div class="form-group">
-    <label for="roomLocations">Room Location</label>
+    <label for="roomLocations">
+      <h6 class="text-primary">Room Location</h6>
+    </label>
     <select class="custom-select" name="roomLocations" id="roomLocations" formControlName="roomLocations" (change)="onRoomLocationChange($event)">
       <option value="" selected>Choose...</option>
       <option *ngFor="let rmloc of roomLocations;" [value]="rmloc.id">
@@ -11,7 +13,9 @@
   </div>
 
   <div class="form-group">
-    <label for="rooms">Room Number</label>
+    <label for="rooms">
+      <h6 class="text-primary">Room Number</h6>
+    </label>
     <select class="custom-select" name="rooms" id="rooms" formControlName="rooms" (change)="onRoomChange($event)">
       <option value="" selected>Choose...</option>
       <option *ngFor="let room of rooms;" [value]="room.id">

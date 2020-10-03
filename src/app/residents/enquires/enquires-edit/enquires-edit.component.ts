@@ -17,12 +17,13 @@ import { concatMap, map, switchMap, mergeMap } from 'rxjs/operators';
   styleUrls: ['./enquires-edit.component.css'],
 })
 export class EnquiresEditComponent implements OnInit {
-  private _enquiryResident: BehaviorSubject<EnquiryResident> = new BehaviorSubject<EnquiryResident>(createInstanceofEnquiryResident());
-  public enquiryResident$ = this._enquiryResident.asObservable();
-  enquiryResident: EnquiryResident;
+  //private _enquiryResident: BehaviorSubject<EnquiryResident> = new BehaviorSubject<EnquiryResident>(createInstanceofEnquiryResident());
+  //public enquiryResident$ = this._enquiryResident.asObservable();
+  // enquiryResident: EnquiryResident;
+  enquiryResident: EnquiryResident = createInstanceofEnquiryResident();
 
-  private _careHomeDetails: BehaviorSubject<CareHome[]> = new BehaviorSubject<CareHome[]>([]);
-  public careHomeDetails$ = this._careHomeDetails.asObservable();
+  //private _careHomeDetails: BehaviorSubject<CareHome[]> = new BehaviorSubject<CareHome[]>([]);
+  //public careHomeDetails$ = this._careHomeDetails.asObservable();
   careHomeDetails: CareHome[] = [];
 
   roomLocations: RoomLocation[] = [];
@@ -59,8 +60,8 @@ export class EnquiresEditComponent implements OnInit {
 
   ngOnInit(): void {
     // init subscription for observables
-    this._enquiryResident.subscribe((enq) => (this.enquiryResident = enq));
-    this._careHomeDetails.subscribe((chd) => (this.careHomeDetails = chd));
+    // this._enquiryResident.subscribe((enq) => (this.enquiryResident = enq));
+    // this._careHomeDetails.subscribe((chd) => (this.careHomeDetails = chd));
 
     // this.loadAllCareHomeDetails();
 
@@ -73,13 +74,18 @@ export class EnquiresEditComponent implements OnInit {
       } else {
         // NEW Enquiry. get all care home details into drop down box
         // onchange of care home, load room locations and room numbers
-        this.loadAllCareHomeDetails().subscribe({
-          next: (data) => {
-            this._careHomeDetails.next(data);
-            console.log('>>>', this.careHomeDetails);
-          },
-          error: (error) => { console.log('Error loading carehome details'); }
-        })
+        setTimeout(() => {
+
+          this.loadAllCareHomeDetails().subscribe({
+            next: (data) => {
+              // this._careHomeDetails.next(data);
+              this.careHomeDetails = data;
+            },
+            error: (error) => { console.log('Error loading carehome details'); }
+          });
+
+        }, 700)
+
       }
     });
 
@@ -107,13 +113,17 @@ export class EnquiresEditComponent implements OnInit {
     this.loadAllCareHomeDetails().subscribe(
       data => {
         console.log('>>1', data);
-        this._careHomeDetails.next(data);
+        //this._careHomeDetails.next(data);
+        this.careHomeDetails = data;
         console.log('>>>', this.careHomeDetails);
         //---------------------------------------------
         this.loadByReferenceId(referenceId).subscribe(
           data2 => {
             console.log('>>2', data2);
-            this._enquiryResident.next(data2);
+            // this._enquiryResident.next(data2);
+            this.enquiryResident = Object.assign(this.enquiryResident, data2);
+            console.log('>>>>>???', this.enquiryResident.careHomeId);
+            this.careHomeChanged(this.enquiryResident.careHomeId);
             this.setupEnquiryEditForm(data2);
             // this.roomLocationString = data2.reservedRoomLocation.toString();
           },
@@ -153,13 +163,15 @@ export class EnquiresEditComponent implements OnInit {
   setupEnquiryEditForm(data: EnquiryResident): void {
     if (data.careHomeId) {
       this.enquiryEditForm.controls['careHome'].setValue(data.careHomeId);
-      this.careHomeChanged(data.careHomeId);
+      // this.careHomeChanged(data.careHomeId);
     }
     // to load la, you need which care it belongs to?
     if (data.careHomeId && data.careHomeId > 0 && data.localAuthorityId && data.localAuthorityId > 0) {
       if (data.localAuthorityId) { this.enquiryEditForm.controls['localAuthority'].setValue(data.localAuthorityId); }
     }
     if (data.status) { this.enquiryEditForm.controls['status'].setValue(data.status); }
+    // set room loc and number
+
   }
 
 
@@ -169,6 +181,8 @@ export class EnquiresEditComponent implements OnInit {
   oncareHomeChange(event: any): void {
     const selCareHomeId = +event.target.value;
     this.careHomeChanged(selCareHomeId);
+    // update enq res
+    this.updateCareHomeId(selCareHomeId);
   }
   careHomeChanged(selCareHomeId: number): void {
     // const selCareHomeId = +event.target.value;
@@ -186,17 +200,16 @@ export class EnquiresEditComponent implements OnInit {
     // LA
     let z = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.localAuthorities);
     Object.assign(this.localAuthorities, ...z);
-
-    // update store object
-    this.updateCareHomeId(selCareHomeId);
   }
 
+
   onLocalAuthorityChange(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      localAuthorityId: +event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { localAuthorityId: +event.target.value });
+    // let newState = {
+    //   ...this._enquiryResident.getValue(),
+    //   localAuthorityId: +event.target.value,
+    // };
+    // this.updateState(newState);
   }
 
   onIsPrivateChange(event: any): void {
@@ -206,267 +219,202 @@ export class EnquiresEditComponent implements OnInit {
       privateId = 101;
       this.enquiryEditForm.controls['localAuthority'].setValue('');
     }
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      localAuthorityId: privateId
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { localAuthorityId: privateId });
+    // let newState = {
+    //   ...this._enquiryResident.getValue(),
+    //   localAuthorityId: privateId
+    // };
+    // this.updateState(newState);
   }
+
+
 
 
   //======================================================
   // === Update care home id
   updateCareHomeId(id: number): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      careHomeId: id,
-    };
-    // this._enquiryResident.next(newState);
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { careHomeId: id });
+    // let newState = {
+    //   ...this._enquiryResident.getValue(),
+    //   careHomeId: id,
+    // };
+    // // this._enquiryResident.next(newState);
+    // this.updateState(newState);
   }
   //======================================================
+
 
 
   //======================================================
   // === Name, Surname etc profile
   onForeNameUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      foreName: event.target.value,
-    };
-    // this._enquiryResident.next(newState);
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { foreName: event.target.value });
+    // let newState = {
+    //   ...this._enquiryResident.getValue(),
+    //   foreName: event.target.value,
+    // };
+    // // this._enquiryResident.next(newState);
+    // this.updateState(newState);
   }
   onSurNameUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      surName: event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { surName: event.target.value });
   }
   onMiddleNameUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      middleName: event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { middleName: event.target.value });
   }
   onDobUpdated(event: any): void {
-    console.log('InEnqEditForm=', event); // {year: 1962, month: 12, day: 16}
+    // console.log(event); //event format = {year: 1962, month: 12, day: 16}
     if (event) {
       // const d = new Date(event.year, event.month-1, event.day);
-      let newState = {
-        ...this._enquiryResident.getValue(),
-        dob: this.convertToJsDate(event),
-      };
-      this.updateState(newState);
+      this.enquiryResident = Object.assign(this.enquiryResident, { dob: this.convertToJsDate(event) });
     }
   }
   onGenderUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      gender: event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { gender: event.target.value });
   }
   onMartialStatusUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      maritalStatus: event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { maritalStatus: event.target.value });
   }
   // =================================================
 
+
   // === address info
   onStreet1Updated(event: any): void {
-    console.log('InEnqEditForm=', event);
-    let address = {
-      ...this._enquiryResident.getValue().address,
-      street1: event.target.value,
+    let adr = {
+      ...this.enquiryResident.address, street1: event.target.value
     };
-    let newState = { ...this._enquiryResident.getValue(), address: address };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { address: adr });
   }
   onStreet2Updated(event: any): void {
-    let address = {
-      ...this._enquiryResident.getValue().address,
-      street2: event.target.value,
+    let adr = {
+      ...this.enquiryResident.address, street2: event.target.value
     };
-    let newState = { ...this._enquiryResident.getValue(), address: address };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { address: adr });
   }
   onCityUpdated(event: any): void {
-    let address = {
-      ...this._enquiryResident.getValue().address,
-      city: event.target.value,
+    let adr = {
+      ...this.enquiryResident.address, city: event.target.value
     };
-    let newState = { ...this._enquiryResident.getValue(), address: address };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { address: adr });
   }
   onCountyUpdated(event: any): void {
-    let address = {
-      ...this._enquiryResident.getValue().address,
-      county: event.target.value,
+    let adr = {
+      ...this.enquiryResident.address, county: event.target.value
     };
-    let newState = { ...this._enquiryResident.getValue(), address: address };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { address: adr });
   }
   onPostCodeUpdated(event: any): void {
-    let address = {
-      ...this._enquiryResident.getValue().address,
-      postCode: event.target.value,
+    let adr = {
+      ...this.enquiryResident.address, postCode: event.target.value
     };
-    let newState = { ...this._enquiryResident.getValue(), address: address };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { address: adr });
   }
   // =================================================
+
 
   // === social worker info
   onSwForeNameUpdated(event: any): void {
     let sw = {
-      ...this._enquiryResident.getValue().socialWorker,
-      foreName: event.target.value,
+      ...this.enquiryResident.socialWorker, foreName: event.target.value
     };
-    let newState = { ...this._enquiryResident.getValue(), socialWorker: sw };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { socialWorker: sw });
   }
   onSwSurNameUpdated(event: any): void {
     let sw = {
-      ...this._enquiryResident.getValue().socialWorker,
-      surName: event.target.value,
+      ...this.enquiryResident.socialWorker, surName: event.target.value
     };
-    let newState = { ...this._enquiryResident.getValue(), socialWorker: sw };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { socialWorker: sw });
   }
   onSwPhoneNumberUpdated(event: any): void {
     let sw = {
-      ...this._enquiryResident.getValue().socialWorker,
-      phoneNumber: event.target.value,
+      ...this.enquiryResident.socialWorker, phoneNumber: event.target.value
     };
-    let newState = { ...this._enquiryResident.getValue(), socialWorker: sw };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { socialWorker: sw });
   }
   onSwEmailUpdated(event: any): void {
     let sw = {
-      ...this._enquiryResident.getValue().socialWorker,
-      email: event.target.value,
+      ...this.enquiryResident.socialWorker, email: event.target.value
     };
-    let newState = { ...this._enquiryResident.getValue(), socialWorker: sw };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { socialWorker: sw });
   }
   // ==================================================
 
 
+
   // === care type ====================================
   onCareCategoryUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      careCategoryId: event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { careCategoryId: event.target.value });
   }
   oncareNeedUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      careNeed: event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { careNeed: event.target.value });
   }
   onStayTypeUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      stayType: event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { stayType: event.target.value });
   }
-
   // =================================================
 
 
   // === room loc and number updated ================
   onRoomLocationUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      reservedRoomLocation: event.target.value,
-      reservedRoomNumber: null,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { reservedRoomLocation: event.target.value });
+    this.enquiryResident = Object.assign(this.enquiryResident, { reservedRoomNumber: '' });
   }
   onRoomNumberUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      reservedRoomNumber: event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { reservedRoomNumber: event.target.value });
   }
   // ===============================================
-
 
 
   // === misc input ================================
   onMoveInDateUpdated(event: any): void {
     if (event) {
-      // const d = new Date(event.year, event.month-1, event.day);
-      let newState = {
-        ...this._enquiryResident.getValue(),
-        moveInDate: this.convertToJsDate(event),
-      };
-      this.updateState(newState);
+      this.enquiryResident = Object.assign(this.enquiryResident, { moveInDate: this.convertToJsDate(event) });
+    //   // const d = new Date(event.year, event.month-1, event.day);
+    //   let newState = {
+    //     ...this._enquiryResident.getValue(),
+    //     moveInDate: this.convertToJsDate(event),
+    //   };
+    //   this.updateState(newState);
     }
   }
   onFamilyHomeVisitDateUpdated(event: any): void {
-    if (event) {
-      let newState = {
-        ...this._enquiryResident.getValue(),
-        familyHomeVisitDate: this.convertToJsDate(event),
-      };
-      this.updateState(newState);
+     if (event) {
+      this.enquiryResident = Object.assign(this.enquiryResident, { familyHomeVisitDate: this.convertToJsDate(event) });
     }
   }
   onEnquiryDateUpdated(event: any): void {
     if (event) {
-      let newState = {
-        ...this._enquiryResident.getValue(),
-        enquiryDate: this.convertToJsDate(event),
-      };
-      this.updateState(newState);
+      this.enquiryResident = Object.assign(this.enquiryResident, { enquiryDate: this.convertToJsDate(event) });
     }
   }
   onResponseDateUpdated(event: any): void {
     if (event) {
-      let newState = {
-        ...this._enquiryResident.getValue(),
-        responseDate: this.convertToJsDate(event),
-      };
-      this.updateState(newState);
+      this.enquiryResident = Object.assign(this.enquiryResident, { responseDate: this.convertToJsDate(event) });
     }
   }
   onResponseUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      response: event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { response: event.target.value });
   }
   onCommentsUpdated(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      comments: event.target.value,
-    };
-    this.updateState(newState);
+    this.enquiryResident = Object.assign(this.enquiryResident, { comments: event.target.value });
   }
   // ==============================================
 
 
+
+
   // === status and submit ========================
   onStatusChange(event: any): void {
-    let newState = {
-      ...this._enquiryResident.getValue(),
-      status: event.target.value,
-    };
-    this.updateState(newState);
+    // let newState = {
+    //   ...this._enquiryResident.getValue(),
+    //   status: event.target.value,
+    // };
+    // this.updateState(newState);
   }
+  xxonSubmit(): void {
+    console.log('>>>submit', this.enquiryResident);
+  }
+
   onSubmit(): void {
     // validation...
     this.errors = [];
@@ -477,22 +425,51 @@ export class EnquiresEditComponent implements OnInit {
     if (this.enquiryResident.foreName === '' && this.enquiryResident.surName === '') {
       this.errors.push('Fore name and sur name are required');
     }
+    if (this.errors.length > 0) return;
 
-    if (this.errors.length <= 0) {
-      console.log('>>>Ready to submit', this.enquiryResident);
-      this.saving = true;
-      this.enquiresService.createEnquiryResident(this.enquiryResident.careHomeId, this.enquiryResident)
-        .subscribe({
-          next: (response) => {
-            this.saving = false;
-            console.log('Data saved');
-          },
-          error: (error) => {
-            console.log('Error saving data');
-            this.saving = false;
-          }
-        });
+    if (!this.enquiryResident.address) {
+      const adr = { street1: '', street2: '', city: '', county: '', postCode: '' };
+      this.enquiryResident = Object.assign(this.enquiryResident, { address: adr });
     }
+    console.log('>>>Ready to submit', this.enquiryResident);
+    // if refid, then update
+    if (this.enquiryResident.referenceId && this.enquiryResident.referenceId != '') {
+      // update...
+      this.updateEnquiry();
+    } else {
+      // add new enquiry...
+      this.createEnquiry();
+    }
+  }
+
+  createEnquiry(): void {
+    this.saving = true;
+    this.enquiresService.createEnquiryResident(this.enquiryResident.careHomeId, this.enquiryResident)
+      .subscribe({
+        next: (response) => {
+          this.saving = false;
+          console.log('Data saved');
+        },
+        error: (error) => {
+          console.log('Error saving data');
+          this.saving = false;
+        }
+      });
+  }
+
+  updateEnquiry(): void {
+    this.saving = true;
+    this.enquiresService.updateEnquiryResident(this.enquiryResident)
+      .subscribe({
+        next: (response) => {
+          this.saving = false;
+          console.log('Data updated');
+        },
+        error: (error) => {
+          console.log('Error saving data');
+          this.saving = false;
+        }
+      });
   }
 
   onCancel(): void {
@@ -506,9 +483,10 @@ export class EnquiresEditComponent implements OnInit {
 
 
   // === helper methods ==========================
-  updateState(state: EnquiryResident): void {
-    this._enquiryResident.next(state);
-  }
+  // updateState(state: EnquiryResident): void {
+  //   this._enquiryResident.next(state);
+  // }
+
   convertToJsDate(event: any): Date {
     return new Date(event.year, event.month - 1, event.day);
   }

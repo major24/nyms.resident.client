@@ -2,8 +2,6 @@
 
   <h1 class="display-4">Residents</h1>
 
-  <div *ngIf="loading" class="spinner-border"></div>
-  
   <div class="row bg-info text-white mb-3">
     <!-- <div class="col-sm">
       <div><strong>RefId</strong></div>
@@ -27,6 +25,8 @@
       <div><strong>Exit</strong></div>
     </div>
   </div>
+
+  <div *ngIf="loading" class="spinner-border"></div>
 
   <div class="row" *ngFor="let res of residents">
     <!-- <div class="col-sm">

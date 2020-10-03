@@ -10,14 +10,14 @@ import { Router } from '@angular/router';
 })
 export class EnquiresComponent implements OnInit {
   enquiryResidents: EnquiryResident[] = [];
-  isLoading: boolean = false;
+  loading: boolean = false;
 
   constructor(private enquiresService: EnquiresService, private router: Router) {
   }
 
   ngOnInit(): void {
     console.log('>>ngonit-enqcomp ', this.enquiryResidents.length);
-    this.isLoading = true;
+    this.loading = true;
     // console.log('>>>>', this._enquiryResidents$.getValue());
     // todo: need to build in flexibility to get enq by home id.
     // for now return all enqs
@@ -28,10 +28,10 @@ export class EnquiresComponent implements OnInit {
           console.log('>>', data);
           //this._enquiryResidents$.next(data);
           this.enquiryResidents = data;
-          this.isLoading = false;
+          this.loading = false;
         },
         error: (error) => {
-          this.isLoading = false;
+          this.loading = false;
           console.log('Error loading enquires');
         }
       });

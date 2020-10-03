@@ -33,7 +33,9 @@ export class RoomLocationEditComponent implements OnInit {
     console.log('>>ngchgroomloc=', changes)
     if (changes.isCareHomeSelectionChanged) {
       this.roomDetailForm.controls['roomLocations'].setValue('');
-      this.rooms.splice(0, this.rooms.length);
+      this.rooms = [];
+      this.roomDetailForm.controls['rooms'].setValue('');
+      // this.rooms.splice(0, this.rooms.length);
     }
     if (changes.reservedRoomLocation) {
       this.roomDetailForm.controls['roomLocations'].setValue(changes.reservedRoomLocation.currentValue);

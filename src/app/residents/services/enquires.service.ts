@@ -32,7 +32,7 @@ export class EnquiresService extends Store<EnquiryResident[]> {
 
   getEnquiresByHomeId(careHomeId: number): Observable<EnquiryResident[]> {
       return this.apiService.getEnquiresByHomeId(careHomeId);
-      
+
     //return this.apiService.getEnquiresByHomeId(careHomeId);
     // .pipe(
     //   map((enqs) => {
@@ -44,6 +44,10 @@ export class EnquiresService extends Store<EnquiryResident[]> {
 
   createEnquiryResident(careHomeId: number, enqResident: EnquiryResident): Observable<EnquiryResident> {
     return this.apiService.createEnquiryResident(careHomeId, enqResident);
+  }
+
+  updateEnquiryResident(enqResident: EnquiryResident): Observable<EnquiryResident> {
+    return this.apiService.updateEnquiryResident(enqResident);
   }
 
 

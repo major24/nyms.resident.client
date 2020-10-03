@@ -9,6 +9,8 @@ import { EnquiresEditComponent } from './residents/enquires/enquires-edit/enquir
 import { InvoiceComponent } from './admin/reports/invoice/invoice.component';
 import { ScheduleEditComponent } from './admin/schedules/schedule-edit/schedule-edit.component';
 import { ScheduleListComponent } from './admin/schedules/schedule-list/schedule-list.component';
+import { AccessDeniedComponent } from './common/errors/access-denied/access-denied.component';
+import { ServerErrorComponent } from './common/errors/server-error/server-error.component';
 
 import { AuthGuard, AuthResidentsGuard, AuthAdminGuard } from './helpers';
 import { ResidentsListComponent } from './residents/residents-list/residents-list.component';
@@ -66,6 +68,14 @@ const routes: Routes = [
         path: 'schedule-edit/:referenceId',
         component: ScheduleEditComponent,
         canActivate: [AuthAdminGuard]
+    },
+    {
+        path: 'server-error',
+        component: ServerErrorComponent
+    },
+    {
+        path: 'access-denied',
+        component: AccessDeniedComponent
     },
     // // otherwise redirect to home
     { path: '**', redirectTo: '' }

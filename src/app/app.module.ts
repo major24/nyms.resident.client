@@ -26,6 +26,8 @@ import { RoomLocationEditComponent } from './residents/templ-edit/room-location-
 import { EnquiryMiscEditComponent } from './residents/templ-edit/enquiry-misc-edit/enquiry-misc-edit.component';
 import { ResidentsListComponent } from './residents/residents-list/residents-list.component';
 import { MainPipe } from './main-pipe.module';
+import { AccessDeniedComponent } from './common/errors/access-denied/access-denied.component';
+import { ServerErrorComponent } from './common/errors/server-error/server-error.component';
 // import { SplitPipe } from './common/split.pipe';
 // import { ModalSetExitComponent } from './common/modal-set-exit/modal-set-exit.component';
 // import { MainPipe } from
@@ -65,6 +67,8 @@ export function tokenGetter() {
     RoomLocationEditComponent,
     EnquiryMiscEditComponent,
     ResidentsListComponent,
+    AccessDeniedComponent,
+    ServerErrorComponent,
     // SplitPipe
   ],
   providers: [

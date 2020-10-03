@@ -21,6 +21,7 @@ export class AuthAdminGuard implements CanActivate {
         if (tokenRoles.includes('Admin')) {
             return true;
         }
+        this.router.navigate(['/access-denied']);
         return false;
     }
 }
