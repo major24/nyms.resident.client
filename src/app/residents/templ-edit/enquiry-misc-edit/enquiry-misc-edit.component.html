@@ -1,7 +1,9 @@
 <form [formGroup]="enquiryMiscForm">
 
   <div class="form-group">
-    <label for="moveInDate">Move In Date</label>
+    <label for="moveInDate">
+      <h6 class="text-primary">Move In Date</h6>
+    </label>
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd"
         formControlName="moveInDate" name="moveInDate" (dateSelect)="onMoveInDateChange($event)" ngbDatepicker #d1="ngbDatepicker">
@@ -12,7 +14,9 @@
   </div>
 
   <div class="form-group">
-    <label for="familyHomeVisitDate">Family Home Visit Date</label>
+    <label for="familyHomeVisitDate">
+      <h6 class="text-primary">Family Home Visit Date</h6>
+    </label>
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd"
         formControlName="familyHomeVisitDate" name="familyHomeVisitDate" (dateSelect)="onFamilyHomeVisitDateChange($event)" ngbDatepicker #d2="ngbDatepicker">
@@ -34,7 +38,9 @@
   </div> -->
 
   <div class="form-group">
-    <label for="responseDate">Response Date</label>
+    <label for="responseDate">
+      <h6 class="text-primary">Response Date</h6>
+    </label>
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd"
         formControlName="responseDate" name="responseDate" (dateSelect)="onResponseDateChange($event)" ngbDatepicker #d4="ngbDatepicker">
@@ -45,12 +51,16 @@
   </div>
 
   <div class="form-group">
-    <label for="response">Response</label>
+    <label for="response">
+      <h6 class="text-primary">Response</h6>
+    </label>
     <textarea matInput rows="4" class="form-control" id="response" name="response" formControlName="response" (change)="onResponseChange($event)" placeholder=""></textarea>
   </div>
 
   <div class="form-group">
-    <label for="comments">Comments</label>
+    <label for="comments">
+      <h6 class="text-primary">Comments</h6>
+    </label>
     <textarea rows="4" class="form-control" id="comments" name="comments" formControlName="comments" (change)="onCommentsChange($event)" placeholder=""></textarea>
   </div>
 

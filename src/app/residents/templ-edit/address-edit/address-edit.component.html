@@ -1,27 +1,35 @@
 <form [formGroup]="addressForm">
 
   <div class="form-group">
-    <label for="street1">Street 1</label>
+    <label for="street1">
+      <h6 class="text-primary">Street</h6>
+    </label>
     <input type="text" class="form-control" id="street1" name="street1" formControlName="street1" (change)="onStreet1Change($event)" placeholder="">
   </div>
 
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label for="street2">Street 2</label>
     <input type="text" class="form-control" id="street2" name="street2" formControlName="street2" (change)="onStreet2Change($event)" placeholder="">
-  </div>
+  </div> -->
 
   <div class="form-group">
-    <label for="city">City</label>
+    <label for="city">
+      <h6 class="text-primary">City</h6>
+    </label>
     <input type="text" class="form-control" id="city" name="city" formControlName="city" (change)="onCityChange($event)" placeholder="">
   </div>
 
   <div class="form-group">
-    <label for="county">County</label>
+    <label for="county">
+      <h6 class="text-primary">County</h6>
+    </label>
     <input type="text" class="form-control" id="county" name="county" formControlName="county" (change)="onCountyChange($event)" placeholder="">
   </div>
 
   <div class="form-group">
-    <label for="postCode">PostCode</label>
+    <label for="postCode">
+      <h6 class="text-primary">Postcode</h6>
+    </label>
     <input type="text" class="form-control" id="postCode" name="postCode" formControlName="postCode" (change)="onPostCodeChange($event)" placeholder="">
   </div>
 </form>

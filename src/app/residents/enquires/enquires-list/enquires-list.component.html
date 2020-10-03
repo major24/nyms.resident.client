@@ -2,38 +2,27 @@
 <div class="container">
 
   <div class="row">
-    <div class="col-sm">
-      <div class="h6">ReferenceId</div>
-    </div>
-    <div class="col-sm">
-      <div class="h6">Fore Name</div>
-    </div>
-    <div class="col-sm">
-      <div class="h6">Sur Name</div>
-    </div>
-    <div class="col-sm">
-      <div class="h6">DOB</div>
-    </div>
-    <div class="col-sm">
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-sm">
-      {{enquiryResident.referenceId}}
-    </div>
-    <div class="col-sm">
-      {{enquiryResident.foreName}}
-    </div>
-    <div class="col-sm">
-      {{enquiryResident.surName}}
+    <div class="col-md">
+      {{enquiryResident.foreName}} {{enquiryResident.surName}}
     </div>
     <div class="col-sm">
       <div *ngIf="enquiryResident.dob">{{enquiryResident.dob | date}}</div>
     </div>
     <div class="col-sm">
+      <div *ngIf="enquiryResident?.updatedDate">{{enquiryResident.updatedDate | date}}</div>
+    </div>
+    <div class="col-sm">
+      <div>{{enquiryResident.localAuthorityName}}</div>
+    </div>
+    <div class="col-md">
+      <div>{{enquiryResident.careCategoryName}}</div>
+    </div>
+    <div class="col-md">
+      <div>{{enquiryResident.careNeed | titlecase }}</div>
+    </div>
+    <div class="col-sm">
       <a [routerLink]="['/enquires-edit', enquiryResident.referenceId]">Edit</a>
     </div>
   </div>
-
+  <div class="h-divider"></div>
 </div>

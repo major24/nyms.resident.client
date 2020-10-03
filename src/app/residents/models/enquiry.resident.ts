@@ -26,6 +26,9 @@ export interface EnquiryResident {
   response: string;
   status: string;
   comments: string;
+  careCategoryName: string;
+  localAuthorityName: string;
+  updatedDate: Date;
 }
 
 export function createInstanceofEnquiryResident() {
@@ -58,6 +61,9 @@ export function createInstanceofEnquiryResident() {
     response: '',
     status: '',
     comments: '',
+    careCategoryName: '',
+    localAuthorityName: '',
+    updatedDate: undefined
   };
   return model;
 }
