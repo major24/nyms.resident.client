@@ -30,6 +30,7 @@ export class EnquiresEditComponent implements OnInit {
   ];
   errors: string[] = [];
   saving: boolean = false;
+  isUpdatingResident: boolean = false;
 
   enquiryEditForm = new FormGroup({
     status: new FormControl(''),
@@ -51,6 +52,7 @@ export class EnquiresEditComponent implements OnInit {
       // console.log(params);
       if (params && params.get('referenceId')) {
         let referenceId: string = params.get('referenceId');
+        this.isUpdatingResident = true;
         this.loadCareHomeDetailsAndEnquiryByReferenceId(referenceId);
       } else {
         // NEW Enquiry. get all care home details into drop down box
@@ -350,6 +352,7 @@ export class EnquiresEditComponent implements OnInit {
         next: (response) => {
           this.saving = false;
           console.log('Data saved');
+          this._router.navigate(['/enquires', {}]);
         },
         error: (error) => {
           console.log('Error saving data');

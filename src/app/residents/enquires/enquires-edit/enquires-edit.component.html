@@ -116,7 +116,7 @@
 </div>
 
 <!-- status only on edit mode-->
-<div class="mt-3">
+<div class="mt-3" *ngIf="isUpdatingResident">
   <form [formGroup]="enquiryEditForm">
     <div class="form-group">
       <label for="status">
