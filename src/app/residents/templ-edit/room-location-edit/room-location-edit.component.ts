@@ -39,9 +39,14 @@ export class RoomLocationEditComponent implements OnInit {
     }
     if (changes.reservedRoomLocation) {
       this.roomDetailForm.controls['roomLocations'].setValue(changes.reservedRoomLocation.currentValue);
-      this.loadRoomsByLocationId(changes.reservedRoomLocation.currentValue);
+      // this.loadRoomsByLocationId(changes.reservedRoomLocation.currentValue);
     }
-    if (changes.reservedRoomNumber) this.roomDetailForm.controls['rooms'].setValue(changes.reservedRoomNumber.currentValue);
+    if (changes.reservedRoomNumber) {
+      this.loadRoomsByLocationId(+this.reservedRoomLocation);
+      this.roomDetailForm.controls['rooms'].setValue(changes.reservedRoomNumber.currentValue);
+    }
+
+
   }
 
 

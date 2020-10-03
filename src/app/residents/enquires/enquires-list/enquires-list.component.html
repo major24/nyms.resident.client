@@ -2,17 +2,23 @@
 <div class="container">
 
   <div class="row">
-    <div class="col-sm">
-      {{enquiryResident.referenceId | slice:0:8}}
-    </div>
-    <div class="col-sm">
-      {{enquiryResident.foreName}}
-    </div>
-    <div class="col-sm">
-      {{enquiryResident.surName}}
+    <div class="col-md">
+      {{enquiryResident.foreName}} {{enquiryResident.surName}}
     </div>
     <div class="col-sm">
       <div *ngIf="enquiryResident.dob">{{enquiryResident.dob | date}}</div>
+    </div>
+    <div class="col-sm">
+      <div *ngIf="enquiryResident?.updatedDate">{{enquiryResident.updatedDate | date}}</div>
+    </div>
+    <div class="col-sm">
+      <div>{{enquiryResident.localAuthorityName}}</div>
+    </div>
+    <div class="col-md">
+      <div>{{enquiryResident.careCategoryName}}</div>
+    </div>
+    <div class="col-md">
+      <div>{{enquiryResident.careNeed | titlecase }}</div>
     </div>
     <div class="col-sm">
       <a [routerLink]="['/enquires-edit', enquiryResident.referenceId]">Edit</a>

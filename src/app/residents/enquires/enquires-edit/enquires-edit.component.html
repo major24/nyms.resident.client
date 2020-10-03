@@ -115,10 +115,13 @@
 
 </div>
 
-<!-- <div>
+<!-- status only on edit mode-->
+<div class="mt-3">
   <form [formGroup]="enquiryEditForm">
     <div class="form-group">
-      <label for="status">Status</label>
+      <label for="status">
+        <h6 class="text-primary">Status</h6>
+      </label>
       <select class="custom-select" name="status" id="status" formControlName="status"
         (change)="onStatusChange($event)">
         <option value="" selected>Choose...</option>
@@ -128,7 +131,8 @@
       </select>
     </div>
   </form>
-</div> -->
+</div>
+<!-- endof status-->
 
 <!-- save button -->
 <div>
