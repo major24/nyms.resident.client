@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiDomainUrl: 'https://localhost:44350',
+  apiDomainUrl: 'https://apps.nyms-services.uk',
 };
