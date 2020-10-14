@@ -4,14 +4,14 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser } from '../models/index';
 import { EnquiryResident, CareHome, Resident } from '../residents/models/index';
-import { Invoice, Schedule } from '../admin/models/index';
-import { ResidentSchedule } from '../admin/models/index';
+import { InvoiceData, InvoiceResident, InvoiceCommentsRequest, BillingCycle, InvoiceValidatedRequest } from '../admin/models/index';
+import { ResidentSchedule, Schedule } from '../admin/models/index';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // === User related ===
   authenticateUser(username: string, password: string): Observable<User> {
@@ -73,7 +73,7 @@ export class ApiService {
   }
 
   updateExitDate(referenceId: string, exitDate: string): Observable<any> {
-    return this.http.put<any>(`/api/residents/${referenceId}/exit-date`, {referenceId: referenceId, exitDate: exitDate });
+    return this.http.put<any>(`/api/residents/${referenceId}/exit-date`, { referenceId: referenceId, exitDate: exitDate });
   }
   // === endof resident related ===
 
@@ -90,16 +90,26 @@ export class ApiService {
 
 
   // === invoice reports ===
-  loadInvoiceByDate(startDate: string, endDate: string): Observable<Invoice[]> {
-    return this.http.get<Invoice[]>(`/api/invoices/all/${startDate}/${endDate}`);
+  loadInvoiceByDate(startDate: string, endDate: string): Observable<InvoiceData> {
+    return this.http.get<InvoiceData>(`/api/invoices/all/${startDate}/${endDate}`);
   }
 
+  loadInvoiceByBillingCycle(localAuthorityId: number, billingCycleId: number): Observable<InvoiceData> {
+    return this.http.get<InvoiceData>(`/api/invoices/localAuthorities/${localAuthorityId}/billingCycles/${billingCycleId}`);
+  }
 
   downloadFile(billingStart: string, billingEnd: string): Observable<any> {
     const url = `/api/invoices/all/${billingStart}/${billingEnd}/download`;
-    return this.http.get(url, { responseType: 'blob'} );
+    return this.http.get(url, { responseType: 'blob' });
   }
 
+  updateInvoicePaymentsWithValidation(invoiceValidatedRequests: InvoiceValidatedRequest[]): Observable<any> {
+    return this.http.post<any>(`/api/invoices/validations`, invoiceValidatedRequests);
+  }
+
+  insertInvoiceComment(invoiceCommentRequest: InvoiceCommentsRequest): Observable<any> {
+    return this.http.post<any>(`/api/invoices/comments`, invoiceCommentRequest);
+  }
 
   // === schedules ===
   loadSchedules(): Observable<ResidentSchedule[]> {
@@ -111,11 +121,18 @@ export class ApiService {
   }
 
   updateScheduleEndDate(id: number, scheduleEndDate: string): Observable<any> {
-    return this.http.put<any>(`/api/residents/schedules/${id}/end-date`, {id: id, scheduleEndDate: scheduleEndDate })
+    return this.http.put<any>(`/api/residents/schedules/${id}/end-date`, { id: id, scheduleEndDate: scheduleEndDate })
   }
 
+  // todo: whild refactor
   createSchedule(referenceId: string, schedule: Schedule): Observable<any> {
     return this.http.post<any>(`/api/residents/${referenceId}/schedules`, schedule);
+  }
+
+
+  // === billing cycles ===
+  loadBillingCycles(): Observable<BillingCycle[]> {
+    return this.http.get<BillingCycle[]>(`/api/invoices/billing-cycles`);
   }
 
 

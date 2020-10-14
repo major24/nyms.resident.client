@@ -7,12 +7,12 @@
 
       <!-- Authorized only -->
       <li class="nav-item" *ngIf="isLoggedIn">
-        <a class="nav-link" [routerLink]="['residents-dashboard']" id="residents-link">Residents</a>
+        <a data-cy="nav-link-residents" class="nav-link" [routerLink]="['residents-dashboard']" id="residents-link">Residents</a>
       </li>
 
       <!-- Admin only -->
       <li class="nav-item" *ngIf="isAdmin && isLoggedIn">
-        <a class="nav-link" [routerLink]="['admin-dashboard']" id="admin-link">Admin</a>
+        <a data-cy="nav-link-admin" class="nav-link" [routerLink]="['admin-dashboard']" id="admin-link">Admin</a>
       </li>
 
       <!-- Anonymous only -->
@@ -22,7 +22,7 @@
 
       <!-- Authorized only -->
       <li class="nav-item" *ngIf="isLoggedIn">
-        <a class="nav-link" (click)="logout()" id="logout-link">Logout</a>
+        <a data-cy="nav-link-logout" class="nav-link" (click)="logout()" id="logout-link">Logout</a>
       </li>
 
     </ul>

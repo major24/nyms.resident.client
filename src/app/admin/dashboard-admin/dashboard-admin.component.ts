@@ -13,8 +13,12 @@ export class DashboardAdminComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  navToInvoice(): void {
-    this.router.navigate(['/invoice', {}]);
+  navToInvReportByDateRange(): void {
+    this.router.navigate(['/report-by-date-range', {}]);
+  }
+
+  navToInvReportByBillingCycle(): void {
+    this.router.navigate(['/report-by-billing-cycle', {}]);
   }
 
   navToSchedules(): void {

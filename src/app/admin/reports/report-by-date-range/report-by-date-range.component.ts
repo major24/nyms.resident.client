@@ -1,30 +1,62 @@
 import { Component, OnInit } from '@angular/core';
-
 import { InvoiceService } from '../../services/index';
-import { Invoice, InvoiceSummary } from '../../models/index';
-import { HttpClient } from '@angular/common/http';
+import { InvoiceResident, InvoiceSummary, InvoiceData } from '../../models/index';
+import { FileService } from '../../../services/index';
+import { saveAs } from 'file-saver';
 
 @Component({
-  selector: 'invoice',
-  templateUrl: './invoice.component.html',
-  styleUrls: ['./invoice.component.css']
+  selector: 'report-by-date-range',
+  templateUrl: './report-by-date-range.component.html',
+  styleUrls: ['./report-by-date-range.component.css']
 })
-export class InvoiceComponent implements OnInit {
-  rawInvoices: Invoice[] = [];
-  invoices: Invoice[] = [];
+export class ReportByDateRangeComponent implements OnInit {
+  _invoiceData: InvoiceData;
+  rawInvoices: InvoiceResident[] = [];
+  invoices: InvoiceResident[] = [];
   invoicesSummary: InvoiceSummary[] = [];
   loading: boolean = false;
 
-  constructor(private invoiceService: InvoiceService, private http: HttpClient) { }
+  startDate: string;
+  endDate: string;
+  downloading: boolean = false;
+
+  constructor(private invoiceService: InvoiceService, private fileService: FileService) { }
 
   ngOnInit(): void {
   }
 
-  displayAllInvoices(event: any): void {
-    if (event.billingStart && event.billingEnd){
-      this.loadInvoiceByDate(event.billingStart, event.billingEnd);
+  onStartDateSelectEvent(event: any): void {
+    this.startDate = `${event.year}-${event.month}-${event.day}`;
+  }
+  onEndDateSelectEvent(event: any): void {
+    this.endDate = `${event.year}-${event.month}-${event.day}`;
+  }
+  onStartDateBlurEvent(event: any): void {
+    this.startDate = event.target.value;
+  }
+  onEndDateBlurEvent(event: any): void {
+    this.endDate = event.target.value;
+  }
+
+  getReport(): void {
+    if (this.startDate && this.endDate){
+      this.loadInvoiceByDate(this.startDate, this.endDate);
     }
   }
+
+  downloadReport(): void {
+    // const url = `/api/invoices/all/2020-09-01/2020-09-10/download`;
+    if (this.startDate === '' || this.endDate === null) {
+      throw new console.error('Date not selected');
+    }
+    this.downloading = true;
+    this.fileService.downloadFile(this.startDate, this.endDate).subscribe(response => {
+      saveAs(response, `invoice-${this.startDate}-${this.endDate}.csv`);
+      this.downloading = false;
+		}), error => console.log('Error downloading the file'),
+    () => console.info('File downloaded successfully');
+  }
+
 
   loadInvoiceByDate(startDate: string, endDate: string): void {
     if (startDate === '' || endDate === null) {
@@ -35,9 +67,10 @@ export class InvoiceComponent implements OnInit {
     this.invoiceService.loadInvoiceByDate(startDate, endDate)
     .subscribe({
       next: (data) => {
-        Object.assign(this.invoices, [...data]);
-        Object.assign(this.rawInvoices, [...data]);
-        // prepare summary
+        this._invoiceData = data;
+        Object.assign(this.invoices, [...data.invoiceResidents]);
+        Object.assign(this.rawInvoices, [...data.invoiceResidents]);
+
         this.makeSummaryTotals(this.invoices);
         this.loading = false;
       },
@@ -61,8 +94,8 @@ export class InvoiceComponent implements OnInit {
     this.makeSummaryTotals(this.invoices);
   }
 
-  getLaTotal(invoices: Invoice[], la: string): number {
-    const x = invoices.map(i => i.schedules.filter(s => s.paymentFromName === la && s.paymentFrom == 'LA'));
+  getLaTotal(invoices: InvoiceResident[], la: string): number {
+    const x = invoices.map(i => i.schedulePayments.filter(s => s.paymentFromName === la && s.paymentFrom == 'LA'));
     let sum = 0;
     x.map(m => {
           if (m.length > 0) {
@@ -72,8 +105,8 @@ export class InvoiceComponent implements OnInit {
     return sum;
   }
 
-  getCcTotal(invoices: Invoice[]): number {
-    const x = invoices.map(i => i.schedules.filter(s => s.paymentFrom == 'CC'));
+  getCcTotal(invoices: InvoiceResident[]): number {
+    const x = invoices.map(i => i.schedulePayments.filter(s => s.paymentFrom == 'CC'));
     let sum = 0;
     x.map(m => {
           if (m.length > 0) {
@@ -83,8 +116,8 @@ export class InvoiceComponent implements OnInit {
     return sum;
   }
 
-  getPvTotal(invoices: Invoice[]): number {
-    const x = invoices.map(i => i.schedules.filter(s => s.paymentFrom == 'PV'));
+  getPvTotal(invoices: InvoiceResident[]): number {
+    const x = invoices.map(i => i.schedulePayments.filter(s => s.paymentFrom == 'PV'));
     let sum = 0;
     x.map(m => {
           if (m.length > 0) {
@@ -94,12 +127,12 @@ export class InvoiceComponent implements OnInit {
     return sum;
   }
 
-  makeSummaryTotals(invoices: Invoice[]): void {
+  makeSummaryTotals(invoices: InvoiceResident[]): void {
     this.invoicesSummary.splice(0, this.invoicesSummary.length);
     let temp = [];
     let invSummary = [] as InvoiceSummary[];
     invoices.map(i => {
-      i.schedules.map(s => temp.push(s.paymentFromName))
+      i.schedulePayments.map(s => temp.push(s.paymentFromName))
     });
     const uq = [...new Set(temp)]
 

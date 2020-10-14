@@ -3,13 +3,18 @@
   <div class="row">
 
     <div class="col-md">
-      <div class="card" style="width: 18rem; height: 11rem;">
+      <div class="card" style="width: 18rem; height: 14rem;">
         <div class="card-header bg-info text-white">
-          <h5 class="card-title">Invoices</h5>
+          <h5 class="card-title">Invoice Report</h5>
         </div>
         <div class="card-body bg-light">
           <p class="card-text">Report on LA and CC invoices</p>
-          <button class="btn btn-primary" (click)="navToInvoice()">Invoice</button>
+          <div>
+            <button class="btn btn-primary" id="report-by-date-btn" (click)="navToInvReportByDateRange()">By Date Range</button>
+          </div>
+          <div>
+            <button class="btn btn-primary mt-2" id="report-by-billing-cycle-btn" (click)="navToInvReportByBillingCycle()">By Billing Cycle</button>
+          </div>
         </div>
       </div>
     </div>

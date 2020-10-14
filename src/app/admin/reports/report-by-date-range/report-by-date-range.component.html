@@ -1,0 +1,24 @@
+<div class="container mt-1">
+
+  <date-range-selection
+    (startDateSelectEvent)="onStartDateSelectEvent($event)"
+    (endDateSelectEvent)="onEndDateSelectEvent($event)"
+    (startDateBlurEvent)="onStartDateBlurEvent($event)"
+    (endDateBlurEvent)="onEndDateBlurEvent($event)"
+    (localAuthorityChangedEvent)="localAuthorityChanged($event)"
+    (getReportEvent)="getReport()"
+    (downloadReportEvent)="downloadReport()">
+  </date-range-selection>
+  <hr />
+
+  <div *ngIf="loading" class="spinner-border"></div>
+
+  <summary-info
+    [invoicesSummary]="invoicesSummary">
+  </summary-info>
+
+  <report-list
+    [invoices]="invoices">
+  </report-list>
+
+</div>

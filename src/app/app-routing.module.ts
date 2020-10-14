@@ -6,7 +6,9 @@ import { HomeComponent } from './common/home/home.component';
 import { DashboardResidentsComponent } from './residents/dashboard-residents/dashboard-residents.component';
 import { EnquiresComponent } from './residents/enquires/enquires.component';
 import { EnquiresEditComponent } from './residents/enquires/enquires-edit/enquires-edit.component';
-import { InvoiceComponent } from './admin/reports/invoice/invoice.component';
+// import { InvoiceComponent } from './admin/reports/invoice/invoice.component';
+import { ReportByDateRangeComponent } from './admin/reports/report-by-date-range/report-by-date-range.component';
+import { ReportByBillingCycleComponent } from './admin/reports/report-by-billing-cycle/report-by-billing-cycle.component';
 import { ScheduleEditComponent } from './admin/schedules/schedule-edit/schedule-edit.component';
 import { ScheduleListComponent } from './admin/schedules/schedule-list/schedule-list.component';
 import { AccessDeniedComponent } from './common/errors/access-denied/access-denied.component';
@@ -54,9 +56,19 @@ const routes: Routes = [
         loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
         canActivate: [AuthAdminGuard]
     },
+    // {
+    //     path: 'invoice',
+    //     component: InvoiceComponent,
+    //     canActivate: [AuthAdminGuard]
+    // },
     {
-        path: 'invoice',
-        component: InvoiceComponent,
+        path: 'report-by-date-range',
+        component: ReportByDateRangeComponent,
+        canActivate: [AuthAdminGuard]
+    },
+    {
+        path: 'report-by-billing-cycle',
+        component: ReportByBillingCycleComponent,
         canActivate: [AuthAdminGuard]
     },
     {

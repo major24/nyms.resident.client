@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../services/index';
 import { Observable } from 'rxjs';
-import { Invoice } from '../models';
+import { InvoiceData, BillingCycle, InvoiceValidatedRequest, InvoiceCommentsRequest } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,24 @@ export class InvoiceService {
 
   constructor(private apiService: ApiService) { }
 
-  loadInvoiceByDate(startDate: string, endDate: string): Observable<Invoice[]> {
+  loadInvoiceByDate(startDate: string, endDate: string): Observable<InvoiceData> {
     return this.apiService.loadInvoiceByDate(startDate, endDate);
   }
+
+  loadBillingCycles(): Observable<BillingCycle[]> {
+    return this.apiService.loadBillingCycles();
+  }
+
+  loadInvoiceByBillingCycle(localAuthorityId: number, billingCycleId: number): Observable<InvoiceData> {
+    return this.apiService.loadInvoiceByBillingCycle(localAuthorityId, billingCycleId);
+  }
+
+  updateInvoicePaymentsWithValidation(invoiceValidatedRequests: InvoiceValidatedRequest[]): Observable<any> {
+    return this.apiService.updateInvoicePaymentsWithValidation(invoiceValidatedRequests);
+  }
+
+  insertInvoiceComment(invoiceCommentRequest: InvoiceCommentsRequest): Observable<any> {
+    return this.apiService.insertInvoiceComment(invoiceCommentRequest);
+  }
+
 }

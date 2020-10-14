@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InvoiceListComponent } from './invoice-list.component';
+import { DateRangeSelectionComponent } from './date-range-selection.component';
 
-describe('InvoiceListComponent', () => {
-  let component: InvoiceListComponent;
-  let fixture: ComponentFixture<InvoiceListComponent>;
+describe('DateRangeSelectionComponent', () => {
+  let component: DateRangeSelectionComponent;
+  let fixture: ComponentFixture<DateRangeSelectionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InvoiceListComponent ]
+      declarations: [ DateRangeSelectionComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(InvoiceListComponent);
+    fixture = TestBed.createComponent(DateRangeSelectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -3,5 +3,9 @@ import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.compo
 import { AuthAdminGuard } from '../helpers/auth-admin.guard';
 
 export const routes: Routes = [
-    { path: '', component: DashboardAdminComponent, canActivate: [AuthAdminGuard] }
+    {
+        path: '',
+        component: DashboardAdminComponent,
+        canActivate: [AuthAdminGuard]
+    }
 ];

@@ -4,7 +4,7 @@
     <h5 class="text-primary">{{invoice.name}}</h5>
     <span style="font-size: small;">Weekly Fee (@ {{invoice.residentWeeklyFee}})</span>
 
-    <div class="row" *ngFor="let schedule of invoice.schedules">
+    <div class="row" *ngFor="let schedule of invoice.schedulePayments">
       <div class="col-md" >
         {{schedule.paymentFromName}}
       </div>
@@ -41,4 +41,3 @@
 
   </div>
 </div>
-

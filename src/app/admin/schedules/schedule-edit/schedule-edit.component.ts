@@ -12,8 +12,8 @@ import { FormGroup, FormControl } from '@angular/forms';
   styleUrls: ['./schedule-edit.component.css']
 })
 export class ScheduleEditComponent implements OnInit {
-  residentSchedules: ResidentSchedule = { referenceId:'', localAuthorityId:0, paymentFromName:'', foreName:'', surName:'', schedules:[]};
-  newSchedule: Schedule = { residentId:0, localAuthorityId:0, paymentType:'', paymentFrom:'', paymentFromName:'', description:'', scheduleBeginDate:'', scheduleEndDate:'', weeklyFee:0, amountDue:0 };
+  residentSchedules: ResidentSchedule = { referenceId: '', localAuthorityId: 0, paymentFromName: '', foreName: '', surName: '', schedules: [] };
+  newSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentType: '', paymentFrom: '', paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0 };
 
   closeResult = '';
   selectedScheduleId: number = 0;
@@ -40,14 +40,14 @@ export class ScheduleEditComponent implements OnInit {
   ];
 
   createScheduleForm = new FormGroup({
-    dpScheduleEndDate_2: new FormControl({year:9999, month:12, day:31})
+    dpScheduleEndDate_2: new FormControl({ year: 9999, month: 12, day: 31 })
   });
 
   constructor(
     private _Activatedroute: ActivatedRoute,
     private _router: Router,
     private scheduleService: ScheduleService,
-    private modalService: NgbModal,) { }
+    private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this._Activatedroute.paramMap.subscribe((params) => {
@@ -55,7 +55,7 @@ export class ScheduleEditComponent implements OnInit {
         // let referenceId: string = params.get('referenceId');
         this.referenceId = params.get('referenceId');
         console.log('>>>', this.referenceId);
-          this.loadSchedules(this.referenceId);
+        this.loadSchedules(this.referenceId);
       }
     });
   }
@@ -64,17 +64,17 @@ export class ScheduleEditComponent implements OnInit {
     if (!referenceId) return;
     this.loading = true;
     this.scheduleService.loadSchedulesByReferenceId(referenceId)
-    .subscribe({
-      next: (data) => {
-        Object.assign(this.residentSchedules, data);
-        this.loading = false;
-      },
-      error: (error) => {
-        console.log('Error fetching schedules ', error);
-        this.error = error;
-        this.loading = false;
-      }
-    });
+      .subscribe({
+        next: (data) => {
+          Object.assign(this.residentSchedules, data);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.log('Error fetching schedules ', error);
+          this.error = error;
+          this.loading = false;
+        }
+      });
   }
 
 
@@ -112,18 +112,18 @@ export class ScheduleEditComponent implements OnInit {
 
     this.saving = true;
     this.scheduleService.createSchedule(this.referenceId, this.newSchedule)
-    .subscribe({
-      next: (data) => {
-        this.modalService.dismissAll();
-        this.saving = false;
-        // reload data
-        this.loadSchedules(this.referenceId);
-      },
-      error: (error) => {
-        console.log('Error saving new schedule end date in schedules ', error);
-        this.saving = false;
-      }
-    });
+      .subscribe({
+        next: (data) => {
+          this.modalService.dismissAll();
+          this.saving = false;
+          // reload data
+          this.loadSchedules(this.referenceId);
+        },
+        error: (error) => {
+          console.log('Error saving new schedule end date in schedules ', error);
+          this.saving = false;
+        }
+      });
   }
 
 
@@ -138,18 +138,18 @@ export class ScheduleEditComponent implements OnInit {
   updateScheduleEndDate(): void {
     this.saving = true;
     this.scheduleService.updateScheduleEndDate(this.selectedScheduleId, this.scheduleEndDate)
-    .subscribe({
-      next: (data) => {
-        this.modalService.dismissAll();
-        this.saving = false;
-        // reload data
-        this.loadSchedules(this.referenceId);
-      },
-      error: (error) => {
-        console.log('Error saving schedule end date in schedules ', error);
-        this.saving = false;
-      }
-    });
+      .subscribe({
+        next: (data) => {
+          this.modalService.dismissAll();
+          this.saving = false;
+          // reload data
+          this.loadSchedules(this.referenceId);
+        },
+        error: (error) => {
+          console.log('Error saving schedule end date in schedules ', error);
+          this.saving = false;
+        }
+      });
   }
 
   // open from template
@@ -159,13 +159,12 @@ export class ScheduleEditComponent implements OnInit {
   }
   // private
   open(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', backdrop: 'static'}).result.then((result) => {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', backdrop: 'static' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';

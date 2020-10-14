@@ -1,7 +1,10 @@
-export interface Schedule {
+import { InvoiceValidatedModel } from './invoice-validated-model';
+
+export interface SchedulePayment {
   id: number;
   residentId: number;
   localAuthorityId: number;
+  paymentTypeId: number;
   paymentType: string;
   paymentFrom: string;
   paymentFromName: string;
@@ -10,4 +13,5 @@ export interface Schedule {
   scheduleEndDate: string;
   weeklyFee: number;
   amountDue: number;
+  invoiceValidatedModel: InvoiceValidatedModel;
 }
