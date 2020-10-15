@@ -70,7 +70,7 @@ export class ReportByDateRangeComponent implements OnInit {
         this._invoiceData = data;
         Object.assign(this.invoices, [...data.invoiceResidents]);
         Object.assign(this.rawInvoices, [...data.invoiceResidents]);
-
+        console.log('>>>', this.rawInvoices);
         this.makeSummaryTotals(this.invoices);
         this.loading = false;
       },
@@ -94,8 +94,9 @@ export class ReportByDateRangeComponent implements OnInit {
     this.makeSummaryTotals(this.invoices);
   }
 
-  getLaTotal(invoices: InvoiceResident[], la: string): number {
-    const x = invoices.map(i => i.schedulePayments.filter(s => s.paymentFromName === la && s.paymentFrom == 'LA'));
+  getLaTotal(invoices: InvoiceResident[], la: number): number {
+    // const x = invoices.map(i => i.schedulePayments.filter(s => s.paymentFromName === la && s.paymentProviderId === 1)); // LA
+    const x = invoices.map(i => i.schedulePayments.filter(s => s.localAuthorityId === la && s.paymentProviderId === 1)); // LA
     let sum = 0;
     x.map(m => {
           if (m.length > 0) {
@@ -106,7 +107,7 @@ export class ReportByDateRangeComponent implements OnInit {
   }
 
   getCcTotal(invoices: InvoiceResident[]): number {
-    const x = invoices.map(i => i.schedulePayments.filter(s => s.paymentFrom == 'CC'));
+    const x = invoices.map(i => i.schedulePayments.filter(s => s.paymentProviderId === 2));
     let sum = 0;
     x.map(m => {
           if (m.length > 0) {
@@ -117,7 +118,7 @@ export class ReportByDateRangeComponent implements OnInit {
   }
 
   getPvTotal(invoices: InvoiceResident[]): number {
-    const x = invoices.map(i => i.schedulePayments.filter(s => s.paymentFrom == 'PV'));
+    const x = invoices.map(i => i.schedulePayments.filter(s => s.paymentProviderId === 3));
     let sum = 0;
     x.map(m => {
           if (m.length > 0) {
@@ -132,7 +133,7 @@ export class ReportByDateRangeComponent implements OnInit {
     let temp = [];
     let invSummary = [] as InvoiceSummary[];
     invoices.map(i => {
-      i.schedulePayments.map(s => temp.push(s.paymentFromName))
+      i.schedulePayments.map(s => temp.push(s.paymentProviderId)) //.paymentFromName))
     });
     const uq = [...new Set(temp)]
 
@@ -141,12 +142,13 @@ export class ReportByDateRangeComponent implements OnInit {
     2: "Derbyshire County Council"
     3: "Client Contribution"
     4: "Private" */
+    console.log('>>??', uq)
     uq.map(u => {
       let obj = {} as InvoiceSummary;
       obj.localAuthority = u;
-      if (u === 'Private') {
+      if (u === 3) { //'Private') {
         obj.totalLaFee = this.getPvTotal(invoices);
-      } else if (u === 'Client Contribution'){
+      } else if (u === 2) { //'Client Contribution'){
         obj.totalLaFee = this.getCcTotal(invoices);
       } else {
         obj.totalLaFee = this.getLaTotal(invoices, u);

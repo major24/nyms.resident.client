@@ -27,7 +27,6 @@ export class ReportByBillingCycleComponent implements OnInit {
   constructor(private invoiceService: InvoiceService) { }
 
   ngOnInit(): void {
-    setTimeout(() => {
       this.invoiceService.loadBillingCycles()
       .subscribe({
         next: (data) => {
@@ -36,7 +35,6 @@ export class ReportByBillingCycleComponent implements OnInit {
         },
         error: (error) => { console.log('Error loading billing cycles', error); }
       })
-    }, 1000)
   }
 
   onLocalAuthorityChange(event: any): void {
@@ -65,11 +63,15 @@ export class ReportByBillingCycleComponent implements OnInit {
       next: (data) => {
         this._invoiceData = data;
         this._invoices = Object.assign(this._invoices, [...data.invoiceResidents]);
+        console.log('>>>', this._invoiceData)
       },
       error: (error) => { console.log('Error getting invoice data by billing cycle ', error); }
     })
   }
 
+  onInvoiceValidatedSave(): void {
+    this.onGetReportEvent();
+  }
 
 
 

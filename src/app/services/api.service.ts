@@ -129,6 +129,13 @@ export class ApiService {
     return this.http.post<any>(`/api/residents/${referenceId}/schedules`, schedule);
   }
 
+  loadPaymentProviders(): Observable<any> {
+    return this.http.get<any>(`/api/schedules/payment-providers`);
+  }
+
+  loadPaymentTypes(): Observable<any> {
+    return this.http.get<any>(`/api/schedules/payment-types`);
+  }
 
   // === billing cycles ===
   loadBillingCycles(): Observable<BillingCycle[]> {

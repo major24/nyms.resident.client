@@ -26,4 +26,12 @@ export class ScheduleService {
   createSchedule(referenceId: string, schedule: Schedule): Observable<any> {
     return this.apiService.createSchedule(referenceId, schedule);
   }
+
+  loadPaymentProviders(): Observable<any> {
+    return this.apiService.loadPaymentProviders();
+  }
+
+  loadPaymentTypes(): Observable<any> {
+    return this.apiService.loadPaymentTypes();
+  }
 }

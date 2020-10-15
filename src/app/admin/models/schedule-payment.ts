@@ -7,6 +7,7 @@ export interface SchedulePayment {
   paymentTypeId: number;
   paymentType: string;
   paymentFrom: string;
+  paymentProviderId: number;
   paymentFromName: string;
   description: string;
   scheduleBeginDate: string;

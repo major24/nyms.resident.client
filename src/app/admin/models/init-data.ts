@@ -22,6 +22,7 @@ export class SchedulePaymentInit implements SchedulePayment {
   paymentType: '';
   paymentFrom: '';
   paymentFromName: '';
+  paymentProviderId:0;
   description: '';
   scheduleBeginDate: '';
   scheduleEndDate: '';

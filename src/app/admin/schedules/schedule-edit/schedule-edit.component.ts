@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ResidentSchedule, Schedule } from '../../models/index';
 import { ScheduleService } from '../../services/index';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { KeyPair } from '../../../models/index';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
@@ -13,7 +12,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class ScheduleEditComponent implements OnInit {
   residentSchedules: ResidentSchedule = { referenceId: '', localAuthorityId: 0, paymentFromName: '', foreName: '', surName: '', schedules: [] };
-  newSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentType: '', paymentFrom: '', paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0 };
+  newSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0 };
 
   closeResult = '';
   selectedScheduleId: number = 0;
@@ -22,22 +21,24 @@ export class ScheduleEditComponent implements OnInit {
   error: string = '';
   loading: boolean = false;
   saving: boolean = false;
+  paymentProviders: any = [];
+  paymentTypes: any = [];
 
-  paymentFromList: KeyPair[] = [
-    { key: 'LA', value: 'Local Authority' },
-    { key: 'CC', value: 'Client Contribution' },
-    { key: 'PV', value: 'Private' }
-  ];
-  paymentTypeList: KeyPair[] = [
-    { key: 'WEEKLY', value: 'Weekly Fee' },
-    { key: 'SUPPLEMENT', value: 'Supplement' },
-    { key: 'ADJUSTMENT', value: 'Adjustment' }
-  ];
-  paymentDescriptionList: KeyPair[] = [
-    { key: 'WEEKLY', value: 'Weekly Fee' },
-    { key: 'SUPPLEMENT', value: 'Supplement' },
-    { key: 'ADJUSTMENT', value: 'Adjustment' }
-  ];
+  // paymentFromList: KeyPair[] = [
+  //   { key: 'LA', value: 'Local Authority' },
+  //   { key: 'CC', value: 'Client Contribution' },
+  //   { key: 'PV', value: 'Private' }
+  // ];
+  // paymentTypeList: KeyPair[] = [
+  //   { key: 'WEEKLY', value: 'Weekly Fee' },
+  //   { key: 'SUPPLEMENT', value: 'Supplement' },
+  //   { key: 'ADJUSTMENT', value: 'Adjustment' }
+  // ];
+  // paymentDescriptionList: KeyPair[] = [
+  //   { key: 'WEEKLY', value: 'Weekly Fee' },
+  //   { key: 'SUPPLEMENT', value: 'Supplement' },
+  //   { key: 'ADJUSTMENT', value: 'Adjustment' }
+  // ];
 
   createScheduleForm = new FormGroup({
     dpScheduleEndDate_2: new FormControl({ year: 9999, month: 12, day: 31 })
@@ -50,11 +51,12 @@ export class ScheduleEditComponent implements OnInit {
     private modalService: NgbModal) { }
 
   ngOnInit(): void {
+    this.loadPaymentProviders();
+    this.loadPaymentTypes();
+
     this._Activatedroute.paramMap.subscribe((params) => {
       if (params && params.get('referenceId')) {
-        // let referenceId: string = params.get('referenceId');
         this.referenceId = params.get('referenceId');
-        console.log('>>>', this.referenceId);
         this.loadSchedules(this.referenceId);
       }
     });
@@ -77,13 +79,32 @@ export class ScheduleEditComponent implements OnInit {
       });
   }
 
+  loadPaymentProviders(): void {
+    this.scheduleService.loadPaymentProviders()
+    .subscribe({
+      next: (data) => {
+        this.paymentProviders = data;
+      },
+      error: (error) => { console.log('Error loading payment providers'); }
+    });
+  }
+
+  loadPaymentTypes(): void {
+    this.scheduleService.loadPaymentTypes()
+    .subscribe({
+      next: (data) => {
+        this.paymentTypes = data;
+      },
+      error: (error) => { console.log('Error loading payment providers'); }
+    });
+  }
 
   // add new schedule related
   onPaymentFromChange(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { paymentFrom: event.target.value });
+    this.newSchedule = Object.assign(this.newSchedule, { paymentProviderId: +event.target.value });
   }
   onPaymentTypeChange(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { paymentType: event.target.value });
+    this.newSchedule = Object.assign(this.newSchedule, { paymentTypeId: +event.target.value });
   }
   onDescriptionChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { description: event.target.value });
@@ -97,18 +118,20 @@ export class ScheduleEditComponent implements OnInit {
   onWeeklyFeeChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { weeklyFee: +event.target.value });
   }
+
   createNewSchdule(): void {
     if (!this.referenceId) {
       this.error = 'Error: Reference Id not found';
       return;
     }
-    if (this.newSchedule.scheduleBeginDate === '' || this.newSchedule.paymentFrom === '' || this.newSchedule.paymentType === '') {
+    if (this.newSchedule.scheduleBeginDate === '' || this.newSchedule.paymentProviderId === 0 || this.newSchedule.paymentTypeId === 0) {
       this.error = 'Missing required fields';
       return;
     }
     if (this.newSchedule.scheduleEndDate === '') {
       this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: new Date('9999-12-31') });
     }
+    console.log('>>>>rdy save', this.newSchedule);
 
     this.saving = true;
     this.scheduleService.createSchedule(this.referenceId, this.newSchedule)
@@ -155,6 +178,7 @@ export class ScheduleEditComponent implements OnInit {
   // open from template
   openModal(content: any, id: number) {
     this.selectedScheduleId = +id;
+    this.error = '';
     this.open(content);
   }
   // private

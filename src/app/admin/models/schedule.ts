@@ -2,8 +2,8 @@ export interface Schedule {
   id: number;
   residentId: number;
   localAuthorityId: number;
-  paymentType: string;
-  paymentFrom: string;
+  paymentProviderId: number;
+  paymentTypeId: number;
   paymentFromName: string;
   description: string;
   scheduleBeginDate: string;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { InvoiceResident, SchedulePayment, InvoiceData, InvoiceValidatedModel, InvoiceValidatedRequest, InvoiceCommentsRequest } from '../../../models/index';
 import { FormControl, FormGroup } from '@angular/forms';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -10,15 +10,16 @@ import { InvoiceService } from '../../../services/index';
   styleUrls: ['./report-list-with-validation.component.css']
 })
 export class ReportListWithValidationComponent implements OnInit {
-  // @Input() invoices: InvoiceResident[] = [];
   invoices: InvoiceResident[] = [];
   @Input() invoiceData: InvoiceData;
+  @Output() invoiceValidatedSaveEvent = new EventEmitter<any>();
 
   closeResult = '';
   selectedScheduleId: number = 0;
   transactionAmount: number = 0;
   comments: string = '';
   saving: boolean = false;
+  hasDataToSave: boolean = false;
   selectedSchedulePayment: SchedulePayment;
   displayComments: string[] = [];
 
@@ -54,13 +55,21 @@ export class ReportListWithValidationComponent implements OnInit {
       }
     }));
 
-    if (list.length > 0){
+    if (list.length > 0) {
+      this.saving = true;
       this.invoiceService.updateInvoicePaymentsWithValidation(list)
       .subscribe({
         next: (data) => {
           console.log('invoices with validation are updated');
+          this.saving = false;
+          this.hasDataToSave = false;
+          this.invoiceValidatedSaveEvent.emit();
         },
-        error: (error) => { console.log('Error updating validated invoices', error); }
+        error: (error) => {
+          console.log('Error updating validated invoices', error);
+          this.saving = false;
+          this.hasDataToSave = false;
+        }
       });
     }
   }
@@ -88,6 +97,7 @@ export class ReportListWithValidationComponent implements OnInit {
       .subscribe({
         next: (data) => {
           console.log('invoice comment inserted');
+          this.modalService.dismissAll();
         },
         error: (error) => { console.log('Error updating validated invoices', error); }
       });
@@ -111,6 +121,15 @@ export class ReportListWithValidationComponent implements OnInit {
             Object.assign(sp.invoiceValidatedModel, invoiceValidatedModel);
         }
       }));
+
+      this.updateSaveFlags();
+  }
+
+  updateSaveFlags(): void {
+    this.hasDataToSave = false;
+    const validated = this.invoiceData.invoiceResidents.map(ir => ir.schedulePayments.filter(sp => sp.invoiceValidatedModel.validated === 'Y' && sp.invoiceValidatedModel.id === 0));
+    if (validated && validated[0].length > 0) this.hasDataToSave = true;
+
   }
 
 //x = Object.assign(x, { validated: event.target.checked ? 'Y' : '' });

@@ -7,16 +7,27 @@
     (billingCycleChangedEvent)="onBillingCycleChangedEvent($event)"
     (getReportEvent)="onGetReportEvent()">
   </billing-date-selection>
-
   <p *ngIf="error">{{error}}</p>
 
+  <div class="container">
+    <div class="row">
+      <div class="col-md">
+        Billing Cycle Id: {{_invoiceData?.billingCycleId}}
+      </div>
+      <div class="col-md">
+        Billing Days: {{_invoiceData?.numberOfDays}}
+      </div>
+    </div>
+  </div>
+  <hr />
   <!-- <p>==={{_invoices | json}}</p> -->
 
 
   <!-- <div *ngIf="loading" class="spinner-border"></div> -->
 
   <report-list-with-validation
-    [invoiceData]="_invoiceData">
+    [invoiceData]="_invoiceData"
+    (invoiceValidatedSaveEvent)="onInvoiceValidatedSave()">
   </report-list-with-validation>
 
 </div>

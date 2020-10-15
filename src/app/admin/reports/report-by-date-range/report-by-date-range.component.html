@@ -9,13 +9,12 @@
     (getReportEvent)="getReport()"
     (downloadReportEvent)="downloadReport()">
   </date-range-selection>
-  <hr />
 
   <div *ngIf="loading" class="spinner-border"></div>
 
-  <summary-info
+  <!-- <summary-info
     [invoicesSummary]="invoicesSummary">
-  </summary-info>
+  </summary-info> -->
 
   <report-list
     [invoices]="invoices">

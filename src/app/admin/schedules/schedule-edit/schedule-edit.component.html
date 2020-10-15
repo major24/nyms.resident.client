@@ -4,8 +4,6 @@
 
   <div *ngIf="loading" class="spinner-border"></div>
 
-  <div *ngIf="error">{{error}}</div>
-
   <div class="container">
     <div class="row">
       <div class="col-md">
@@ -112,12 +110,12 @@
 
       <form [formGroup]="createScheduleForm">
         <div class="form-group">
-          <label for="paymentFrom">Payment From</label>
+          <label for="paymentFrom">Payment Providers</label>
           <div class="input-group">
             <select id="paymentFrom" class="form-control" (change)="onPaymentFromChange($event)">
               <option value='' selected>Choose</option>
-              <option *ngFor="let pf of paymentFromList; let i = index" [value]="pf.key">
-                {{pf.value}}
+              <option *ngFor="let pp of paymentProviders; let i = index" [value]="pp.id">
+                {{pp.name}}
               </option>
             </select>
           </div>
@@ -128,8 +126,8 @@
           <div class="input-group">
             <select id="paymentType" class="form-control" (change)="onPaymentTypeChange($event)">
               <option value='' selected>Choose</option>
-              <option *ngFor="let pt of paymentTypeList; let i = index" [value]="pt.key">
-                {{pt.value}}
+              <option *ngFor="let pt of paymentTypes; let i = index" [value]="pt.id">
+                {{pt.name}}
               </option>
             </select>
           </div>
@@ -172,6 +170,7 @@
 
     </div>
     <div class="modal-footer">
+      <div *ngIf="error">{{error}}</div>
       <button type="button" [disabled]="saving" class="btn btn-primary" (click)="createNewSchdule()">
         <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
         Save
