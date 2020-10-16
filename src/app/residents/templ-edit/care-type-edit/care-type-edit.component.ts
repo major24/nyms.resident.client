@@ -12,6 +12,8 @@ export class CareTypeEditComponent implements OnInit {
   @Input() careCategoryId: string;
   @Input() careNeed: string;
   @Input() stayType: string;
+  @Input() careNeeds: any[] = [];
+  @Input() stayTypes: any[] = [];
 
   @Output() careCategoryUpdated = new EventEmitter<string>();
   @Output() careNeedUpdated = new EventEmitter<string>();
@@ -23,15 +25,15 @@ export class CareTypeEditComponent implements OnInit {
     stayType: new FormControl(''),
   });
 
-  careNeeds: KeyPair[] = [
-    { key: 'high', value: 'High' },
-    { key: 'medium', value: 'Medium' },
-    { key: 'low', value: 'Low' }
-  ];
-  stayTypes: KeyPair[] = [
-    { key: 'permanent', value: 'Permanent' },
-    { key: 'respite', value: 'Respite' }
-  ];
+  // careNeeds: KeyPair[] = [
+  //   { key: 'high', value: 'High' },
+  //   { key: 'medium', value: 'Medium' },
+  //   { key: 'low', value: 'Low' }
+  // ];
+  // stayTypes: KeyPair[] = [
+  //   { key: 'permanent', value: 'Permanent' },
+  //   { key: 'respite', value: 'Respite' }
+  // ];
 
   constructor() { }
 

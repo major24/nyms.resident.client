@@ -5,11 +5,6 @@
     <ngb-panel id="panel-profile" title="Profile" class="text-white">
       <ng-template ngbPanelContent>
 
-        <!-- <div class="form-group">
-          <label *ngIf="enquiryResident.referenceId" for="referenceId">Reference Id:
-            {{ enquiryResident.referenceId }}</label>
-        </div> -->
-
         <form [formGroup]="enquiryEditForm">
           <div class="form-group">
             <label for="careHome">
@@ -25,26 +20,25 @@
           </div>
 
           <div class="form-group">
-            <label for="localAuthority">
-              <h6 class="text-primary">Local Authority</h6>
+            <label for="referralAgency">
+              <h6 class="text-primary">Referral Agency</h6>
             </label>
-            <select class="custom-select" name="localAuthority" id="localAuthority" formControlName="localAuthority"
-              (change)="onLocalAuthorityChange($event)">
+            <select class="custom-select" name="referralAgency" id="referralAgency" formControlName="referralAgency"
+              (change)="onReferralAgencyChange($event)">
               <option value="" selected>Choose...</option>
-              <option *ngFor="let la of localAuthorities; let i = index" [value]="la.id">
-                {{la.name}}
+              <option *ngFor="let refAgency of referralAgency; let i = index" [value]="refAgency.key">
+                {{refAgency.value}}
               </option>
             </select>
           </div>
 
-          <div class="form-group">
+          <!-- <div class="form-group">
             <input type="checkbox" name="isPrivate" id="isPrivate" formControlName="isPrivate"
               (click)="onIsPrivateChange($event)">
             <label for="isPrivate" class="ml-2">
               <h6 class="text-primary">Private</h6>
             </label>
-          </div>
-
+          </div> -->
         </form>
 
         <resident-profile-edit [foreName]="enquiryResident.foreName" [surName]="enquiryResident.surName"
@@ -58,20 +52,18 @@
       </ng-template>
     </ngb-panel>
 
-    <ngb-panel id="panel-address" title="Address">
+    <!-- <ngb-panel id="panel-address" title="Address">
       <ng-template ngbPanelContent>
-
         <address-edit [street1]="enquiryResident.address?.street1" [street2]="enquiryResident.address?.street2"
           [city]="enquiryResident.address?.city" [county]="enquiryResident.address?.county"
           [postCode]="enquiryResident.address?.postCode" (street1Updated)="onStreet1Updated($event)"
           (street2Updated)="onStreet2Updated($event)" (cityUpdated)="onCityUpdated($event)"
           (countyUpdated)="onCountyUpdated($event)" (postCodeUpdated)="onPostCodeUpdated($event)">
         </address-edit>
-
       </ng-template>
-    </ngb-panel>
+    </ngb-panel> -->
 
-    <ngb-panel title="Social Worker">
+    <ngb-panel title="Referral Agency Details">
       <ng-template ngbPanelContent>
         <social-worker-detail-edit [foreName]="enquiryResident.socialWorker?.foreName"
           [surName]="enquiryResident.socialWorker?.surName" [phoneNumber]="enquiryResident.socialWorker?.phoneNumber"
@@ -84,10 +76,16 @@
 
     <ngb-panel title="Care Type Room Details">
       <ng-template ngbPanelContent>
-        <care-type-edit [isCareHomeSelectionChanged]="isCareHomeSelectionChanged" [careCategories]="careCategories"
-          [careCategoryId]="enquiryResident.careCategoryId" [careNeed]="enquiryResident.careNeed"
-          [stayType]="enquiryResident.stayType" (careCategoryUpdated)="onCareCategoryUpdated($event)"
-          (careNeedUpdated)="oncareNeedUpdated($event)" (stayTypeUpdated)="onStayTypeUpdated($event)">
+        <care-type-edit [isCareHomeSelectionChanged]="isCareHomeSelectionChanged"
+          [careCategories]="careCategories"
+          [careNeeds]="careNeeds"
+          [stayTypes]="stayTypes"
+          [careCategoryId]="enquiryResident.careCategoryId"
+          [careNeed]="enquiryResident.careNeed"
+          [stayType]="enquiryResident.stayType"
+          (careCategoryUpdated)="onCareCategoryUpdated($event)"
+          (careNeedUpdated)="oncareNeedUpdated($event)"
+          (stayTypeUpdated)="onStayTypeUpdated($event)">
         </care-type-edit>
 
         <room-location-edit [isCareHomeSelectionChanged]="isCareHomeSelectionChanged" [roomLocations]="roomLocations"

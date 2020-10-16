@@ -7,6 +7,10 @@ import { Observable } from 'rxjs';
 import { KeyPair } from '../../../models/index';
 import { RoomLocation } from '../../models/index';
 import { CarehomeService } from '../../services/index';
+import ReferralAgency from '../../../helpers/data-referral-agency';
+import CareNeeds from '../../../helpers/data-care-needs';
+import StayTypes from '../../../helpers/data-stay-types';
+import EnquiryStatuses from '../../../helpers/data-enquiry-status';
 
 @Component({
   selector: 'app-enquires-edit',
@@ -22,12 +26,11 @@ export class EnquiresEditComponent implements OnInit {
   isCareHomeSelectionChanged: number = 0; //boolean = false;
   careCategories: any[] = [];
   localAuthorities: any[] = [];
+  referralAgency: any[] = ReferralAgency;
+  careNeeds: any[] = CareNeeds;
+  stayTypes: any[] = StayTypes;
+  statuses: any[] = EnquiryStatuses;
 
-  statuses: KeyPair[] = [
-    { key: 'active', value: 'Active' },
-    { key: 'admit', value: 'Admit' },
-    { key: 'closed', value: 'Closed' }
-  ];
   errors: string[] = [];
   saving: boolean = false;
   isUpdatingResident: boolean = false;
@@ -35,7 +38,7 @@ export class EnquiresEditComponent implements OnInit {
   enquiryEditForm = new FormGroup({
     status: new FormControl(''),
     careHome: new FormControl(''),
-    localAuthority: new FormControl(''),
+    referralAgency: new FormControl(''),
     isPrivate: new FormControl('')
   });
 
@@ -108,7 +111,7 @@ export class EnquiresEditComponent implements OnInit {
     }
     // to load la, you need which care it belongs to?
     if (data.careHomeId && data.careHomeId > 0 && data.localAuthorityId && data.localAuthorityId > 0) {
-      if (data.localAuthorityId) { this.enquiryEditForm.controls['localAuthority'].setValue(data.localAuthorityId); }
+      if (data.localAuthorityId) { this.enquiryEditForm.controls['referralAgency'].setValue(data.localAuthorityId); }
     }
     if (data.status) { this.enquiryEditForm.controls['status'].setValue(data.status); }
   }
@@ -136,19 +139,14 @@ export class EnquiresEditComponent implements OnInit {
     let y = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.careCategories);
     Object.assign(this.careCategories, ...y);
 
-    // LA
-    let z = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.localAuthorities);
-    Object.assign(this.localAuthorities, ...z);
+    // Load hardcoded referral agency info
+    // let z = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.localAuthorities);
+    // Object.assign(this.localAuthorities, ...z);
   }
 
 
-  onLocalAuthorityChange(event: any): void {
+  onReferralAgencyChange(event: any): void {
     this.enquiryResident = Object.assign(this.enquiryResident, { localAuthorityId: +event.target.value });
-    // let newState = {
-    //   ...this._enquiryResident.getValue(),
-    //   localAuthorityId: +event.target.value,
-    // };
-    // this.updateState(newState);
   }
 
   onIsPrivateChange(event: any): void {
@@ -156,7 +154,7 @@ export class EnquiresEditComponent implements OnInit {
     let privateId = 0; // default
     if (event.target.checked) {
       privateId = 101;
-      this.enquiryEditForm.controls['localAuthority'].setValue('');
+      this.enquiryEditForm.controls['referralAgency'].setValue('');
     }
     this.enquiryResident = Object.assign(this.enquiryResident, { localAuthorityId: privateId });
   }

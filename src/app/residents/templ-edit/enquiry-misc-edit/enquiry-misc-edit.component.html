@@ -2,7 +2,7 @@
 
   <div class="form-group">
     <label for="moveInDate">
-      <h6 class="text-primary">Move In Date</h6>
+      <h6 class="text-primary">Potential Move In Date</h6>
     </label>
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd"
@@ -15,7 +15,7 @@
 
   <div class="form-group">
     <label for="familyHomeVisitDate">
-      <h6 class="text-primary">Family Home Visit Date</h6>
+      <h6 class="text-primary">Home Visit Date</h6>
     </label>
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd"
@@ -26,6 +26,15 @@
     </div>
   </div>
 
+  <div class="form-group">
+    <label for="comments">
+      <h6 class="text-primary">Comments</h6>
+    </label>
+    <textarea rows="4" class="form-control" id="comments" name="comments" formControlName="comments" (change)="onCommentsChange($event)" placeholder=""></textarea>
+  </div>
+
+
+  
   <!-- <div class="form-group">
     <label for="enquiryDate">Enquiry Date</label>
     <div class="input-group">
@@ -57,11 +66,6 @@
     <textarea matInput rows="4" class="form-control" id="response" name="response" formControlName="response" (change)="onResponseChange($event)" placeholder=""></textarea>
   </div>
 
-  <div class="form-group">
-    <label for="comments">
-      <h6 class="text-primary">Comments</h6>
-    </label>
-    <textarea rows="4" class="form-control" id="comments" name="comments" formControlName="comments" (change)="onCommentsChange($event)" placeholder=""></textarea>
-  </div>
+
 
   </form>
