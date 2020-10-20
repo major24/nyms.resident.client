@@ -68,9 +68,9 @@ export class ReportByDateRangeComponent implements OnInit {
     .subscribe({
       next: (data) => {
         this._invoiceData = data;
+        this.invoices = [];
         Object.assign(this.invoices, [...data.invoiceResidents]);
         Object.assign(this.rawInvoices, [...data.invoiceResidents]);
-        console.log('>>>', this.rawInvoices);
         this.makeSummaryTotals(this.invoices);
         this.loading = false;
       },

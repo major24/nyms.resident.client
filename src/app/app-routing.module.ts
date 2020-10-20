@@ -6,14 +6,13 @@ import { HomeComponent } from './common/home/home.component';
 import { DashboardResidentsComponent } from './residents/dashboard-residents/dashboard-residents.component';
 import { EnquiresComponent } from './residents/enquires/enquires.component';
 import { EnquiresEditComponent } from './residents/enquires/enquires-edit/enquires-edit.component';
-// import { InvoiceComponent } from './admin/reports/invoice/invoice.component';
 import { ReportByDateRangeComponent } from './admin/reports/report-by-date-range/report-by-date-range.component';
 import { ReportByBillingCycleComponent } from './admin/reports/report-by-billing-cycle/report-by-billing-cycle.component';
 import { ScheduleEditComponent } from './admin/schedules/schedule-edit/schedule-edit.component';
 import { ScheduleListComponent } from './admin/schedules/schedule-list/schedule-list.component';
 import { AccessDeniedComponent } from './common/errors/access-denied/access-denied.component';
 import { ServerErrorComponent } from './common/errors/server-error/server-error.component';
-
+import { EnquiryActionsComponent } from './residents/templ-edit/enquiry-actions/enquiry-actions.component';
 import { AuthGuard, AuthResidentsGuard, AuthAdminGuard } from './helpers';
 import { ResidentsListComponent } from './residents/residents-list/residents-list.component';
 
@@ -48,6 +47,11 @@ const routes: Routes = [
         component: EnquiresEditComponent
     },
     {
+        path: 'enquires-action/:referenceId',
+        component: EnquiryActionsComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: 'login',
         component: LoginComponent
     },
@@ -56,11 +60,6 @@ const routes: Routes = [
         loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
         canActivate: [AuthAdminGuard]
     },
-    // {
-    //     path: 'invoice',
-    //     component: InvoiceComponent,
-    //     canActivate: [AuthAdminGuard]
-    // },
     {
         path: 'report-by-date-range',
         component: ReportByDateRangeComponent,

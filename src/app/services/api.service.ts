@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser } from '../models/index';
-import { EnquiryResident, CareHome, Resident } from '../residents/models/index';
+import { EnquiryResident, CareHome, Resident, EnquiryAction } from '../residents/models/index';
 import { InvoiceData, InvoiceResident, InvoiceCommentsRequest, BillingCycle, InvoiceValidatedRequest } from '../admin/models/index';
 import { ResidentSchedule, Schedule } from '../admin/models/index';
 
@@ -60,6 +60,15 @@ export class ApiService {
       `/api/enquires/${enqResident.referenceId}`,
       enqResident
     );
+  }
+
+  //enquiry actions
+  loadEnquiryActions(referenceId: string): Observable<EnquiryAction[]> {
+    return this.http.get<EnquiryAction[]>(`/api/enquires/${referenceId}/actions`);
+  }
+
+  saveEnquiryActions(referenceId: string, enquiryActions: EnquiryAction[]): Observable<EnquiryAction[]> {
+    return this.http.post<any>(`/api/enquires/${referenceId}/actions`, enquiryActions);
   }
 
 
@@ -123,6 +132,11 @@ export class ApiService {
   updateScheduleEndDate(id: number, scheduleEndDate: string): Observable<any> {
     return this.http.put<any>(`/api/residents/schedules/${id}/end-date`, { id: id, scheduleEndDate: scheduleEndDate })
   }
+
+  inactivateSchedule(id: number): Observable<any> {
+    return this.http.put<any>(`/api/residents/schedules/${id}/inactivate`, { id: id })
+  }
+
 
   // todo: whild refactor
   createSchedule(referenceId: string, schedule: Schedule): Observable<any> {

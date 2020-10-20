@@ -12,7 +12,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class ScheduleEditComponent implements OnInit {
   residentSchedules: ResidentSchedule = { referenceId: '', localAuthorityId: 0, paymentFromName: '', foreName: '', surName: '', schedules: [] };
-  newSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0 };
+  newSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0, active: 'Y' };
 
   closeResult = '';
   selectedScheduleId: number = 0;
@@ -23,22 +23,6 @@ export class ScheduleEditComponent implements OnInit {
   saving: boolean = false;
   paymentProviders: any = [];
   paymentTypes: any = [];
-
-  // paymentFromList: KeyPair[] = [
-  //   { key: 'LA', value: 'Local Authority' },
-  //   { key: 'CC', value: 'Client Contribution' },
-  //   { key: 'PV', value: 'Private' }
-  // ];
-  // paymentTypeList: KeyPair[] = [
-  //   { key: 'WEEKLY', value: 'Weekly Fee' },
-  //   { key: 'SUPPLEMENT', value: 'Supplement' },
-  //   { key: 'ADJUSTMENT', value: 'Adjustment' }
-  // ];
-  // paymentDescriptionList: KeyPair[] = [
-  //   { key: 'WEEKLY', value: 'Weekly Fee' },
-  //   { key: 'SUPPLEMENT', value: 'Supplement' },
-  //   { key: 'ADJUSTMENT', value: 'Adjustment' }
-  // ];
 
   createScheduleForm = new FormGroup({
     dpScheduleEndDate_2: new FormControl({ year: 9999, month: 12, day: 31 })
@@ -174,6 +158,30 @@ export class ScheduleEditComponent implements OnInit {
         }
       });
   }
+
+  disableSchedule(): void {
+    console.log('rdy to disable ', this.selectedScheduleId);
+    if (this.selectedScheduleId <= 0) return;
+
+    this.saving = true;
+    this.scheduleService.inactivateSchedule(this.selectedScheduleId)
+    .subscribe({
+      next: (next) => {
+        console.log('schedule is inactivated', next);
+        this.modalService.dismissAll();
+        this.saving = false;
+        // reload data
+        this.loadSchedules(this.referenceId);
+      },
+      error: (error) => {
+        console.log('Error inactivating schedule ', error);
+        this.saving = false;
+      }
+    })
+  }
+
+
+
 
   // open from template
   openModal(content: any, id: number) {

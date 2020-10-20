@@ -61,11 +61,18 @@
       <div class="col-md text-right">
         <button type="button" class="btn btn-outline-dark btn-sm"
           (click)="openModal(content, schedule.id)">Expire</button>
+        <button type="button" class="btn btn-outline-dark btn-sm mr-1"
+          (click)="openModal(contentConfirm, schedule.id)">Delete</button>
       </div>
     </div>
   </div>
 
 
+  <div class="font-sm mt-5">
+    <hr />
+    Note: When a resident move out or passed away, update exit date in [residents] tab.
+    <hr />
+  </div>
 
 
 
@@ -98,7 +105,7 @@
   <!-- endof schedule end date -->
 
 
-
+  <!-- modal for create schedule -->
   <ng-template #contentAdd let-modal>
     <div class="modal-header">
       <h4 class="modal-title" id="modal-basic-title">Create Schedule</h4>
@@ -177,12 +184,33 @@
       </button>
     </div>
   </ng-template>
+<!-- endof modal for create schedule -->
 
 
-  <div class="font-sm mt-5">
-    <hr />
-    Note: When a resident move out or passed away, update exit date in [residents] tab.
-    <hr />
-  </div>
+  <!-- confirm modal -->
+  <ng-template #contentConfirm let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Confirm</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+          <span>Are you sure you want to delete? </span>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" [disabled]="saving" class="btn btn-primary" (click)="disableSchedule()">
+        <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+        Save
+      </button>
+    </div>
+  </ng-template>
+  <!-- endof comfirm modal -->
+
+
+
+
 
 </div>

@@ -1,0 +1,113 @@
+<div class="container">
+
+  <form [formGroup]="actionForm">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-4">
+          <div class="form-group">
+            <label for="action">
+              <h6 class="text-primary">Action</h6>
+            </label>
+            <input type="text" class="form-control" id="action" name="action" (change)="onActionChange($event)" formControlName="action" placeholder="" [value]="action">
+          </div>
+        </div>
+
+        <div class="col-3">
+          <div class="form-group">
+            <label for="actionDate">
+              <h6 class="text-primary">Action Date</h6>
+            </label>
+            <div class="input-group">
+              <input class="form-control" placeholder="yyyy-mm-dd" formControlName="actionDate" name="actionDate"
+                (dateSelect)="onActionDateChange($event)" ngbDatepicker
+                #d="ngbDatepicker" [placement]="'right'">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="form-group">
+            <label for="action">
+              <h6 class="text-primary">Response</h6>
+            </label>
+            <textarea id="response" matInput rows="2" cols="40" formControlName="response" (change)="onActionResponseAddChange($event)" placeholder="" [value]="response"></textarea>
+          </div>
+        </div>
+
+        <div class="col-1 mt-5">
+          <span class="ml-4">
+            <button [disabled]="action == ''" type="button" class="btn btn-outline-dark btn-sm" (click)="addAction()">+</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="h-divider"></div>
+
+  <!-- grid header -->
+  <div class="container">
+    <div class="row">
+      <div class="col-sm offset-sm-11">
+        <span style="font-size: .8em;">Completed</span>
+      </div>
+    </div>
+  </div>
+  <div class="h-divider"></div>
+
+  <!-- grid -->
+  <div class="form-group">
+    <div class="container">
+
+      <div class="row" *ngFor="let action of enquiryActions; let i = index">
+        <div class="col-4">
+          {{action.action}}
+        </div>
+        <div class="col-3">
+          {{action.actionDate | date}}
+        </div>
+        <div class="col-4">
+          <span *ngIf="action.id > 0 && action.status === 'completed'"> <!-- has id from database and completed. no edit -->
+            {{action.response}}
+          </span>
+          <span *ngIf="action.id === 0 || action.status !== 'completed'">
+            <textarea matInput rows="3" cols="40" placeholder="" (change)="onActionResponseChange($event, action.id)" value="{{action.response}}">
+              {{action.response}}
+            </textarea>
+          </span>
+        </div>
+        <div class="col-1">
+          <span *ngIf="action.id === 0" class="ml-4">
+            <button class="btn btn-outline-dark btn-sm" (click)="removeAction(i)">X</button>
+          </span>
+          <div *ngIf="action.id > 0 && action.status !== 'completed'">
+            <span class="ml-4">
+              <input type="checkbox" (change)="onActionComplete($event, action.id)" />
+            </span>
+          </div>
+          <div *ngIf="action.id > 0 && action.status === 'completed'">
+            <span style="font-size: .8rem;">{{action.updatedDate}}</span>
+          </div>
+        </div>
+        <div class="h-divider"></div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-md text-right">
+          <span class="ml-4">
+            <button class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+            <button [disabled]="enquiryActions.length === 0" type="button" class="btn btn-primary ml-4" (click)="saveActions()">Save</button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- increment the panal height for calendar control to be fully visible -->
+  <div class="mt-5">&nbsp;</div>
+
+</div>

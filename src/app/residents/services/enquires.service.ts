@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EnquiryResident } from '../models';
+import { EnquiryResident, EnquiryAction } from '../models';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../services/index';
 
@@ -25,6 +25,14 @@ export class EnquiresService {
 
   updateEnquiryResident(enqResident: EnquiryResident): Observable<EnquiryResident> {
     return this.apiService.updateEnquiryResident(enqResident);
+  }
+
+  loadEnquiryActions(referenceId: string): Observable<EnquiryAction[]> {
+    return this.apiService.loadEnquiryActions(referenceId);
+  }
+
+  saveEnquiryActions(referenceId: string, enquiryActions: EnquiryAction[]): Observable<EnquiryAction[]> {
+    return this.apiService.saveEnquiryActions(referenceId, enquiryActions);
   }
 
 }

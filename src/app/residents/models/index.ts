@@ -4,3 +4,4 @@ export * from './carehome';
 export * from './room-location';
 export * from './room';
 export * from './social-worker';
+export * from './enquiry-action';

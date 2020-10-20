@@ -15,9 +15,6 @@ export class EnquiresListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  remove(referenceId: string){
-    console.log('>>removing>>', referenceId);
-  }
 
 }
 

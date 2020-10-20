@@ -38,6 +38,9 @@
         <span *ngIf="(schedule?.scheduleEndDate | date: 'yyyy-mm-dd') > ('1900-01-01' | date: 'yyyy-mm-dd')">
           {{schedule?.scheduleEndDate | date}}
         </span>
+        <span *ngIf="schedule.active !== 'Y'" class="text-danger" style="font-size: smaller;">
+          (Inactive)
+        </span>
       </div>
       <div class="col-md text-right">
         {{schedule.weeklyFee | number : '1.2-2'}}
