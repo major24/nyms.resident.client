@@ -23,6 +23,8 @@ export class ReportListWithValidationComponent implements OnInit {
   selectedSchedulePayment: SchedulePayment;
   displayComments: string[] = [];
 
+  public isCollapsed = false;
+  
   reportListWithValidationForm = new FormGroup({
     isValid: new FormControl(null),
     transactionAmount: new FormControl(''),

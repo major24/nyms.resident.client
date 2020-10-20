@@ -1,6 +1,6 @@
 import { Address } from '../../models/address';
 import { SocialWorker } from './social-worker';
-
+import { EnquiryAction } from './enquiry-action';
 
 export interface EnquiryResident {
   referenceId: string;
@@ -63,7 +63,7 @@ export function createInstanceofEnquiryResident() {
     comments: '',
     careCategoryName: '',
     localAuthorityName: '',
-    updatedDate: undefined
+    updatedDate: undefined,
   };
   return model;
 }

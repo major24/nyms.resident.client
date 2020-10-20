@@ -22,7 +22,7 @@
       <div><strong>Admission</strong></div>
     </div>
     <div class="col-sm">
-      <div><strong>Exit</strong></div>
+      <div><strong>Discharge</strong></div>
     </div>
   </div>
 
@@ -51,7 +51,7 @@
       <div *ngIf="res.exitDate < '9999-11-30T00:00:00'">{{res.exitDate | date}}</div>
 
       <div *ngIf="res.exitDate > '9999-11-30T00:00:00' && showExitButton">
-        <button type="button" class="btn btn-outline-dark btn-sm" (click)="openModal(content, res.referenceId)">Move Out</button>
+        <button type="button" class="btn btn-outline-dark btn-sm" (click)="openModal(content, res.referenceId)">Discharge</button>
       </div>
 
     </div>

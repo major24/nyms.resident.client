@@ -51,13 +51,26 @@
             <div class="form-group small" *ngIf="schedule.invoiceValidatedModel.id > 0">
               <div>By: {{schedule.invoiceValidatedModel?.updatedBy}} On: {{schedule.invoiceValidatedModel.updatedDate | date}}</div>
               <div>For: {{schedule.invoiceValidatedModel?.validatedAmount | number : '1.2-2'}}</div>
+              <div *ngIf="schedule.amountDue !== schedule.invoiceValidatedModel.validatedAmount">
+                <span class="text-danger" style="font-size: smaller;">Var: {{schedule.amountDue - schedule.invoiceValidatedModel.validatedAmount | number : '1.2-2'}}</span>
+              </div>
             </div>
           </div>
           <div class="col-1">
             <button type="button" class="btn btn-outline-dark btn-sm"
             (click)="openModal(content, schedule.id, schedule)">+</button>
-            <span class="ml-2" *ngIf="schedule.comments && schedule.comments.length > 0" style="cursor: pointer;"
-              (click)="openModalComments(content_comments, schedule.comments)">...</span>
+
+              <!-- popover for comments-->
+              <ng-template #popContent2 >
+                <div class="popover-body">
+                  <div *ngFor="let cmt of schedule.comments">
+                    {{cmt}}
+                  </div>
+                </div>
+              </ng-template>
+              <span class="ml-2" *ngIf="schedule.comments && schedule.comments.length > 0" style="cursor: pointer;"
+                [ngbPopover]="popContent2" placement="left">...</span>
+              <!-- endof popover for comments-->
           </div>
 
         </div>
@@ -105,9 +118,16 @@
   <!-- endof schedule end date -->
 
 
+</div>
+
+
+
+
+
+
 
     <!-- modal comments -->
-    <ng-template #content_comments let-modal>
+    <!-- <ng-template #content_comments let-modal>
       <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Comments</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -119,10 +139,10 @@
           {{cmt}}
         </div>
       </div>
-    </ng-template>
+    </ng-template> -->
     <!-- endof schedule end date -->
+    <!-- <span class="ml-2" *ngIf="schedule.comments && schedule.comments.length > 0" style="cursor: pointer;"
+      (click)="openModalComments(content_comments, schedule.comments)">...</span> -->
 
 
 
-
-</div>

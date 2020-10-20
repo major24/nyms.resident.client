@@ -23,6 +23,7 @@ export class ScheduleListComponent implements OnInit {
     this.scheduleService.loadSchedules()
     .subscribe({
       next: (data) => {
+        console.log('>>>sch', data);
         Object.assign(this.residentSchedules, [...data]);
         this.loading = false;
       },

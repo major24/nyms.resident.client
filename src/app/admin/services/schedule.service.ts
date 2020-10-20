@@ -23,6 +23,10 @@ export class ScheduleService {
     return this.apiService.updateScheduleEndDate(id, scheduleEndDate);
   }
 
+  inactivateSchedule(id: number): Observable<any> {
+    return this.apiService.inactivateSchedule(id);
+  }
+
   createSchedule(referenceId: string, schedule: Schedule): Observable<any> {
     return this.apiService.createSchedule(referenceId, schedule);
   }

@@ -4,7 +4,6 @@ import { EnquiryResident, createInstanceofEnquiryResident, CareHome } from '../.
 import { EnquiresService } from '../../services';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { KeyPair } from '../../../models/index';
 import { RoomLocation } from '../../models/index';
 import { CarehomeService } from '../../services/index';
 import ReferralAgency from '../../../helpers/data-referral-agency';
@@ -313,6 +312,9 @@ export class EnquiresEditComponent implements OnInit {
   // ==============================================
 
 
+
+
+
   // === status and submit ========================
   onStatusChange(event: any): void {
     this.enquiryResident = Object.assign(this.enquiryResident, { status: event.target.value });
@@ -335,6 +337,7 @@ export class EnquiresEditComponent implements OnInit {
       this.enquiryResident = Object.assign(this.enquiryResident, { address: adr });
     }
     console.log('>>>Ready to submit', this.enquiryResident);
+
     // if refid, then update
     if (this.enquiryResident.referenceId && this.enquiryResident.referenceId != '') {
       this.updateEnquiry();

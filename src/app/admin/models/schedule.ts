@@ -10,4 +10,5 @@ export interface Schedule {
   scheduleEndDate: string;
   weeklyFee: number;
   amountDue: number;
+  active: string;
 }

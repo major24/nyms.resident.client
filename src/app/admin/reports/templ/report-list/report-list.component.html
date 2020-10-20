@@ -9,14 +9,16 @@
         {{schedule.paymentFromName}}
       </div>
       <div class="col-md">
-        {{schedule.description}} <span style="font-size: small;">(@ {{schedule.weeklyFee}})</span>
+        {{schedule.description}} <span style="font-size: small;">(@ {{schedule.weeklyFee}}) ({{schedule.numberOfDays}})</span>
       </div>
       <div class="col-md text-right">
-        {{schedule.amountDue | number : '1.2-2'}}
+        <span [attr.data-cy-amount]="invoice.name+'_'+schedule.amountDue">
+          {{schedule.amountDue | number : '1.2-2'}}
+        </span>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="schedule?.localAuthorityId > 0">
       <div class="col-md">
         &nbsp;
       </div>
@@ -24,9 +26,12 @@
         <strong>Total La Fee:</strong>
       </div>
       <div class="col-md text-right">
-        <strong>{{invoice.totalLaFee | number : '1.2-2'}}</strong>
+        <span [attr.data-cy-amount]="invoice.name+'_'+schedule.amountDue">
+          <strong>{{invoice.totalLaFee | number : '1.2-2'}}</strong>
+        </span>
       </div>
     </div>
+
     <div class="row border mb-4">
       <div class="col-md">
         &nbsp;
