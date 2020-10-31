@@ -21,7 +21,8 @@
       <div>{{enquiryResident.careNeed | titlecase }}</div>
     </div>
     <div class="col-sm">
-      <a [routerLink]="['/enquires-edit', enquiryResident.referenceId]">Edit</a>
+      <!-- //<span [attr.data-cy-amount]="invoice.name+'_'+schedule.amountDue">{{schedule.amountDue | number : '1.2-2'}}</span> -->
+      <a [attr.data-cy-enq-edit]="enquiryResident.foreName+'_'+enquiryResident.surName" [routerLink]="['/enquires-edit', enquiryResident.referenceId]">Edit</a>
     </div>
     <div class="col-sm">
       <a [routerLink]="['/enquires-action', enquiryResident.referenceId]">Actions</a>

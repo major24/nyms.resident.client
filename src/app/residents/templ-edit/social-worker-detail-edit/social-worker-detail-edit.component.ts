@@ -18,8 +18,8 @@ export class SocialWorkerDetailEditComponent implements OnInit {
   @Output() swEmailUpdated = new EventEmitter<string>();
 
   socialWorkerForm = new FormGroup({
-    foreName: new FormControl(''),
-    surName: new FormControl(''),
+    swForeName: new FormControl(''),
+    swSurName: new FormControl(''),
     phoneNumber: new FormControl(''),
     email: new FormControl(''),
   });
@@ -29,12 +29,12 @@ export class SocialWorkerDetailEditComponent implements OnInit {
 
   ngOnChanges(changes: any): void {
     if (changes.foreName) {
-      this.socialWorkerForm.controls['foreName'].setValue(
+      this.socialWorkerForm.controls['swForeName'].setValue(
         changes.foreName.currentValue
       );
     }
     if (changes.surName) {
-      this.socialWorkerForm.controls['surName'].setValue(
+      this.socialWorkerForm.controls['swSurName'].setValue(
         changes.surName.currentValue
       );
     }

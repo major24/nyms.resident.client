@@ -22,7 +22,7 @@ export class EnquiresComponent implements OnInit {
     // todo: need to build in flexibility to get enq by home id.
     // for now return all enqs
     // in server, validate user role and return only allowed carehomes
-      this.enquiresService.getEnquiresByHomeId(1)
+    this.enquiresService.getEnquiresByHomeId(1)
       .subscribe({
         next: (data) => {
           console.log('>>', data);
@@ -70,7 +70,7 @@ export class EnquiresComponent implements OnInit {
 
 // //update(enquiry: EnquiryResident) {
 
-//   // this.http.put<Todo>(`${this.baseUrl}/todos/${todo.id}`, JSON.stringify(todo)).subscribe(data => {
+//   // this.http.post<Todo>(`${this.baseUrl}/todos/${todo.id}`, JSON.stringify(todo)).subscribe(data => {
 //   //   this.dataStore.todos.forEach((t, i) => {
 //   //     if (t.id === data.id) { this.dataStore.todos[i] = data; }
 //   //   });

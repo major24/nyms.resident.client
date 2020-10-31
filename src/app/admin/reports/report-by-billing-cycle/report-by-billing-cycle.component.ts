@@ -16,13 +16,15 @@ export class ReportByBillingCycleComponent implements OnInit {
   localAuthorities: KeyPair[] = [
     { key: '1', value: 'Derbyshire County Council'},
     { key: '2', value:'Manchester City Council'},
-    { key: '3', value:'Tameside Metropolitan Borough Council'}
+    { key: '3', value:'Tameside Metropolitan Borough Council'},
+    { key: '100', value:'Private'}
   ];
   _localAuthorityId: number = 0;
   _billingCycleId: number = 0;
   _invoiceData: InvoiceData;
   _invoices: any = []; // TODO: chg to conc obj
   error: string = '';
+  loading: boolean = false;
 
   constructor(private invoiceService: InvoiceService) { }
 
@@ -56,16 +58,20 @@ export class ReportByBillingCycleComponent implements OnInit {
       this.error = 'Please select local authority and a billing cycle';
       return;
     }
-
+    this.loading = true;
     this._invoiceData = new InvoiceDataInit();
     this.invoiceService.loadInvoiceByBillingCycle(this._localAuthorityId, this._billingCycleId)
     .subscribe({
       next: (data) => {
         this._invoiceData = data;
         this._invoices = Object.assign(this._invoices, [...data.invoiceResidents]);
-        console.log('>>>', this._invoiceData)
+        this.loading = false;
       },
-      error: (error) => { console.log('Error getting invoice data by billing cycle ', error); }
+      error: (error) => {
+        console.log('Error getting invoice data by billing cycle ', error);
+        this.error = error;
+        this.loading = false;
+      }
     })
   }
 

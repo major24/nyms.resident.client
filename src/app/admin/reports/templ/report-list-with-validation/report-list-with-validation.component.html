@@ -45,7 +45,7 @@
           </div>
           <div class="col-3 align-center"> <!--validation-->
             <div class="form-group" >
-              <input *ngIf="schedule.invoiceValidatedModel.id === 0" type="checkbox" name="isValid" id="isValid" formControlName="isValid"
+              <input *ngIf="schedule.invoiceValidatedModel.id === 0" [attr.data-cy-isvalid]="invoice.name+'_'+schedule.amountDue" type="checkbox" name="isValid" id="isValid" formControlName="isValid"
                 (click)="onIsValidChange($event, schedule.id)" [ngModel]="myvalue">
             </div>
             <div class="form-group small" *ngIf="schedule.invoiceValidatedModel.id > 0">
@@ -79,7 +79,7 @@
 
       <div class="row mt-3">
         <div class="col-md text-right">
-          <button type="button" [disabled]="saving" [disabled]="!hasDataToSave" class="btn btn-primary" (click)="save()">
+          <button type="button" id="save" [disabled]="saving" [disabled]="!hasDataToSave" class="btn btn-primary" (click)="save()">
             <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
             Save
           </button>

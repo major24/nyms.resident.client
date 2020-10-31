@@ -10,6 +10,7 @@ import ReferralAgency from '../../../helpers/data-referral-agency';
 import CareNeeds from '../../../helpers/data-care-needs';
 import StayTypes from '../../../helpers/data-stay-types';
 import EnquiryStatuses from '../../../helpers/data-enquiry-status';
+import { Util } from '../../../helpers/index';
 
 @Component({
   selector: 'app-enquires-edit',
@@ -38,7 +39,9 @@ export class EnquiresEditComponent implements OnInit {
     status: new FormControl(''),
     careHome: new FormControl(''),
     referralAgency: new FormControl(''),
-    isPrivate: new FormControl('')
+    isPrivate: new FormControl(''),
+    admissionDate: new FormControl(''),
+    localAuthority: new FormControl('')
   });
 
   activeIds: string[] = ['panel-profile', 'panel-carehome'] // default to open profile //, 'panel-address']
@@ -46,7 +49,8 @@ export class EnquiresEditComponent implements OnInit {
     private _Activatedroute: ActivatedRoute,
     private _router: Router,
     private enquiresService: EnquiresService,
-    private careHomeService: CarehomeService
+    private careHomeService: CarehomeService,
+    private readonly util: Util
   ) { }
 
   ngOnInit(): void {
@@ -109,8 +113,8 @@ export class EnquiresEditComponent implements OnInit {
       this.enquiryEditForm.controls['careHome'].setValue(data.careHomeId);
     }
     // to load la, you need which care it belongs to?
-    if (data.careHomeId && data.careHomeId > 0 && data.localAuthorityId && data.localAuthorityId > 0) {
-      if (data.localAuthorityId) { this.enquiryEditForm.controls['referralAgency'].setValue(data.localAuthorityId); }
+    if (data.careHomeId && data.careHomeId > 0 && data.referralAgencyId && data.referralAgencyId > 0) {
+      if (data.referralAgencyId) { this.enquiryEditForm.controls['referralAgency'].setValue(data.referralAgencyId); }
     }
     if (data.status) { this.enquiryEditForm.controls['status'].setValue(data.status); }
   }
@@ -139,24 +143,24 @@ export class EnquiresEditComponent implements OnInit {
     Object.assign(this.careCategories, ...y);
 
     // Load hardcoded referral agency info
-    // let z = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.localAuthorities);
-    // Object.assign(this.localAuthorities, ...z);
+    let z = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.localAuthorities);
+    Object.assign(this.localAuthorities, ...z);
   }
 
 
   onReferralAgencyChange(event: any): void {
-    this.enquiryResident = Object.assign(this.enquiryResident, { localAuthorityId: +event.target.value });
+    this.enquiryResident = Object.assign(this.enquiryResident, { referralAgencyId: +event.target.value });
   }
 
-  onIsPrivateChange(event: any): void {
-    // private id = 101
-    let privateId = 0; // default
-    if (event.target.checked) {
-      privateId = 101;
-      this.enquiryEditForm.controls['referralAgency'].setValue('');
-    }
-    this.enquiryResident = Object.assign(this.enquiryResident, { localAuthorityId: privateId });
-  }
+  // onIsPrivateChange(event: any): void {
+  //   // private id = 101
+  //   let privateId = 0; // default
+  //   if (event.target.checked) {
+  //     privateId = 101;
+  //     this.enquiryEditForm.controls['referralAgency'].setValue('');
+  //   }
+  //   this.enquiryResident = Object.assign(this.enquiryResident, { localAuthorityId: privateId });
+  // }
 
 
 
@@ -180,12 +184,8 @@ export class EnquiresEditComponent implements OnInit {
   onMiddleNameUpdated(event: any): void {
     this.enquiryResident = Object.assign(this.enquiryResident, { middleName: event.target.value });
   }
-  onDobUpdated(event: any): void {
-    // console.log(event); //event format = {year: 1962, month: 12, day: 16}
-    if (event) {
-      // const d = new Date(event.year, event.month-1, event.day);
-      this.enquiryResident = Object.assign(this.enquiryResident, { dob: this.convertToJsDate(event) });
-    }
+  onDobUpdated(date: any): void {
+    this.enquiryResident = Object.assign(this.enquiryResident, { dob: date });
   }
   onGenderUpdated(event: any): void {
     this.enquiryResident = Object.assign(this.enquiryResident, { gender: event.target.value });
@@ -283,32 +283,34 @@ export class EnquiresEditComponent implements OnInit {
 
 
   // === misc input ================================
-  onMoveInDateUpdated(event: any): void {
+  onMoveInDateUpdated(date: any): void {
     if (event) {
-      this.enquiryResident = Object.assign(this.enquiryResident, { moveInDate: this.convertToJsDate(event) });
+      this.enquiryResident = Object.assign(this.enquiryResident, { moveInDate: date });
     }
   }
-  onFamilyHomeVisitDateUpdated(event: any): void {
+  onFamilyHomeVisitDateUpdated(date: any): void {
      if (event) {
-      this.enquiryResident = Object.assign(this.enquiryResident, { familyHomeVisitDate: this.convertToJsDate(event) });
+      this.enquiryResident = Object.assign(this.enquiryResident, { familyHomeVisitDate: date });
     }
-  }
-  onEnquiryDateUpdated(event: any): void {
-    if (event) {
-      this.enquiryResident = Object.assign(this.enquiryResident, { enquiryDate: this.convertToJsDate(event) });
-    }
-  }
-  onResponseDateUpdated(event: any): void {
-    if (event) {
-      this.enquiryResident = Object.assign(this.enquiryResident, { responseDate: this.convertToJsDate(event) });
-    }
-  }
-  onResponseUpdated(event: any): void {
-    this.enquiryResident = Object.assign(this.enquiryResident, { response: event.target.value });
   }
   onCommentsUpdated(event: any): void {
     this.enquiryResident = Object.assign(this.enquiryResident, { comments: event.target.value });
   }
+
+  // onEnquiryDateUpdated(event: any): void {
+  //   if (event) {
+  //     this.enquiryResident = Object.assign(this.enquiryResident, { enquiryDate: this.convertToJsDate(event) });
+  //   }
+  // }
+  // onResponseDateUpdated(event: any): void {
+  //   if (event) {
+  //     this.enquiryResident = Object.assign(this.enquiryResident, { responseDate: this.convertToJsDate(event) });
+  //   }
+  // }
+  // onResponseUpdated(event: any): void {
+  //   this.enquiryResident = Object.assign(this.enquiryResident, { response: event.target.value });
+  // }
+
   // ==============================================
 
 
@@ -319,6 +321,19 @@ export class EnquiresEditComponent implements OnInit {
   onStatusChange(event: any): void {
     this.enquiryResident = Object.assign(this.enquiryResident, { status: event.target.value });
   }
+  onAdmissionDateChange(event: any): void {
+    if (event) {
+      this.enquiryResident = Object.assign(this.enquiryResident, { admissionDate: this.util.convertAngDateToJsDate(event) });
+    }
+  }
+  onAdmissionDateBlur(event: any): void {
+    if (event) {
+      this.enquiryResident = Object.assign(this.enquiryResident, { admissionDate: this.util.convertStringDateToJsDate(event.target.value) });
+    }
+  }
+  onLocalAuthorityChange(event: any): void {
+    this.enquiryResident = Object.assign(this.enquiryResident, { localAuthorityId: event.target.value });
+  }
 
   onSubmit(): void {
     // validation...
@@ -328,7 +343,7 @@ export class EnquiresEditComponent implements OnInit {
       this.errors.push('Care home id is required');
     }
     if (this.enquiryResident.foreName === '' && this.enquiryResident.surName === '') {
-      this.errors.push('Fore name and sur name are required');
+      this.errors.push('Forename and surname are required');
     }
     if (this.errors.length > 0) return;
 
@@ -336,7 +351,15 @@ export class EnquiresEditComponent implements OnInit {
       const adr = { street1: '', street2: '', city: '', county: '', postCode: '' };
       this.enquiryResident = Object.assign(this.enquiryResident, { address: adr });
     }
-    console.log('>>>Ready to submit', this.enquiryResident);
+
+    // validate for enq to resident (admit)
+    if (this.enquiryResident.status === 'admit') {
+      if (this.enquiryResident.admissionDate === null || this.enquiryResident.localAuthorityId === 0) {
+        this.errors.push('When admiting, admission date and local authority are required');
+      }
+    }
+
+    console.log('>>>Ready to submit enquiry', this.enquiryResident);
 
     // if refid, then update
     if (this.enquiryResident.referenceId && this.enquiryResident.referenceId != '') {
