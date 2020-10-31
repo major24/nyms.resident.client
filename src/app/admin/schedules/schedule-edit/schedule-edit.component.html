@@ -12,7 +12,7 @@
         </h5>
       </div>
       <div class="col-md text-right">
-        <button class="btn btn-primary btn-sm" (click)="openModal(contentAdd, 0)">Add</button>
+        <button id="add-schedule" class="btn btn-primary btn-sm" (click)="openModal(contentAdd, 0)">Add</button>
       </div>
     </div>
   </div>
@@ -60,8 +60,10 @@
       </div>
       <div class="col-md text-right">
         <button type="button" class="btn btn-outline-dark btn-sm"
+          [attr.data-cy-schedule-expire]="schedule.description"
           (click)="openModal(content, schedule.id)">Expire</button>
         <button type="button" class="btn btn-outline-dark btn-sm mr-1"
+          [attr.data-cy-schedule-delete]="schedule.description"
           (click)="openModal(contentConfirm, schedule.id)">Delete</button>
       </div>
     </div>
@@ -88,7 +90,7 @@
         <div class="form-group">
           <label for="dateOfExit">Exit Date</label>
           <div class="input-group">
-            <input id="dateOfExit" class="form-control" placeholder="yyyy-mm-dd" name="dp" (dateSelect)="onScheduleEndDateChange_1($event)" ngbDatepicker #dp="ngbDatepicker">
+            <input id="dateOfExit" class="form-control" placeholder="yyyy-mm-dd" name="dp" (dateSelect)="onScheduleEndDateChange_1($event)" (blur)="onScheduleEndDateBlur_1($event)" ngbDatepicker #dp="ngbDatepicker">
              <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar"  (click)="dp.toggle()" type="button"></button>
             </div>
@@ -96,7 +98,7 @@
         </div>
     </div>
     <div class="modal-footer">
-      <button type="button" [disabled]="saving" class="btn btn-primary" (click)="updateScheduleEndDate()">
+      <button type="button" id="save-schedule-exit" [disabled]="saving" class="btn btn-primary" (click)="updateScheduleEndDate()">
         <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
         Save
       </button>
@@ -143,14 +145,14 @@
         <div class="form-group">
           <label for="description">Description</label>
           <div class="input-group">
-            <input type="text" class="form-control" id="description" name="description" (change)="onDescriptionChange($event)" placeholder="">
+            <input type="text" class="form-control" [disabled]="disablePaymentDescriptionText" id="description" name="description" (change)="onDescriptionChange($event)" placeholder="" [value]="newSchedule.description">
           </div>
         </div>
 
         <div class="form-group">
           <label for="scheduleBeginDate">Schedule Begin Date</label>
           <div class="input-group">
-            <input id="scheduleBeginDate" class="form-control" placeholder="yyyy-mm-dd" name="scheduleBeginDate" (dateSelect)="onScheduleBeginDateChange($event)" ngbDatepicker #scheduleBeginDate="ngbDatepicker">
+            <input id="scheduleBeginDate" class="form-control" placeholder="yyyy-mm-dd" name="scheduleBeginDate" (dateSelect)="onScheduleBeginDateChange($event)" (blur)="onScheduleBeginDateBlur($event)" ngbDatepicker #scheduleBeginDate="ngbDatepicker">
               <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar"  (click)="scheduleBeginDate.toggle()" type="button"></button>
             </div>
@@ -160,7 +162,7 @@
         <div class="form-group">
           <label for="dpScheduleEndDate_2">Schedule End Date</label>
           <div class="input-group">
-            <input id="dpScheduleEndDate_2" class="form-control" placeholder="yyyy-mm-dd" name="dpScheduleEndDate_2" formControlName="dpScheduleEndDate_2" (dateSelect)="onScheduleEndDateChange_2($event)" ngbDatepicker #dpScheduleEndDate_2="ngbDatepicker" [startDate]="{year: 9999, month: 12}">
+            <input id="dpScheduleEndDate_2" class="form-control" placeholder="yyyy-mm-dd" name="dpScheduleEndDate_2" formControlName="dpScheduleEndDate_2" (dateSelect)="onScheduleEndDateChange_2($event)" (blur)="onScheduleEndDateBlur_2($event)" ngbDatepicker #dpScheduleEndDate_2="ngbDatepicker" [startDate]="{year: 9999, month: 12}">
               <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar"  (click)="dpScheduleEndDate_2.toggle()" type="button"></button>
             </div>
@@ -178,7 +180,7 @@
     </div>
     <div class="modal-footer">
       <div *ngIf="error">{{error}}</div>
-      <button type="button" [disabled]="saving" class="btn btn-primary" (click)="createNewSchdule()">
+      <button type="button" id="create-schedule" [disabled]="saving" class="btn btn-primary" (click)="createNewSchdule()">
         <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
         Save
       </button>
@@ -201,7 +203,7 @@
         </div>
     </div>
     <div class="modal-footer">
-      <button type="button" [disabled]="saving" class="btn btn-primary" (click)="disableSchedule()">
+      <button type="button" id="schedule-delete-btn" [disabled]="saving" class="btn btn-primary" (click)="disableSchedule()">
         <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
         Save
       </button>

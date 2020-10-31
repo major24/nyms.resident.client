@@ -19,7 +19,7 @@ export class EnquiryActionsComponent implements OnInit {
   statusCompleted = 'completed';
   statusCompletedForUI = '_completing';
 
-  constructor(    private _Activatedroute: ActivatedRoute,
+  constructor(private _Activatedroute: ActivatedRoute,
     private _router: Router,
     private enquiresService: EnquiresService,) { }
 
@@ -82,10 +82,6 @@ export class EnquiryActionsComponent implements OnInit {
     });
   }
 
-  onActionResponseFromGridChange(event: any, id: number): void {
-
-  }
-
   addAction(): void {
     // DEFAULT to pending. to be discussed
     // When adding from UI, add negative id, so we can track and update responses associated with it
@@ -105,13 +101,13 @@ export class EnquiryActionsComponent implements OnInit {
     // if status is 'completed', already saved to db. DO not send back
     // if just checked for complete, it will be '_completing'
     const dataToSend = this.enquiryActions.filter(ea => ea.status !== this.statusCompleted)
-    // // before saving change UI related id (negative to zero, so will be saved in db)
+    // before saving change UI related id (negative to zero, so it will be saved in db)
     this.enquiryActions.map(e => {
       if (e.id < 0){
         e.id = 0;
       }
     });
-    console.log('>>??', dataToSend);
+
     this.enquiresService.saveEnquiryActions(this.referenceId, dataToSend)
     .subscribe({
       next: (data) =>{
@@ -130,17 +126,10 @@ export class EnquiryActionsComponent implements OnInit {
 
 
 
-  // saveActionResponse(id: number): void {
-  //   console.log('>>', id)
-  // }
-
-  // completeAction(id: number): void {
-  //   console.log('>>', id)
-  // }
     // === helper methods ==========================
-    convertToJsDate(event: any): Date {
-      return new Date(event.year, event.month - 1, event.day);
-    }
+  convertToJsDate(event: any): Date {
+    return new Date(event.year, event.month - 1, event.day);
+  }
 
 
 }

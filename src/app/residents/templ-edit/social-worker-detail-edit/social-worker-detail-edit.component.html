@@ -1,29 +1,29 @@
 <form [formGroup]="socialWorkerForm">
   <div class="form-group">
-    <label for="foreName">
+    <label for="swForeName">
       <h6 class="text-primary">Fore Name</h6>
     </label>
     <input
       type="text"
       class="form-control"
-      id="foreName"
-      name="foreName"
-      formControlName="foreName"
+      id="swForeName"
+      name="swForeName"
+      formControlName="swForeName"
       (change)="onSwForeNameChange($event)"
       placeholder=""
     />
   </div>
 
   <div class="form-group">
-    <label for="surName">
+    <label for="swSurName">
       <h6 class="text-primary">Sur Name</h6>
     </label>
     <input
       type="text"
       class="form-control"
-      id="surName"
-      name="surName"
-      formControlName="surName"
+      id="swSurName"
+      name="swSurName"
+      formControlName="swSurName"
       (change)="onSwSurNameChange($event)"
       placeholder=""
     />

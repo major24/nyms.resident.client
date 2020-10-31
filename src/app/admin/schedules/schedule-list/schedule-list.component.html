@@ -16,7 +16,9 @@
         <div class="font-italic text-info">{{residentSchedule.paymentFromName}}</div>
       </div>
       <div class="col-md d-flex justify-content-end">
-        <a [routerLink]="['/schedule-edit', residentSchedule.referenceId]">Edit</a>
+        <a [attr.data-cy-schedule-edit]="residentSchedule.foreName+'_'+residentSchedule.surName"
+        [routerLink]="['/schedule-edit', residentSchedule.referenceId]">Edit</a>
+        <!-- <a [routerLink]="['/schedule-edit', residentSchedule.referenceId]">Edit</a> -->
       </div>
     </div>
 

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Util } from '../../../helpers/index';
 
 @Component({
   selector: 'resident-profile-edit',
@@ -32,7 +33,7 @@ export class ResidentProfileEditComponent implements OnInit {
     maritalStatus: new FormControl(''),
   });
 
-  constructor() { }
+  constructor(private readonly util: Util) { }
 
   ngOnInit(): void {
   }
@@ -62,7 +63,14 @@ export class ResidentProfileEditComponent implements OnInit {
     this.middleNameUpdated.emit(event);
   }
   onDobChange(event: any): void {
-    this.dobUpdated.emit(event);
+    if (event) {
+      this.dobUpdated.emit(this.util.convertAngDateToJsDate(event));
+    }
+  }
+  onDobBlur(event: any): void {
+    if (event) {
+      this.dobUpdated.emit(this.util.convertStringDateToJsDate(event.target.value));
+    }
   }
   onGenderChange(event: any): void {
     this.genderUpdated.emit(event);

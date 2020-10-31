@@ -6,7 +6,7 @@
     </label>
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd"
-        formControlName="moveInDate" name="moveInDate" (dateSelect)="onMoveInDateChange($event)" ngbDatepicker #d1="ngbDatepicker">
+        formControlName="moveInDate" id="moveInDate" name="moveInDate" (dateSelect)="onMoveInDateChange($event)" (blur)="onMoveInDateBlur($event)" ngbDatepicker #d1="ngbDatepicker">
       <div class="input-group-append">
         <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
       </div>
@@ -19,7 +19,7 @@
     </label>
     <div class="input-group">
       <input class="form-control" placeholder="yyyy-mm-dd"
-        formControlName="familyHomeVisitDate" name="familyHomeVisitDate" (dateSelect)="onFamilyHomeVisitDateChange($event)" ngbDatepicker #d2="ngbDatepicker">
+        formControlName="familyHomeVisitDate" id="familyHomeVisitDate" name="familyHomeVisitDate" (dateSelect)="onFamilyHomeVisitDateChange($event)" (blur)="onFamilyHomeVisitDateBlur($event)" ngbDatepicker #d2="ngbDatepicker">
       <div class="input-group-append">
         <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
       </div>

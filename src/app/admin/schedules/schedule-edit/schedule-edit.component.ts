@@ -4,6 +4,7 @@ import { ResidentSchedule, Schedule } from '../../models/index';
 import { ScheduleService } from '../../services/index';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Util } from '../../../helpers/index';
 
 @Component({
   selector: 'schedule-edit',
@@ -23,6 +24,7 @@ export class ScheduleEditComponent implements OnInit {
   saving: boolean = false;
   paymentProviders: any = [];
   paymentTypes: any = [];
+  disablePaymentDescriptionText: boolean = true;
 
   createScheduleForm = new FormGroup({
     dpScheduleEndDate_2: new FormControl({ year: 9999, month: 12, day: 31 })
@@ -32,7 +34,8 @@ export class ScheduleEditComponent implements OnInit {
     private _Activatedroute: ActivatedRoute,
     private _router: Router,
     private scheduleService: ScheduleService,
-    private modalService: NgbModal) { }
+    private modalService: NgbModal,
+    private readonly util: Util) { }
 
   ngOnInit(): void {
     this.loadPaymentProviders();
@@ -88,16 +91,31 @@ export class ScheduleEditComponent implements OnInit {
     this.newSchedule = Object.assign(this.newSchedule, { paymentProviderId: +event.target.value });
   }
   onPaymentTypeChange(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { paymentTypeId: +event.target.value });
+    const selId = +event.target.value;
+    this.newSchedule = Object.assign(this.newSchedule, { paymentTypeId: selId });
+    this.newSchedule = Object.assign(this.newSchedule, { description: '' });
+
+    const pType = this.paymentTypes.find(pt => pt.id === selId);
+    if (pType) {
+      this.newSchedule = Object.assign(this.newSchedule, { description: pType.name });
+    }
+    // ids 1-3 is LA weekly, CC weekly, Private weekly. so if > 3 then let edit desc
+    this.disablePaymentDescriptionText = (selId > 3) ? false : true;
   }
   onDescriptionChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { description: event.target.value });
   }
   onScheduleBeginDateChange(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { scheduleBeginDate: this.convertToJsDate(event) });
+    this.newSchedule = Object.assign(this.newSchedule, { scheduleBeginDate: this.util.convertAngDateToJsDate(event) });
+  }
+  onScheduleBeginDateBlur(event: any): void {
+    this.newSchedule = Object.assign(this.newSchedule, { scheduleBeginDate: this.util.convertStringDateToJsDate(event.target.value) });
   }
   onScheduleEndDateChange_2(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: this.convertToJsDate(event) });
+    this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: this.util.convertAngDateToJsDate(event) });
+  }
+  onScheduleEndDateBlur_2(event: any): void {
+    this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: this.util.convertStringDateToJsDate(event.target.value) });
   }
   onWeeklyFeeChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { weeklyFee: +event.target.value });
@@ -141,6 +159,9 @@ export class ScheduleEditComponent implements OnInit {
     if (event) {
       this.scheduleEndDate = `${event.year}-${event.month}-${event.day}`;
     }
+  }
+  onScheduleEndDateBlur_1(event: any): void {
+    this.scheduleEndDate = event.target.value;
   }
   updateScheduleEndDate(): void {
     this.saving = true;

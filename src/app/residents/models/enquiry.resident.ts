@@ -5,6 +5,7 @@ import { EnquiryAction } from './enquiry-action';
 export interface EnquiryResident {
   referenceId: string;
   careHomeId: number;
+  referralAgencyId: number;
   localAuthorityId: number;
   foreName: string;
   surName: string;
@@ -29,12 +30,14 @@ export interface EnquiryResident {
   careCategoryName: string;
   localAuthorityName: string;
   updatedDate: Date;
+  admissionDate: Date;
 }
 
 export function createInstanceofEnquiryResident() {
   let model: EnquiryResident = {
     referenceId: '',
     careHomeId: 0,
+    referralAgencyId: 0,
     localAuthorityId: 0,
     foreName: '',
     surName: '',
@@ -64,6 +67,7 @@ export function createInstanceofEnquiryResident() {
     careCategoryName: '',
     localAuthorityName: '',
     updatedDate: undefined,
+    admissionDate: undefined
   };
   return model;
 }

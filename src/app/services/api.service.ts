@@ -56,7 +56,7 @@ export class ApiService {
   }
 
   updateEnquiryResident(enqResident: EnquiryResident) {
-    return this.http.put<EnquiryResident>(
+    return this.http.post<EnquiryResident>(
       `/api/enquires/${enqResident.referenceId}`,
       enqResident
     );
@@ -82,7 +82,7 @@ export class ApiService {
   }
 
   updateExitDate(referenceId: string, exitDate: string): Observable<any> {
-    return this.http.put<any>(`/api/residents/${referenceId}/exit-date`, { referenceId: referenceId, exitDate: exitDate });
+    return this.http.post<any>(`/api/residents/${referenceId}/exit-date`, { referenceId: referenceId, exitDate: exitDate });
   }
   // === endof resident related ===
 
@@ -130,11 +130,11 @@ export class ApiService {
   }
 
   updateScheduleEndDate(id: number, scheduleEndDate: string): Observable<any> {
-    return this.http.put<any>(`/api/residents/schedules/${id}/end-date`, { id: id, scheduleEndDate: scheduleEndDate })
+    return this.http.post<any>(`/api/residents/schedules/${id}/end-date`, { id: id, scheduleEndDate: scheduleEndDate })
   }
 
   inactivateSchedule(id: number): Observable<any> {
-    return this.http.put<any>(`/api/residents/schedules/${id}/inactivate`, { id: id })
+    return this.http.post<any>(`/api/residents/schedules/${id}/inactivate`, { id: id })
   }
 
 

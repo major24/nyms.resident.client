@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Util } from '../../../helpers/index';
 
 @Component({
   selector: 'enquiry-misc-edit',
@@ -28,7 +29,7 @@ export class EnquiryMiscEditComponent implements OnInit {
     response: new FormControl(''),
     comments: new FormControl(''),
   });
-  constructor() { }
+  constructor(private readonly util: Util) { }
 
   ngOnInit(): void {
 
@@ -57,20 +58,33 @@ export class EnquiryMiscEditComponent implements OnInit {
   }
 
   onMoveInDateChange(event: any): void {
-    this.moveInDateUpdated.emit(event);
+    if (event) {
+      this.moveInDateUpdated.emit(this.util.convertAngDateToJsDate(event));
+    }
   }
+  onMoveInDateBlur(event: any): void {
+    this.moveInDateUpdated.emit(this.util.convertStringDateToJsDate(event.target.value));
+  }
+
   onFamilyHomeVisitDateChange(event: any): void {
-    this.familyHomeVisitDateUpdated.emit(event);
+    if(event) {
+      this.familyHomeVisitDateUpdated.emit(this.util.convertAngDateToJsDate(event));
+    }
   }
-  onEnquiryDateChange(event: any): void {
-    this.enquiryDateUpdated.emit(event);
+  onFamilyHomeVisitDateBlur(event: any): void {
+    if (event) {
+      this.familyHomeVisitDateUpdated.emit(this.util.convertStringDateToJsDate(event.target.value));
+    }
   }
-  onResponseDateChange(event: any): void {
-    this.responseDateUpdated.emit(event);
-  }
-  onResponseChange(event: any): void {
-    this.responseUpdated.emit(event);
-  }
+  // onEnquiryDateChange(event: any): void {
+  //   this.enquiryDateUpdated.emit(event);
+  // }
+  // onResponseDateChange(event: any): void {
+  //   this.responseDateUpdated.emit(event);
+  // }
+  // onResponseChange(event: any): void {
+  //   this.responseUpdated.emit(event);
+  // }
   onCommentsChange(event: any): void {
     this.commentsUpdated.emit(event);
   }
