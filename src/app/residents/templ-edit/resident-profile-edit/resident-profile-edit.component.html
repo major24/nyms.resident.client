@@ -9,7 +9,7 @@
   </div>
 
   <div class="form-group">
-    <label for="foreName">
+    <label for="surName">
       <h6 class="text-primary">Surname</h6>
     </label>
     <input type="text" class="form-control" id="surName" name="surName" formControlName="surName"
@@ -24,7 +24,15 @@
       (change)="onMiddleNameChange($event)" placeholder="">
   </div>
 
-  <div class="form-group">
+  <mdate
+  [dateValue]="dob"
+  [labelDateCtl]="'Dob'"
+  [startYear]="1500"
+  [DateCtlId]="'dob'"
+  (dateCtlSelectedEvent)="onDobChange($event)"
+  ></mdate>
+
+  <!-- <div class="form-group">
     <label for="dob">
       <h6 class="text-primary">DOB</h6>
     </label>
@@ -36,7 +44,7 @@
         <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
       </div>
     </div>
-  </div>
+  </div> -->
 
 
   <div class="form-group">
@@ -47,25 +55,25 @@
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="genderMale" formControlName="gender" name="gender"
+      <input type="radio" [attr.data-cy-gender]="'male'" class="custom-control-input" id="genderMale" formControlName="gender" name="gender"
         (change)="onGenderChange($event)" value="male">
       <label class="custom-control-label" for="genderMale">Male</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="genderFemale" formControlName="gender" name="gender"
+      <input type="radio" [attr.data-cy-gender]="'female'" class="custom-control-input" id="genderFemale" formControlName="gender" name="gender"
         (change)="onGenderChange($event)" value="female">
       <label class="custom-control-label" for="genderFemale">Female</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="genderNotDisclosed" formControlName="gender" name="gender"
+      <input type="radio" [attr.data-cy-gender]="'notdisclosed'" class="custom-control-input" id="genderNotDisclosed" formControlName="gender" name="gender"
         (change)="onGenderChange($event)" value="notdisclosed">
       <label class="custom-control-label" for="genderNotDisclosed">Not Disclosed</label>
     </div>
   </div>
 
-  <!-- <div class="form-group">
+  <div class="form-group">
     <div>
       <label for="maritalStatus">
         <h6 class="text-primary">Martial Status</h6>
@@ -73,19 +81,19 @@
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="maritalStatusMarried" formControlName="maritalStatus"
+      <input type="radio" [attr.data-cy-maritalstatus]="'married'" class="custom-control-input" id="maritalStatusMarried" formControlName="maritalStatus"
         name="maritalStatus" (change)="onMartialStatusChange($event)" value="married">
       <label class="custom-control-label" for="maritalStatusMarried">Married</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="maritalStatusDivorced" formControlName="maritalStatus"
+      <input type="radio" [attr.data-cy-maritalstatus]="'divorced'" class="custom-control-input" id="maritalStatusDivorced" formControlName="maritalStatus"
         name="maritalStatus" (change)="onMartialStatusChange($event)" value="divorced">
       <label class="custom-control-label" for="maritalStatusDivorced">Divorced</label>
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="maritalStatusWidower" formControlName="maritalStatus"
+      <input type="radio" [attr.data-cy-maritalstatus]="'widower'" class="custom-control-input" id="maritalStatusWidower" formControlName="maritalStatus"
         name="maritalStatus" (change)="onMartialStatusChange($event)" value="widower">
       <label class="custom-control-label" for="maritalStatusWidower">Widower</label>
     </div>
@@ -95,5 +103,5 @@
         name="maritalStatus" (change)="onMartialStatusChange($event)" value="single">
       <label class="custom-control-label" for="maritalStatusSingle">Single</label>
     </div>
-  </div> -->
+  </div>
 </form>

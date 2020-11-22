@@ -50,6 +50,7 @@ export class ResidentsListComponent implements OnInit {
     .subscribe({
       next: (data) => {
         Object.assign(this.residents, [...data]);
+        console.log('>>>2', data);
         this.loading = false;
       },
       error: (error) => {

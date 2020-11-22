@@ -5,3 +5,5 @@ export * from './room-location';
 export * from './room';
 export * from './social-worker';
 export * from './enquiry-action';
+export * from './next-of-kin';
+export * from './contact-info';

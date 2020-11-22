@@ -15,6 +15,7 @@ import { ServerErrorComponent } from './common/errors/server-error/server-error.
 import { EnquiryActionsComponent } from './residents/templ-edit/enquiry-actions/enquiry-actions.component';
 import { AuthGuard, AuthResidentsGuard, AuthAdminGuard } from './helpers';
 import { ResidentsListComponent } from './residents/residents-list/residents-list.component';
+import { ResidentEditComponent } from './residents/resident-edit/resident-edit.component';
 
 const routes: Routes = [
     {
@@ -45,6 +46,18 @@ const routes: Routes = [
     {
         path: 'enquires-add',
         component: EnquiresEditComponent
+    },
+    {
+        path: 'enquires22-add',
+        component: ResidentEditComponent
+    },
+    {
+        path: 'residents-admit/:referenceId',
+        component: ResidentEditComponent
+    },
+    {
+        path: 'residents-edit/:referenceId',
+        component: ResidentEditComponent
     },
     {
         path: 'enquires-action/:referenceId',

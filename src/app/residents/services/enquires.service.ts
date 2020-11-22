@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EnquiryResident, EnquiryAction } from '../models';
+import { EnquiryResident, EnquiryAction, CareHome, Resident } from '../models';
 import { Observable } from 'rxjs';
 import { ApiService } from '../../services/index';
 
@@ -33,6 +33,14 @@ export class EnquiresService {
 
   saveEnquiryActions(referenceId: string, enquiryActions: EnquiryAction[]): Observable<EnquiryAction[]> {
     return this.apiService.saveEnquiryActions(referenceId, enquiryActions);
+  }
+
+  loadCareHomeDetailByEnquiryReferenceId(referenceId: string): Observable<CareHome> {
+    return this.apiService.loadCareHomeDetailByEnquiryReferenceId(referenceId);
+  }
+
+  admitResident(referenceId: string, resident: Resident): Observable<Resident> {
+    return this.apiService.admitResident(referenceId, resident);
   }
 
 }

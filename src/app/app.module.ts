@@ -29,6 +29,12 @@ import { MainPipe } from './main-pipe.module';
 import { AccessDeniedComponent } from './common/errors/access-denied/access-denied.component';
 import { ServerErrorComponent } from './common/errors/server-error/server-error.component';
 import { EnquiryActionsComponent } from './residents/templ-edit/enquiry-actions/enquiry-actions.component';
+import { ResidentEditComponent } from './residents/resident-edit/resident-edit.component';
+import { NextOfKinComponent } from './residents/templ-edit/next-of-kin/next-of-kin.component';
+import { ContactInfoComponent } from './residents/templ-edit/contact-info/contact-info.component';
+import { ReferralInfoComponent } from './residents/templ-edit/referral-info/referral-info.component';
+import { ResidentEditSummaryComponent } from './residents/templ-edit/resident-edit-summary/resident-edit-summary.component';
+import { MdateComponent } from './residents/templ-edit/mdate/mdate.component';
 // import { SplitPipe } from './common/split.pipe';
 // import { ModalSetExitComponent } from './common/modal-set-exit/modal-set-exit.component';
 // import { MainPipe } from
@@ -71,6 +77,12 @@ export function tokenGetter() {
     AccessDeniedComponent,
     ServerErrorComponent,
     EnquiryActionsComponent,
+    ResidentEditComponent,
+    NextOfKinComponent,
+    ContactInfoComponent,
+    ReferralInfoComponent,
+    ResidentEditSummaryComponent,
+    MdateComponent,
     // SplitPipe
   ],
   providers: [

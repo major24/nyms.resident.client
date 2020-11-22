@@ -1,0 +1,142 @@
+<div>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <span class="text-primary h5">
+          {{ resident.foreName }} {{ resident.surName }}
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">Dob: {{ resident.dob | date }}</div>
+      <div class="col">Gender: {{ resident.gender }}</div>
+      <div class="col">Maritial Status: {{ resident.maritalStatus }}</div>
+    </div>
+  </div>
+
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col">
+        <span class="text-info h6">Contact Detail</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <span>{{ resident.address.street1 }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <span>{{ resident.address.city }}</span>
+        <span class="ml-3">{{ resident.address.county }}</span>
+        <span class="ml-3">{{ resident.address.postCode }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <span>{{ resident.emailAddress }}</span>
+        <span class="ml-5">{{ resident.phoneNumber }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col">
+        <span class="text-info h6">Social Worker</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <span
+          >{{ resident.socialWorker?.foreName }}
+          {{ resident.socialWorker?.surName }}</span
+        >
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <span>{{ resident.socialWorker?.emailAddress }}</span>
+        <span class="ml-5">{{ resident.socialWorker?.phoneNumber }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col">
+        <span class="text-info h6">Care and Room Detail</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <span>{{ resident.stayType }} {{ resident.careNeed }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <span *ngIf="resident.roomLocation != 0">{{
+          resident.roomLocation
+        }}</span>
+        <span class="ml-5" *ngIf="resident.roomNumber != 0">{{
+          resident.roomNumber
+        }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="container mt-3">
+      <div class="row">
+        <div class="col">
+          <span class="text-info h6">Next of Kin</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <span>{{resident.nextOfKin.foreName}}
+            {{resident.nextOfKin.surName}}
+          </span>
+          <span class="ml-3">
+            {{resident.nextOfKin.relationship}}
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <span>{{resident.nextOfKin.address.street1}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <span>{{resident.nextOfKin.address.city}}</span>
+          <span class="ml-3">{{resident.nextOfKin.address.county}}</span>
+          <span class="ml-3">{{resident.nextOfKin.address.postCode}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <span>{{resident.nextOfKin.contact.emailAddress.address}}</span>
+          <span class="ml-5">{{resident.nextOfKin.contact.phone.number}}</span>
+        </div>
+      </div>
+    </div> -->
+
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col">
+        <span class="text-info h6">Admission</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <span>Date: {{ resident.moveInDate | date }}</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <span>PO Number: {{ resident.poNumber }}</span>
+        <span class="ml-5">Nhs Number: {{ resident.nhsNumber }}</span>
+      </div>
+    </div>
+  </div>
+</div>

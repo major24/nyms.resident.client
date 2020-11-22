@@ -1,0 +1,31 @@
+<form [formGroup]="contactForm">
+  <div class="form-group">
+    <label for="emailAddress">
+      <h6 class="text-primary">Email Address</h6>
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="emailAddress"
+      name="emailAddress"
+      formControlName="emailAddress"
+      (change)="onEmailChange($event)"
+      placeholder=""
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="phoneNumber">
+      <h6 class="text-primary">Phone Number</h6>
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="phoneNumber"
+      name="phoneNumber"
+      formControlName="phoneNumber"
+      (change)="onPhoneNumberChange($event)"
+      placeholder=""
+    />
+  </div>
+</form>

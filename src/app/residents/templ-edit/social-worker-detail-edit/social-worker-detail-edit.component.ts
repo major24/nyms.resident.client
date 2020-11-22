@@ -10,7 +10,7 @@ export class SocialWorkerDetailEditComponent implements OnInit {
   @Input() foreName: string;
   @Input() surName: string;
   @Input() phoneNumber: string;
-  @Input() email: string;
+  @Input() emailAddress: string;
 
   @Output() swForeNameUpdated = new EventEmitter<string>();
   @Output() swSurNameUpdated = new EventEmitter<string>();
@@ -21,7 +21,7 @@ export class SocialWorkerDetailEditComponent implements OnInit {
     swForeName: new FormControl(''),
     swSurName: new FormControl(''),
     phoneNumber: new FormControl(''),
-    email: new FormControl(''),
+    emailAddress: new FormControl(''),
   });
   constructor() {}
 
@@ -43,9 +43,9 @@ export class SocialWorkerDetailEditComponent implements OnInit {
         changes.phoneNumber.currentValue
       );
     }
-    if (changes.email) {
-      this.socialWorkerForm.controls['email'].setValue(
-        changes.email.currentValue
+    if (changes.emailAddress) {
+      this.socialWorkerForm.controls['emailAddress'].setValue(
+        changes.emailAddress.currentValue
       );
     }
   }

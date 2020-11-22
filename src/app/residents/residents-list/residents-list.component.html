@@ -45,16 +45,22 @@
       <div>{{res.laId}}</div>
     </div>
     <div class="col-sm">
-      <div>{{res.admissionDate | date}}</div>
+      <div>{{res.moveInDate | date}}</div>
     </div>
     <div class="col-sm">
+      <span>
+        <a [attr.data-cy-res-edit]="res.foreName+'_'+res.surName" [routerLink]="['/residents-edit', res.referenceId]">Edit</a>
+      </span>
+      <span class="ml-3">
+        <a [attr.data-cy-res-view]="res.foreName+'_'+res.surName" [routerLink]="['/residents-view', res.referenceId]">View</a>
+      </span>
+    </div>
+    <!-- <div class="col-sm">
       <div *ngIf="res.exitDate < '9999-11-30T00:00:00'">{{res.exitDate | date}}</div>
-
       <div *ngIf="res.exitDate > '9999-11-30T00:00:00' && showExitButton">
         <button type="button" class="btn btn-outline-dark btn-sm" (click)="openModal(content, res.referenceId)">Discharge</button>
       </div>
-
-    </div>
+    </div> -->
     <div class="h-divider"></div>
   </div>
 
