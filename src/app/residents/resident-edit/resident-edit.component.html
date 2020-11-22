@@ -1,0 +1,293 @@
+<div class="mt-3">
+  <!-- <div>==={{resident | json}}</div> -->
+  <!-- <div>==={{resident.contactInfos | json}}</div> -->
+  <!-- <div>===>>{{noks | json}}</div> -->
+  <div class="container">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>Profile</a>
+        <ng-template ngbNavContent>
+          <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 text-info h5">Resident Detail</span>
+          </nav>
+          <div>
+            <label for="careHome">
+              <h6 class="text-primary">{{ careHomeDetail?.name }}</h6>
+            </label>
+          </div>
+
+          <resident-profile-edit
+            [foreName]="resident.foreName"
+            [surName]="resident.surName"
+            [middleName]="resident.middleName"
+            [dob]="resident.dob"
+            [gender]="resident.gender"
+            [maritalStatus]="resident.maritalStatus"
+            (foreNameUpdated)="onForeNameUpdated($event)"
+            (surNameUpdated)="onSurNameUpdated($event)"
+            (middleNameUpdated)="onMiddleNameUpdated($event)"
+            (dobUpdated)="onDobUpdated($event)"
+            (genderUpdated)="onGenderUpdated($event)"
+            (martialStatusUpdated)="onMartialStatusUpdated($event)"
+          >
+          </resident-profile-edit>
+
+          <!-- add space at bottom of tab -->
+          <div class="mb-3">&nbsp;</div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2" [disabled]="disabled">
+        <a ngbNavLink [attr.data-cy-resident-tab]="'contact-info'"
+          >Contact Info</a
+        >
+        <ng-template ngbNavContent>
+          <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 text-info h5">Address</span>
+          </nav>
+          <address-edit
+            [street1]="resident.address?.street1"
+            [city]="resident.address?.city"
+            [county]="resident.address?.county"
+            [postCode]="resident.address?.postCode"
+            (street1Updated)="onStreet1Updated($event)"
+            (cityUpdated)="onCityUpdated($event)"
+            (countyUpdated)="onCountyUpdated($event)"
+            (postCodeUpdated)="onPostCodeUpdated($event)"
+          >
+          </address-edit>
+
+          <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 text-info h5"
+              >Contact Information</span
+            >
+          </nav>
+          <contact-info
+            [emailAddress]="resident.emailAddress"
+            [phoneNumber]="resident.phoneNumber"
+            (emailUpdated)="onEmailUpdated($event)"
+            (phoneNumberUpdated)="onPhoneNumberUpdated($event)"
+          >
+          </contact-info>
+
+          <!-- add space at bottom of tab -->
+          <div class="mb-3">&nbsp;</div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="3">
+        <a ngbNavLink [attr.data-cy-resident-tab]="'social-worker'">
+          <span>Social Worker</span>
+        </a>
+        <ng-template ngbNavContent>
+          <div>
+            <nav class="navbar navbar-light bg-light">
+              <span class="navbar-brand mb-0 text-info h5"
+                >Referral Information</span
+              >
+            </nav>
+            <social-worker-detail-edit
+              [foreName]="resident.socialWorker?.foreName"
+              [surName]="resident.socialWorker?.surName"
+              [phoneNumber]="resident.socialWorker?.phoneNumber"
+              [emailAddress]="resident.socialWorker?.emailAddress"
+              (swForeNameUpdated)="onSwForeNameUpdated($event)"
+              (swSurNameUpdated)="onSwSurNameUpdated($event)"
+              (swPhoneNumberUpdated)="onSwPhoneNumberUpdated($event)"
+              (swEmailUpdated)="onSwEmailUpdated($event)"
+            >
+            </social-worker-detail-edit>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="4">
+        <a ngbNavLink [attr.data-cy-resident-tab]="'care-room'">Care & Room</a>
+        <ng-template ngbNavContent>
+          <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 text-info h5">Care Type</span>
+          </nav>
+          <care-type-edit
+            [isCareHomeSelectionChanged]="isCareHomeSelectionChanged"
+            [careCategories]="careCategories"
+            [careNeeds]="careNeeds"
+            [stayTypes]="stayTypes"
+            [careCategoryId]="resident.careCategoryId"
+            [careNeed]="resident.careNeed"
+            [stayType]="resident.stayType"
+            (careCategoryUpdated)="onCareCategoryUpdated($event)"
+            (careNeedUpdated)="oncareNeedUpdated($event)"
+            (stayTypeUpdated)="onStayTypeUpdated($event)"
+          >
+          </care-type-edit>
+
+          <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 text-info h5">Room Detail</span>
+          </nav>
+
+          <room-location-edit
+            [isCareHomeSelectionChanged]="isCareHomeSelectionChanged"
+            [roomLocations]="roomLocations"
+            [roomLocation]="resident.roomLocation"
+            [roomNumber]="resident.roomNumber"
+            (roomLocationUpdated)="onRoomLocationUpdated($event)"
+            (roomNumberUpdated)="onRoomNumberUpdated($event)"
+          >
+          </room-location-edit>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="5">
+        <a ngbNavLink [attr.data-cy-resident-tab]="'next-of-kin'"
+          >Next Of Kin</a
+        >
+        <ng-template ngbNavContent>
+          <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 text-info h5">Next of kin</span>
+          </nav>
+          <!-- <next-of-kin
+            [nokForeName]="resident.nextOfKin?.foreName"
+            [nokSurName]="resident.nextOfKin?.surName"
+            [relationship]="resident.nextOfKin?.relationship"
+            (nokForeNameUpdated)="onNokForeNameUpdated($event)"
+            (nokSurNameUpdated)="onNokSurNameUpdated($event)"
+            (relationshipUpdated)="onRelationshipUpdated($event)"
+            >
+            </next-of-kin>
+
+            <nav class="navbar navbar-light bg-light">
+              <span class="navbar-brand mb-0 text-info h5">Contact Detail</span>
+            </nav>
+
+            <contact-info
+            [email]="''"
+            [phoneNumber]="''"
+            (emailUpdated)="onNokEmailUpdated($event)"
+            (phoneNumberUpdated)="onNokPhoneNumberUpdated($event)">
+            </contact-info
+            >
+
+            <nav class="navbar navbar-light bg-light">
+              <span class="navbar-brand mb-0 text-info h5">Address</span>
+            </nav>
+
+            <address-edit
+            [street1]="''"
+            [city]="''"
+            [county]="''"
+            [postCode]="''"
+            (street1Updated)="onNokStreet1Updated($event)"
+            (cityUpdated)="onNokCityUpdated($event)"
+            (countyUpdated)="onNokCountyUpdated($event)"
+            (postCodeUpdated)="onNokPostCodeUpdated($event)"
+            >
+            </address-edit
+            > -->
+
+          <!-- <div class="container">
+              <div class="row">
+                <div class="col-md">
+                  <div class="form-group mt-3 float-right">
+                    <button id="addNok" (click)="onAddNok()" class="btn btn-primary ml-3">
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="6">
+        <a ngbNavLink [attr.data-cy-resident-tab]="'other'">Other</a>
+        <ng-template ngbNavContent>
+          <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 text-info h5">Local Authority</span>
+          </nav>
+          <referral-info
+            [localAuthorities]="localAuthorities"
+            [localAuthorityId]="resident.localAuthorityId"
+            [laId]="resident.laId"
+            [nhsNumber]="resident.nhsNumber"
+            [poNumber]="resident.poNumber"
+            (localAuthorityUpdated)="onLocalAuthorityUpdated($event)"
+            (laIdUpdated)="onLaIdUpdated($event)"
+            (nhsNumberUpdated)="onNhsNumberUpdated($event)"
+            (poNumberUpdated)="onPoNumberUpdated($event)"
+          >
+          </referral-info>
+
+          <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 text-info h5">Admission</span>
+            <span>=={{ resident.moveInDate }}</span>
+          </nav>
+
+          <enquiry-misc-edit
+            [moveInDate]="resident.moveInDate"
+            [labelDateCtl]="'Admission Date'"
+            [familyHomeVisitDate]="resident.familyHomeVisitDate"
+            [comments]="resident.comments"
+            [labelMoveInDate]="'Admission Date'"
+            (moveInDateUpdated)="onMoveInDateUpdated($event)"
+            (familyHomeVisitDateUpdated)="onFamilyHomeVisitDateUpdated($event)"
+            (commentsUpdated)="onCommentsUpdated($event)"
+          >
+          </enquiry-misc-edit>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="7">
+        <a ngbNavLink [attr.data-cy-resident-tab]="'summary'">Summary</a>
+        <ng-template ngbNavContent>
+          <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 text-info h5">Summary</span>
+          </nav>
+          <resident-edit-summary
+            [resident]="resident"
+            [saving]="saving"
+            (saveResidentDataEvent)="onSaveResidentDataEvent($event)"
+            (cancelEvent)="onCancelEvent($event)"
+          >
+          </resident-edit-summary>
+
+          <hr />
+          <!-- save button -->
+          <div class="container">
+            <div class="row">
+              <div class="col-md">
+                <div *ngIf="errors.length > 0">
+                  <div *ngFor="let error of errors" style="color: red">
+                    {{ error }}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md">
+                <div class="form-group mt-3 float-right">
+                  <button
+                    id="cancel"
+                    class="btn btn-secondary"
+                    (click)="onCancel()"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    id="save"
+                    (click)="onSubmit()"
+                    [disabled]="saving"
+                    class="btn btn-primary ml-3"
+                  >
+                    <span
+                      *ngIf="saving"
+                      class="spinner-border spinner-border-sm mr-1"
+                    ></span>
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+    </ul>
+
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+    <!-- <pre>Active: {{ active }}</pre> -->
+  </div>
+  <!-- root container-->
+</div>
+<!--root-->

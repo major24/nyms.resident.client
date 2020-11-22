@@ -64,6 +64,7 @@ export class ReportByBillingCycleComponent implements OnInit {
     .subscribe({
       next: (data) => {
         this._invoiceData = data;
+        if (this._invoiceData.invoiceResidents.length == 0) this.error = 'NOT FOUND';
         this._invoices = Object.assign(this._invoices, [...data.invoiceResidents]);
         this.loading = false;
       },

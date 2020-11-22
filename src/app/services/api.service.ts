@@ -62,6 +62,10 @@ export class ApiService {
     );
   }
 
+  admitResident(referenceId: string, resident: Resident): Observable<Resident> {
+    return this.http.post<Resident>(`api/enquires/${referenceId}/admit`, resident);
+  }
+
   //enquiry actions
   loadEnquiryActions(referenceId: string): Observable<EnquiryAction[]> {
     return this.http.get<EnquiryAction[]>(`/api/enquires/${referenceId}/actions`);
@@ -70,8 +74,6 @@ export class ApiService {
   saveEnquiryActions(referenceId: string, enquiryActions: EnquiryAction[]): Observable<EnquiryAction[]> {
     return this.http.post<any>(`/api/enquires/${referenceId}/actions`, enquiryActions);
   }
-
-
   // === endof enquires ===
 
 
@@ -79,6 +81,10 @@ export class ApiService {
   // === resident related ===
   getAllResidents(careHomeId: number): Observable<Resident[]> {
     return this.http.get<Resident[]>(`/api/carehomes/${careHomeId}/residents/active`);
+  }
+
+  loadResidentByReferenceId(referenceId: string): Observable<Resident> {
+    return this.http.get<Resident>(`/api/residents/${referenceId}`);
   }
 
   updateExitDate(referenceId: string, exitDate: string): Observable<any> {
@@ -93,8 +99,12 @@ export class ApiService {
   loadAllCareHomeDetails(): Observable<CareHome[]> {
     return this.http.get<CareHome[]>(`/api/carehomes/details`);
   }
-
-
+  loadCareHomeDetailByEnquiryReferenceId(referenceId: string): Observable<CareHome> {
+    return this.http.get<CareHome>(`/api/enquires/${referenceId}/carehome/details`);
+  }
+  loadCareHomeDetailByResidentReferenceId(referenceId: string): Observable<CareHome> {
+    return this.http.get<CareHome>(`/api/residents/${referenceId}/carehome/details`);
+  }
   // === endof carehome lookup values ===
 
 

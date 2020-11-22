@@ -5,7 +5,7 @@
     <div class="col-md">
       {{enquiryResident.foreName}} {{enquiryResident.surName}}
     </div>
-    <div class="col-sm">
+    <!-- <div class="col-sm">
       <div *ngIf="enquiryResident.dob">{{enquiryResident.dob | date}}</div>
     </div>
     <div class="col-sm">
@@ -13,7 +13,7 @@
     </div>
     <div class="col-sm">
       <div>{{enquiryResident.localAuthorityName}}</div>
-    </div>
+    </div> -->
     <div class="col-md">
       <div>{{enquiryResident.careCategoryName}}</div>
     </div>
@@ -21,11 +21,15 @@
       <div>{{enquiryResident.careNeed | titlecase }}</div>
     </div>
     <div class="col-sm">
-      <!-- //<span [attr.data-cy-amount]="invoice.name+'_'+schedule.amountDue">{{schedule.amountDue | number : '1.2-2'}}</span> -->
-      <a [attr.data-cy-enq-edit]="enquiryResident.foreName+'_'+enquiryResident.surName" [routerLink]="['/enquires-edit', enquiryResident.referenceId]">Edit</a>
-    </div>
-    <div class="col-sm">
-      <a [routerLink]="['/enquires-action', enquiryResident.referenceId]">Actions</a>
+      <span>
+        <a [attr.data-cy-enq-edit]="enquiryResident.foreName+'_'+enquiryResident.surName" [routerLink]="['/enquires-edit', enquiryResident.referenceId]">Edit</a>
+      </span>
+      <span class="ml-3">
+        <a [routerLink]="['/enquires-action', enquiryResident.referenceId]">Actions</a>
+      </span>
+      <span class="ml-3">
+        <a [attr.data-cy-enq-admit]="enquiryResident.foreName+'_'+enquiryResident.surName" [routerLink]="['/residents-admit', enquiryResident.referenceId]">Admit</a>
+      </span>
     </div>
   </div>
   <div class="h-divider"></div>

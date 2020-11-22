@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { ApiService } from '../../services/index';
-import { Resident } from '../models/index';
+import { Resident, CareHome } from '../models/index';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,7 +14,15 @@ export class ResidentsService {
     return this.apiService.getAllResidents(careHomeId);
   }
 
+  loadResidentByReferenceId(referenceId: string): Observable<Resident> {
+    return this.apiService.loadResidentByReferenceId(referenceId);
+  }
+
   updateExitDate(referenceId: string, exitDate: string): Observable<any> {
     return this.apiService.updateExitDate(referenceId, exitDate);
+  }
+
+  loadCareHomeDetailByResidentReferenceId(referenceId: string): Observable<CareHome> {
+    return this.apiService.loadCareHomeDetailByResidentReferenceId(referenceId);
   }
 }

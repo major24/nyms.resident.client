@@ -41,7 +41,9 @@ export class EnquiresComponent implements OnInit {
   navToAddEnquiry(): void {
     this.router.navigate(['/enquires-add']);
   }
-
+  navToAddEnquiry22(): void {
+    this.router.navigate(['/enquires22-add']);
+  }
 
 }
 

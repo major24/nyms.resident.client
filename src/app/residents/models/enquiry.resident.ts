@@ -18,20 +18,27 @@ export interface EnquiryResident {
   careCategoryId: string;
   careNeed: string;
   stayType: string;
-  reservedRoomLocation: string;
-  reservedRoomNumber: string;
-  moveInDate: Date;
+  roomLocation: number;
+  roomNumber: number;
+  moveInDate: string;
   familyHomeVisitDate: Date;
-  enquiryDate: Date;
-  responseDate: Date;
-  response: string;
   status: string;
   comments: string;
   careCategoryName: string;
   localAuthorityName: string;
   updatedDate: Date;
-  admissionDate: Date;
 }
+
+const address = {
+  id: 0,
+  refType: 'enquiry',
+  addrType: 'home',
+  street1: '',
+  street2: '',
+  city: '',
+  county: '',
+  postCode: '',
+};
 
 export function createInstanceofEnquiryResident() {
   let model: EnquiryResident = {
@@ -45,31 +52,25 @@ export function createInstanceofEnquiryResident() {
     dob: undefined,
     gender: '',
     maritalStatus: '',
-    address: { street1: '', street2: '', city: '', county: '', postCode: '' },
+    address: address,
     socialWorker: {
       foreName: '',
       surName: '',
       phoneNumber: '',
-      email: '',
+      emailAddress: '',
     },
     careCategoryId: '',
     careNeed: '',
     stayType: '',
-    reservedRoomLocation: '',
-    reservedRoomNumber: '',
-    moveInDate: undefined,
+    roomLocation: 0,
+    roomNumber: 0,
+    moveInDate: '',
     familyHomeVisitDate: undefined,
-    enquiryDate: undefined,
-    responseDate: undefined,
-    response: '',
     status: '',
     comments: '',
     careCategoryName: '',
     localAuthorityName: '',
     updatedDate: undefined,
-    admissionDate: undefined
   };
   return model;
 }
-
-

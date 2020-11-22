@@ -2,16 +2,15 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { RoomLocation, Room } from '../../models/index';
 
-
 @Component({
   selector: 'room-location-edit',
   templateUrl: './room-location-edit.component.html',
-  styleUrls: ['./room-location-edit.component.css']
+  styleUrls: ['./room-location-edit.component.css'],
 })
 export class RoomLocationEditComponent implements OnInit {
   @Input() roomLocations: RoomLocation[] = [];
-  @Input() reservedRoomLocation: string;
-  @Input() reservedRoomNumber: number = 0;
+  @Input() roomLocation: string;
+  @Input() roomNumber: number = 0;
   rooms: Room[] = [];
   @Output() roomLocationUpdated = new EventEmitter<string>();
   @Output() roomNumberUpdated = new EventEmitter<string>();
@@ -24,31 +23,31 @@ export class RoomLocationEditComponent implements OnInit {
     rooms: new FormControl(''),
   });
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: any): void {
-    console.log('>>ngchgroomloc=', changes)
+    console.log('>>ngchgroomloc=', changes);
     if (changes.isCareHomeSelectionChanged) {
       this.roomDetailForm.controls['roomLocations'].setValue('');
       this.rooms = [];
       this.roomDetailForm.controls['rooms'].setValue('');
       // this.rooms.splice(0, this.rooms.length);
     }
-    if (changes.reservedRoomLocation) {
-      this.roomDetailForm.controls['roomLocations'].setValue(changes.reservedRoomLocation.currentValue);
-      // this.loadRoomsByLocationId(changes.reservedRoomLocation.currentValue);
+    if (changes.roomLocation) {
+      this.roomDetailForm.controls['roomLocations'].setValue(
+        changes.roomLocation.currentValue
+      );
+      // this.loadRoomsByLocationId(changes.roomLocation.currentValue);
     }
-    if (changes.reservedRoomNumber) {
-      this.loadRoomsByLocationId(+this.reservedRoomLocation);
-      this.roomDetailForm.controls['rooms'].setValue(changes.reservedRoomNumber.currentValue);
+    if (changes.roomNumber) {
+      this.loadRoomsByLocationId(+this.roomLocation);
+      this.roomDetailForm.controls['rooms'].setValue(
+        changes.roomNumber.currentValue
+      );
     }
-
-
   }
-
 
   onRoomLocationChange(event: any): void {
     if (event.target.value) {
@@ -63,9 +62,7 @@ export class RoomLocationEditComponent implements OnInit {
   }
 
   loadRoomsByLocationId(locId: number): void {
-    const selLoc = this.roomLocations.filter(loc => loc.id === locId);
-    this.rooms = selLoc.map(x => x.rooms)[0];
+    const selLoc = this.roomLocations.filter((loc) => loc.id === locId);
+    this.rooms = selLoc.map((x) => x.rooms)[0];
   }
-
 }
-

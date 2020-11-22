@@ -1,30 +1,19 @@
 <form [formGroup]="enquiryMiscForm">
 
-  <div class="form-group">
-    <label for="moveInDate">
-      <h6 class="text-primary">Potential Move In Date</h6>
-    </label>
-    <div class="input-group">
-      <input class="form-control" placeholder="yyyy-mm-dd"
-        formControlName="moveInDate" id="moveInDate" name="moveInDate" (dateSelect)="onMoveInDateChange($event)" (blur)="onMoveInDateBlur($event)" ngbDatepicker #d1="ngbDatepicker">
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
-      </div>
-    </div>
-  </div>
+  <mdate
+  [dateValue]="moveInDate"
+  [labelDateCtl]="labelDateCtl"
+  [startYear]="1500"
+  [DateCtlId]="'moveInDate'"
+  (dateCtlSelectedEvent)="onMoveInDateChange($event)"
+  ></mdate>
 
-  <div class="form-group">
-    <label for="familyHomeVisitDate">
-      <h6 class="text-primary">Home Visit Date</h6>
-    </label>
-    <div class="input-group">
-      <input class="form-control" placeholder="yyyy-mm-dd"
-        formControlName="familyHomeVisitDate" id="familyHomeVisitDate" name="familyHomeVisitDate" (dateSelect)="onFamilyHomeVisitDateChange($event)" (blur)="onFamilyHomeVisitDateBlur($event)" ngbDatepicker #d2="ngbDatepicker">
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button"></button>
-      </div>
-    </div>
-  </div>
+  <mdate
+  [dateValue]="familyHomeVisitDate"
+  [labelDateCtl]="'Home Visit Date'"
+  [DateCtlId]="'familyHomeVisitDate'"
+  (dateCtlSelectedEvent)="onFamilyHomeVisitDateChange($event)"
+  ></mdate>
 
   <div class="form-group">
     <label for="comments">
@@ -33,39 +22,4 @@
     <textarea rows="4" class="form-control" id="comments" name="comments" formControlName="comments" (change)="onCommentsChange($event)" placeholder=""></textarea>
   </div>
 
-
-
-  <!-- <div class="form-group">
-    <label for="enquiryDate">Enquiry Date</label>
-    <div class="input-group">
-      <input class="form-control" placeholder="yyyy-mm-dd"
-        formControlName="enquiryDate" name="enquiryDate" (dateSelect)="onEnquiryDateChange($event)" ngbDatepicker #d3="ngbDatepicker">
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary calendar" (click)="d3.toggle()" type="button"></button>
-      </div>
-    </div>
-  </div> -->
-
-  <!-- <div class="form-group">
-    <label for="responseDate">
-      <h6 class="text-primary">Response Date</h6>
-    </label>
-    <div class="input-group">
-      <input class="form-control" placeholder="yyyy-mm-dd"
-        formControlName="responseDate" name="responseDate" (dateSelect)="onResponseDateChange($event)" ngbDatepicker #d4="ngbDatepicker">
-      <div class="input-group-append">
-        <button class="btn btn-outline-secondary calendar" (click)="d4.toggle()" type="button"></button>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="response">
-      <h6 class="text-primary">Response</h6>
-    </label>
-    <textarea matInput rows="4" class="form-control" id="response" name="response" formControlName="response" (change)="onResponseChange($event)" placeholder=""></textarea>
-  </div> -->
-
-
-
-  </form>
+</form>
