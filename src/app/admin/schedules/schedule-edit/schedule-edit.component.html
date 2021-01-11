@@ -59,12 +59,15 @@
         {{schedule.weeklyFee | number : '1.2-2'}}
       </div>
       <div class="col-md text-right">
-        <button type="button" class="btn btn-outline-dark btn-sm"
+        <!-- <button type="button" class="btn btn-outline-dark btn-sm"
           [attr.data-cy-schedule-expire]="schedule.description"
-          (click)="openModal(content, schedule.id)">Expire</button>
+          (click)="openModal(content, schedule.id)">Expire</button> -->
         <button type="button" class="btn btn-outline-dark btn-sm mr-1"
           [attr.data-cy-schedule-delete]="schedule.description"
           (click)="openModal(contentConfirm, schedule.id)">Delete</button>
+          <button type="button" class="btn btn-outline-dark btn-sm mr-1"
+          [attr.data-cy-schedule-edit]="schedule.description"
+          (click)="openModal(contentAdd, schedule.id)">Edit</button>
       </div>
     </div>
   </div>
@@ -121,8 +124,8 @@
         <div class="form-group">
           <label for="paymentFrom">Payment Providers</label>
           <div class="input-group">
-            <select id="paymentFrom" class="form-control" (change)="onPaymentFromChange($event)">
-              <option value='' selected>Choose</option>
+            <select id="paymentFrom" formControlName="paymentFrom" class="form-control" (change)="onPaymentFromChange($event)">
+              <!-- <option *ngIf="newSchedule.id == 0" value='' selected>Choose</option> -->
               <option *ngFor="let pp of paymentProviders; let i = index" [value]="pp.id">
                 {{pp.name}}
               </option>
@@ -133,8 +136,8 @@
         <div class="form-group">
           <label for="paymentType">Payment Type</label>
           <div class="input-group">
-            <select id="paymentType" class="form-control" (change)="onPaymentTypeChange($event)">
-              <option value='' selected>Choose</option>
+            <select id="paymentType" formControlName="paymentType" class="form-control" (change)="onPaymentTypeChange($event)">
+              <!-- <option value='' selected>Choose</option> -->
               <option *ngFor="let pt of paymentTypes; let i = index" [value]="pt.id">
                 {{pt.name}}
               </option>
@@ -145,14 +148,14 @@
         <div class="form-group">
           <label for="description">Description</label>
           <div class="input-group">
-            <input type="text" class="form-control" [disabled]="disablePaymentDescriptionText" id="description" name="description" (change)="onDescriptionChange($event)" placeholder="" [value]="newSchedule.description">
+            <input type="text" class="form-control" formControlName="description"  id="description" name="description" (change)="onDescriptionChange($event)" placeholder="" [value]="newSchedule.description">
           </div>
         </div>
 
         <div class="form-group">
           <label for="scheduleBeginDate">Schedule Begin Date</label>
           <div class="input-group">
-            <input id="scheduleBeginDate" class="form-control" placeholder="yyyy-mm-dd" name="scheduleBeginDate" (dateSelect)="onScheduleBeginDateChange($event)" (blur)="onScheduleBeginDateBlur($event)" ngbDatepicker #scheduleBeginDate="ngbDatepicker">
+            <input id="scheduleBeginDate" class="form-control" formControlName="scheduleBeginDate" placeholder="yyyy-mm-dd" name="scheduleBeginDate" (dateSelect)="onScheduleBeginDateChange($event)" (blur)="onScheduleBeginDateBlur($event)" ngbDatepicker #scheduleBeginDate="ngbDatepicker">
               <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar"  (click)="scheduleBeginDate.toggle()" type="button"></button>
             </div>
@@ -162,7 +165,7 @@
         <div class="form-group">
           <label for="dpScheduleEndDate_2">Schedule End Date</label>
           <div class="input-group">
-            <input id="dpScheduleEndDate_2" class="form-control" placeholder="yyyy-mm-dd" name="dpScheduleEndDate_2" formControlName="dpScheduleEndDate_2" (dateSelect)="onScheduleEndDateChange_2($event)" (blur)="onScheduleEndDateBlur_2($event)" ngbDatepicker #dpScheduleEndDate_2="ngbDatepicker" [startDate]="{year: 9999, month: 12}">
+            <input id="dpScheduleEndDate_2" class="form-control" formControlName="dpScheduleEndDate_2" placeholder="yyyy-mm-dd" name="dpScheduleEndDate_2" formControlName="dpScheduleEndDate_2" (dateSelect)="onScheduleEndDateChange_2($event)" (blur)="onScheduleEndDateBlur_2($event)" ngbDatepicker #dpScheduleEndDate_2="ngbDatepicker" [startDate]="{year: 9999, month: 12}">
               <div class="input-group-append">
               <button class="btn btn-outline-secondary calendar"  (click)="dpScheduleEndDate_2.toggle()" type="button"></button>
             </div>
@@ -172,7 +175,7 @@
         <div class="form-group">
           <label for="description">Weekly Fee</label>
           <div class="input-group">
-            <input type="number" class="form-control" id="weeklyFee" name="weeklyFee" (change)="onWeeklyFeeChange($event)" placeholder="">
+            <input type="number" class="form-control" formControlName="weeklyFee" id="weeklyFee" name="weeklyFee" (change)="onWeeklyFeeChange($event)" placeholder="">
           </div>
         </div>
       </form>

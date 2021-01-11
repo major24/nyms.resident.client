@@ -13,6 +13,7 @@ import { Util } from '../../../helpers/index';
 })
 export class ScheduleEditComponent implements OnInit {
   residentSchedules: ResidentSchedule = { referenceId: '', localAuthorityId: 0, paymentFromName: '', foreName: '', surName: '', schedules: [] };
+  initSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0, active: 'Y' };
   newSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0, active: 'Y' };
 
   closeResult = '';
@@ -24,10 +25,15 @@ export class ScheduleEditComponent implements OnInit {
   saving: boolean = false;
   paymentProviders: any = [];
   paymentTypes: any = [];
-  disablePaymentDescriptionText: boolean = true;
+  // disablePaymentDescriptionText: boolean = true;
 
   createScheduleForm = new FormGroup({
-    dpScheduleEndDate_2: new FormControl({ year: 9999, month: 12, day: 31 })
+    paymentFrom: new FormControl(''),
+    paymentType: new FormControl(''),
+    description: new FormControl(''),//({value:'', disabled: true}),
+    scheduleBeginDate: new FormControl(''),
+    dpScheduleEndDate_2: new FormControl({ year: 9999, month: 12, day: 31 }),
+    weeklyFee: new FormControl('')
   });
 
   constructor(
@@ -99,8 +105,8 @@ export class ScheduleEditComponent implements OnInit {
     if (pType) {
       this.newSchedule = Object.assign(this.newSchedule, { description: pType.name });
     }
-    // ids 1-3 is LA weekly, CC weekly, Private weekly. so if > 3 then let edit desc
-    this.disablePaymentDescriptionText = (selId > 3) ? false : true;
+    // ids 1-3 is LA weekly, CC weekly, Private weekly. 5 == adjustment
+    selId == 5 ? this.createScheduleForm.controls['description'].enable() : this.createScheduleForm.controls['description'].disable();
   }
   onDescriptionChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { description: event.target.value });
@@ -208,6 +214,30 @@ export class ScheduleEditComponent implements OnInit {
   openModal(content: any, id: number) {
     this.selectedScheduleId = +id;
     this.error = '';
+    // this.createScheduleForm.controls['description'].disable();
+    // Setup if edit is called with existing schedule value?
+    if (this.selectedScheduleId > 0) {
+      const selelectedSchedule = this.residentSchedules.schedules.find(s => s.id == this.selectedScheduleId);
+      this.newSchedule = Object.assign(this.newSchedule, selelectedSchedule)
+    } else {
+      this.newSchedule = Object.assign(this.newSchedule, this.initSchedule)
+    }
+
+    this.createScheduleForm.controls['paymentFrom'].setValue(this.newSchedule.paymentProviderId);
+    this.createScheduleForm.controls['paymentType'].setValue(this.newSchedule.paymentTypeId);
+    this.createScheduleForm.controls['description'].setValue(this.newSchedule.description);
+    if (this.newSchedule.scheduleBeginDate != '') {
+      const d = new Date(this.newSchedule.scheduleBeginDate);
+      this.createScheduleForm.controls['scheduleBeginDate'].setValue({ year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() });
+    } else {
+      this.createScheduleForm.controls['scheduleBeginDate'].setValue('');
+    }
+    if (this.newSchedule.scheduleEndDate != '') {
+      const d = new Date(this.newSchedule.scheduleEndDate);
+      this.createScheduleForm.controls['dpScheduleEndDate_2'].setValue({ year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() });
+    }
+    this.createScheduleForm.controls['weeklyFee'].setValue(this.newSchedule.weeklyFee);
+
     this.open(content);
   }
   // private
