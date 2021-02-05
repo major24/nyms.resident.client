@@ -17,7 +17,7 @@
           <label for="billingCycle"><strong>Billing Cycle</strong></label>
           <select class="custom-select" name="billingCycle" id="billingCycle" formControlName="billingCycle" (change)="onBillingCycleChange($event)">
             <option *ngFor="let bc of billingCycles;" [value]="bc.id">
-              ({{bc.id}}) {{bc.periodStart | date}}  -  {{bc.periodEnd | date}}
+              ({{bc.id}}) {{bc.periodStart | date:'dd-MMM-yy'}}  -  {{bc.periodEnd | date:'dd-MMM-yy'}}
             </option>
           </select>
         </div>

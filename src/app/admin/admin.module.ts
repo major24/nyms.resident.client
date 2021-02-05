@@ -15,6 +15,9 @@ import { ReportByBillingCycleComponent } from './reports/report-by-billing-cycle
 import { DateRangeSelectionComponent } from './reports/templ/date-range-selection/date-range-selection.component';
 import { ReportListWithValidationComponent } from './reports/templ/report-list-with-validation/report-list-with-validation.component';
 import { ReportListComponent } from './reports/templ/report-list/report-list.component';
+// import { MdateComponent } from '../residents/templ-edit/mdate/mdate.component';
+import { MdateModule } from '../residents/templ-edit/mdate/mdateModule';
+
 // import { SplitPipe } from '../common/split.pipe';
 
 @NgModule({
@@ -30,12 +33,14 @@ import { ReportListComponent } from './reports/templ/report-list/report-list.com
     DateRangeSelectionComponent,
     ReportListWithValidationComponent,
     ReportListComponent,
+    // MdateComponent,
     // SplitPipe
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     NgbModule,
+    MdateModule,
     RouterModule.forChild(routes)
   ],
   providers: []

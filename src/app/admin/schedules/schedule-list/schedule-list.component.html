@@ -32,13 +32,13 @@
       </div>
       <div class="col-md">
         <span *ngIf="(schedule?.scheduleBeginDate | date: 'yyyy-mm-dd') > ('1900-01-01' | date: 'yyyy-mm-dd')">
-          {{schedule?.scheduleBeginDate | date}}
+          {{schedule?.scheduleBeginDate | date:'dd-MMM-yy'}}
         </span>
         <!-- <span>{{schedule?.scheduleBeginDate | date: 'yyyy-mm-d'}}</span> -->
       </div>
       <div class="col-md">
         <span *ngIf="(schedule?.scheduleEndDate | date: 'yyyy-mm-dd') > ('1900-01-01' | date: 'yyyy-mm-dd')">
-          {{schedule?.scheduleEndDate | date}}
+          {{schedule?.scheduleEndDate | date:'dd-MMM-yy'}}
         </span>
         <span *ngIf="schedule.active !== 'Y'" class="text-danger" style="font-size: smaller;">
           (Inactive)
