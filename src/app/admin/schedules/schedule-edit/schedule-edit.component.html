@@ -79,8 +79,6 @@
     <hr />
   </div>
 
-
-
   <!-- set schedule end date modal -->
   <ng-template #content let-modal>
     <div class="modal-header">
@@ -152,25 +150,19 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="scheduleBeginDate">Schedule Begin Date</label>
-          <div class="input-group">
-            <input id="scheduleBeginDate" class="form-control" formControlName="scheduleBeginDate" placeholder="yyyy-mm-dd" name="scheduleBeginDate" (dateSelect)="onScheduleBeginDateChange($event)" (blur)="onScheduleBeginDateBlur($event)" ngbDatepicker #scheduleBeginDate="ngbDatepicker">
-              <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar"  (click)="scheduleBeginDate.toggle()" type="button"></button>
-            </div>
-          </div>
-        </div>
+        <mdate
+        [dateValue]="scheduleBeginDate"
+        [labelDateCtl]="'Schedule Begin Date'"
+        [DateCtlId]="'scheduleBeginDate'"
+        (dateCtlSelectedEvent)="onScheduleBeginDateChange($event)"
+        ></mdate>
 
-        <div class="form-group">
-          <label for="dpScheduleEndDate_2">Schedule End Date</label>
-          <div class="input-group">
-            <input id="dpScheduleEndDate_2" class="form-control" formControlName="dpScheduleEndDate_2" placeholder="yyyy-mm-dd" name="dpScheduleEndDate_2" formControlName="dpScheduleEndDate_2" (dateSelect)="onScheduleEndDateChange_2($event)" (blur)="onScheduleEndDateBlur_2($event)" ngbDatepicker #dpScheduleEndDate_2="ngbDatepicker" [startDate]="{year: 9999, month: 12}">
-              <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar"  (click)="dpScheduleEndDate_2.toggle()" type="button"></button>
-            </div>
-          </div>
-        </div>
+        <mdate
+        [dateValue]="scheduleEndDate"
+        [labelDateCtl]="'Schedule End Date'"
+        [DateCtlId]="'scheduleEndDate'"
+        (dateCtlSelectedEvent)="onScheduleEndDateChange($event)"
+        ></mdate>
 
         <div class="form-group">
           <label for="description">Weekly Fee</label>
@@ -213,9 +205,5 @@
     </div>
   </ng-template>
   <!-- endof comfirm modal -->
-
-
-
-
 
 </div>

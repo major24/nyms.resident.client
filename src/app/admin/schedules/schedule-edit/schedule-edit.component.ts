@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ResidentSchedule, Schedule } from '../../models/index';
 import { ScheduleService } from '../../services/index';
@@ -16,9 +16,14 @@ export class ScheduleEditComponent implements OnInit {
   initSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0, active: 'Y' };
   newSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0, active: 'Y' };
 
+  @Input() scheduleBeginDate: any = undefined;
+  @Input() labelDateCtl: string = 'Date';
+  @Input() scheduleEndDate: any = undefined;
+  @Output() scheduleBeginDateUpdated = new EventEmitter<any>();
+  @Output() scheduleEndDateUpdated = new EventEmitter<any>();
+
   closeResult = '';
   selectedScheduleId: number = 0;
-  scheduleEndDate: string = '';
   referenceId: string = '';
   error: string = '';
   loading: boolean = false;
@@ -31,8 +36,7 @@ export class ScheduleEditComponent implements OnInit {
     paymentFrom: new FormControl(''),
     paymentType: new FormControl(''),
     description: new FormControl(''),//({value:'', disabled: true}),
-    scheduleBeginDate: new FormControl(''),
-    dpScheduleEndDate_2: new FormControl({ year: 9999, month: 12, day: 31 }),
+    // scheduleEndDate: new FormControl({ year: 9999, month: 12, day: 31 }),
     weeklyFee: new FormControl('')
   });
 
@@ -111,18 +115,20 @@ export class ScheduleEditComponent implements OnInit {
   onDescriptionChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { description: event.target.value });
   }
+
   onScheduleBeginDateChange(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { scheduleBeginDate: this.util.convertAngDateToJsDate(event) });
+    this.newSchedule = Object.assign(this.newSchedule, { scheduleBeginDate: event }); //this.util.convertAngDateToJsDate(event) });
   }
-  onScheduleBeginDateBlur(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { scheduleBeginDate: this.util.convertStringDateToJsDate(event.target.value) });
+
+  onScheduleEndDateChange(event: any): void {
+    this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: event });    // this.util.convertAngDateToJsDate(event) });
   }
-  onScheduleEndDateChange_2(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: this.util.convertAngDateToJsDate(event) });
-  }
-  onScheduleEndDateBlur_2(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: this.util.convertStringDateToJsDate(event.target.value) });
-  }
+    // onScheduleBeginDateBlur(event: any): void {
+  //   this.newSchedule = Object.assign(this.newSchedule, { scheduleBeginDate: this.util.convertStringDateToJsDate(event.target.value) });
+  // }
+  // onScheduleEndDateBlur_2(event: any): void {
+  //   this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: this.util.convertStringDateToJsDate(event.target.value) });
+  // }
   onWeeklyFeeChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { weeklyFee: +event.target.value });
   }
@@ -227,14 +233,13 @@ export class ScheduleEditComponent implements OnInit {
     this.createScheduleForm.controls['paymentType'].setValue(this.newSchedule.paymentTypeId);
     this.createScheduleForm.controls['description'].setValue(this.newSchedule.description);
     if (this.newSchedule.scheduleBeginDate != '') {
-      const d = new Date(this.newSchedule.scheduleBeginDate);
-      this.createScheduleForm.controls['scheduleBeginDate'].setValue({ year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() });
-    } else {
-      this.createScheduleForm.controls['scheduleBeginDate'].setValue('');
+      this.scheduleBeginDate = new Date(this.newSchedule.scheduleBeginDate)
     }
+
     if (this.newSchedule.scheduleEndDate != '') {
-      const d = new Date(this.newSchedule.scheduleEndDate);
-      this.createScheduleForm.controls['dpScheduleEndDate_2'].setValue({ year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() });
+      this.scheduleEndDate = new Date(this.newSchedule.scheduleEndDate);
+    } else {
+      this.scheduleEndDate = new Date("9999-12-31");
     }
     this.createScheduleForm.controls['weeklyFee'].setValue(this.newSchedule.weeklyFee);
 

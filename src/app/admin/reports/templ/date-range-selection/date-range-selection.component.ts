@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { KeyPair } from '../../../../models/index';
 import { Output, EventEmitter } from '@angular/core';
@@ -17,11 +17,10 @@ export class DateRangeSelectionComponent implements OnInit {
   });
 
   // downloading: boolean = false;
-
+  @Input() startDate: any = undefined;
+  @Input() endDate: any = undefined;
   @Output() startDateSelectEvent = new EventEmitter<any>();
   @Output() endDateSelectEvent = new EventEmitter<any>();
-  @Output() startDateBlurEvent = new EventEmitter<any>();
-  @Output() endDateBlurEvent = new EventEmitter<any>();
   @Output() localAuthorityChangedEvent = new EventEmitter<any>();
   @Output() getReportEvent = new EventEmitter<any>();
   @Output() downloadReportEvent = new EventEmitter<any>();
@@ -48,16 +47,6 @@ export class DateRangeSelectionComponent implements OnInit {
   onEndDateChange(event: any): void {
     if (event) {
       this.endDateSelectEvent.emit(event);
-    }
-  }
-  onStartDateBlur(event: any): void {
-    if (event) {
-      this.startDateBlurEvent.emit(event);
-    }
-  }
-  onEndDateBlur(event: any): void {
-    if (event) {
-      this.endDateBlurEvent.emit(event);
     }
   }
 

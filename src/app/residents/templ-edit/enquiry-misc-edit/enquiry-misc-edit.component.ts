@@ -25,27 +25,20 @@ export class EnquiryMiscEditComponent implements OnInit {
   constructor(private readonly util: Util) { }
 
   ngOnInit(): void {
-
   }
 
   ngOnChanges(changes: any): void {
     if (changes.comments) { this.enquiryMiscForm.controls['comments'].setValue(changes.comments.currentValue); }
   }
 
-
   onMoveInDateChange(event: any): void {
-      this.moveInDateUpdated.emit(event);     //this.util.convertAngDateToJsDate(event));
+      this.moveInDateUpdated.emit(event);
   }
-  // onMoveInDateBlur(event: any): void {
-  //   this.moveInDateUpdated.emit(this.util.convertStringDateToJsDate(event.target.value));
-  // }
 
   onFamilyHomeVisitDateChange(event: any): void {
-      this.familyHomeVisitDateUpdated.emit(event); //this.util.convertAngDateToJsDate(event));
+      this.familyHomeVisitDateUpdated.emit(event);
   }
-  // onFamilyHomeVisitDateBlur(event: any): void {
-  //     this.familyHomeVisitDateUpdated.emit(this.util.convertStringDateToJsDate(event.target.value));
-  // }
+
   onCommentsChange(event: any): void {
     this.commentsUpdated.emit(event);
   }

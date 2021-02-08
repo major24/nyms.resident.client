@@ -21,7 +21,7 @@ export interface Resident {
   stayType: string;
   roomLocation: number;
   roomNumber: number;
-  moveInDate: string;
+  admissionDate: string;
   familyHomeVisitDate: Date;
   exitDate: Date;
   comments: string;
@@ -74,7 +74,7 @@ export function createInstanceOfResident() {
     stayType: '',
     roomLocation: 0,
     roomNumber: 0,
-    moveInDate: '',
+    admissionDate: '',
     familyHomeVisitDate: undefined,
     exitDate: undefined,
     comments: '',

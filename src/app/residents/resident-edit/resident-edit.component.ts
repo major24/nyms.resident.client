@@ -31,17 +31,13 @@ export class ResidentEditComponent implements OnInit {
   routePath: string = '';
   isAdmiting: boolean = false;
   disabled: boolean = false;
-  // enquiryPage: boolean = true;
-  // residentPage: boolean = false;
 
-  //enquiryResident: EnquiryResident = createInstanceofEnquiryResident();
   rawResident: Resident = createInstanceOfResident();
   resident: Resident = this.rawResident;
 
   noks: NextOfKin[] = [];
   nok: NextOfKin = createInstanceOfNok();
 
-  // careHomeDetails: CareHome[] = []; // REMOVE Later
   careHomeDetail: CareHome;
 
   roomLocations: RoomLocation[] = [];
@@ -71,7 +67,6 @@ export class ResidentEditComponent implements OnInit {
     this.routePath = this._Activatedroute.snapshot.routeConfig.path;
     console.log(this.routePath);
     if (this.routePath.includes('residents-admit')) {
-      console.log('>>>1-admit enquiry');
       this.isAdmiting = true;
     }
 
@@ -102,8 +97,17 @@ export class ResidentEditComponent implements OnInit {
             (dataEnquiry) => {
               console.log('>>21', this.resident);
               console.log('>>22', dataEnquiry);
-              this.resident = JSON.parse(JSON.stringify(this.rawResident));
-              this.resident = Object.assign(this.resident, dataEnquiry);
+              // this.resident = JSON.parse(JSON.stringify(this.rawResident));
+              // this.resident = Object.assign(this.resident, dataEnquiry);
+              // Assing ONLY resident related fields.
+              // Notes: Enq.moveInDate is Res.admissionDate, todo: find other reqd fields and map it
+              for (const key of Object.keys(dataEnquiry)) {
+                if (key in this.resident) { // or obj1.hasOwnProperty(key)
+                  this.resident[key] = dataEnquiry[key];
+                }
+              }
+              this.resident.admissionDate = dataEnquiry.moveInDate;
+              console.log('>>>23', this.resident);
               // set respective select control
               this.careHomeChanged(this.resident.careHomeId);
               this.setupEnquiryEditForm(dataEnquiry);
@@ -132,9 +136,6 @@ export class ResidentEditComponent implements OnInit {
             (dataEnquiry) => {
               console.log('>>2', dataEnquiry);
               this.resident = Object.assign(this.resident, dataEnquiry);
-              // set respective select control
-              //this.careHomeChanged(this.resident.careHomeId);
-              // this.setupEnquiryEditForm(dataEnquiry);
             },
             (error2) => {
               console.log('Error getting enquiry', error2);
@@ -173,25 +174,20 @@ export class ResidentEditComponent implements OnInit {
     this.updateCareHomeId(selCareHomeId);
   }
   careHomeChanged(selCareHomeId: number): void {
-    // const selCareHomeId = +event.target.value;
     // RoomLocations
     this.roomLocations.splice(0, this.roomLocations.length);
-    // let x = this.careHomeDetails.filter(ch => ch.id === selCareHomeId).map(a => a.roomLocations);
     let x = this.careHomeDetail.roomLocations;
     Object.assign(this.roomLocations, x);
     this.isCareHomeSelectionChanged = selCareHomeId;
 
     // CareCategories
     this.careCategories.splice(0, this.careCategories.length);
-    let y = this.careHomeDetail.careCategories; //.filter(ch => ch.id === selCareHomeId).map(a => a.careCategories);
+    let y = this.careHomeDetail.careCategories;
     Object.assign(this.careCategories, y);
 
     // Load local authorites
-    let z = this.careHomeDetail.localAuthorities; //s.filter(ch => ch.id === selCareHomeId).map(a => a.localAuthorities);
+    let z = this.careHomeDetail.localAuthorities;
     Object.assign(this.localAuthorities, z);
-    // console.log('>>>77', this.roomLocations);
-    // console.log('>>>88', this.careCategories);
-    // console.log('>>>99', this.localAuthorities);
   }
 
   updateCareHomeId(id: number): void {
@@ -201,7 +197,6 @@ export class ResidentEditComponent implements OnInit {
   //======================================================
   // === Profile - Name, Surname etc profile
   onForeNameUpdated(event: any): void {
-    console.log('>>>', event.target.value);
     this.resident = Object.assign(this.resident, {
       foreName: event.target.value,
     });
@@ -333,9 +328,9 @@ export class ResidentEditComponent implements OnInit {
   // ===============================================
 
   // === misc input - Other ================================
-  onMoveInDateUpdated(date: any): void {
+  onAdmissionDateUpdated(date: any): void {
     if (event) {
-      this.resident = Object.assign(this.resident, { moveInDate: date }); // admissionDate  //date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate() }); // moveInDate
+      this.resident = Object.assign(this.resident, { admissionDate: date }); // admissionDate  //date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate() }); // moveInDate
     }
   }
   onFamilyHomeVisitDateUpdated(date: any): void {
@@ -385,9 +380,6 @@ export class ResidentEditComponent implements OnInit {
 
   // === NOK ===========================================
   onNokForeNameUpdated(event: any): void {
-    // let curNok = this.resident.nextOfKin;
-    // curNok.foreName = event.target.value;
-    // this.resident = Object.assign(this.resident, { nextOfKin: curNok });
     let curNok = this.nok;
     curNok.foreName = event.target.value;
   }
@@ -407,7 +399,7 @@ export class ResidentEditComponent implements OnInit {
     curNok.address = Object.assign(curNok.address, {
       street1: event.target.value,
     });
-    this.nok = Object.assign(this.nok, curNok); //{ nextOfKin: curNok });
+    this.nok = Object.assign(this.nok, curNok);
   }
   onNokCityUpdated(event: any): void {
     let curNok = this.deepCloneNok();
@@ -445,29 +437,35 @@ export class ResidentEditComponent implements OnInit {
     if (this.resident.careHomeId <= 0) this.errors.push('Carehome is required');
     if (this.resident.foreName === '' || this.resident.surName === '')
       this.errors.push('Name is required');
-    if (this.resident.moveInDate === '')
+    if (this.resident.admissionDate === '')
       this.errors.push('Admission date is required');
 
     if (this.errors.length > 0) return;
 
-    // remove enq reference id. no longer used after admiting.
-    this.resident.enquiryReferenceId = this.resident.referenceId;
-    // this.resident.referenceId = '';
     this.saving = true;
-    console.log('>>>rdy to save', this.resident);
 
-    this.enquiresService
-      .admitResident(this.resident.enquiryReferenceId, this.resident)
-      .subscribe(
-        (data) => {
-          console.log('>>Enquiry admitted', data);
-          this._router.navigate(['/residents', {}]);
-        },
-        (error) => {
-          console.log('Error admitting enquiry', error);
-        }
+    if (this.isAdmiting) {
+      console.log('>>>rdy to save (create new resident from enquiry - admit)', this.resident);
+      // remove enq reference id. no longer used after admiting.
+      this.resident.enquiryReferenceId = this.resident.referenceId;
+      this.enquiresService
+        .admitResident(this.resident.enquiryReferenceId, this.resident)
+        .subscribe(
+          (data) => {
+            console.log('>>Enquiry admitted', data);
+            this.saving = false;
+            this._router.navigate(['/residents', {}]);
+          },
+          (error) => {
+            console.log('Error admitting enquiry', error);
+          }
       );
-    this.saving = false;
+    } else {
+      console.log('>>>rdy to save (update existing resident)', this.resident);
+      // TODO
+    }
+
+
   }
 
   onCancel(event: any): void {

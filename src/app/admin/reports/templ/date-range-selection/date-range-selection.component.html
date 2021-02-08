@@ -2,29 +2,21 @@
   <form [formGroup]="invoiceForm">
   <div class="row">
     <div class="col-sm">
-      <div class="form-group">
-        <label for="startDate"><strong>Start Date</strong></label>
-        <div class="input-group">
-          <input class="form-control" placeholder="yyyy-mm-dd"
-            formControlName="startDate" id="startDate" name="startDate" (dateSelect)="onStartDateChange($event)" (blur)="onStartDateBlur($event)" ngbDatepicker #d0="ngbDatepicker" required>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary calendar" (click)="d0.toggle()" type="button"></button>
-          </div>
-        </div>
-      </div>
+      <mdate
+      [dateValue]="startDate"
+      [labelDateCtl]="'Start Date'"
+      [DateCtlId]="'startDate'"
+      (dateCtlSelectedEvent)="onStartDateChange($event)"
+      ></mdate>
     </div>
 
     <div class="col-sm">
-      <div class="form-group">
-        <label for="endDate"><strong>End Date</strong></label>
-        <div class="input-group">
-          <input class="form-control" placeholder="yyyy-mm-dd"
-            formControlName="endDate" id="endDate" name="endDate" (dateSelect)="onEndDateChange($event)" (blur)="onEndDateBlur($event)" ngbDatepicker #d1="ngbDatepicker" required>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
-          </div>
-        </div>
-      </div>
+      <mdate
+      [dateValue]="endDate"
+      [labelDateCtl]="'End Date'"
+      [DateCtlId]="'endDate'"
+      (dateCtlSelectedEvent)="onEndDateChange($event)"
+      ></mdate>
     </div>
 
     <div class="col-sm">
@@ -40,8 +32,8 @@
 
     <div class="col-sm">
       <div>&nbsp;</div>
-      <button class="btn btn-primary mt-1" id="go-btn" [disabled]="!invoiceForm.valid" (click)="getReportByDate()">Go</button>
-      <button class="btn btn-primary mt-1 ml-4" [disabled]="!invoiceForm.valid" (click)="downloadReportByDate()">Download
+      <button class="btn btn-primary mt-1" id="go-btn"  (click)="getReportByDate()">Go</button>
+      <button class="btn btn-primary mt-1 ml-4" (click)="downloadReportByDate()">Download
         <!-- <span *ngIf="downloading" class="spinner-border spinner-border-sm mr-1"></span> -->
       </button>
     </div>

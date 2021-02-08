@@ -41,9 +41,9 @@ export class MdateComponent implements OnInit {
   }
 
   onDateCtlDateSelect(event: any): void {
-    const dateIn = `${event.year}-${event.month}-${event.day}`;
-    const strDate = this.util.getIsoDateString(dateIn);
-    this.dateCtlSelectedEvent.emit(strDate); //(`${event.year}-${event.month}-${event.day}`);
+    // const dateIn = `${event.year}-${event.month}-${event.day}`;
+    // const strDate = this.util.getIsoDateString(dateIn);
+    // this.dateCtlSelectedEvent.emit(strDate); //(`${event.year}-${event.month}-${event.day}`);
   }
   onDateCtlDateChange(event: any): void {
     this.dateCtlSelectedEvent.emit(this.util.getIsoDateString(event.target.value));

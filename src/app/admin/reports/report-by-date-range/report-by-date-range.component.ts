@@ -26,16 +26,10 @@ export class ReportByDateRangeComponent implements OnInit {
   }
 
   onStartDateSelectEvent(event: any): void {
-    this.startDate = `${event.year}-${event.month}-${event.day}`;
+    this.startDate = event;  //`${event.year}-${event.month}-${event.day}`;
   }
   onEndDateSelectEvent(event: any): void {
-    this.endDate = `${event.year}-${event.month}-${event.day}`;
-  }
-  onStartDateBlurEvent(event: any): void {
-    this.startDate = event.target.value;
-  }
-  onEndDateBlurEvent(event: any): void {
-    this.endDate = event.target.value;
+    this.endDate = event; // `${event.year}-${event.month}-${event.day}`;
   }
 
   getReport(): void {
@@ -157,7 +151,6 @@ export class ReportByDateRangeComponent implements OnInit {
     })
 
     Object.assign(this.invoicesSummary, [...invSummary]);
-    // console.log('***', this.invoicesSummary);
   }
 
   convertToJsDate(event: any): Date {
