@@ -1,0 +1,23 @@
+<form [formGroup]="residentMiscForm">
+  <mdate
+    [labelDateCtl]="'Admission Date'"
+    [dateValue]="admissionDate"
+    [DateCtlId]="'admissionDate'"
+    (dateCtlSelectedEvent)="onAdmissionDateChange($event)"
+  ></mdate>
+
+  <mdate
+    [labelDateCtl]="'Home Visit Date'"
+    [dateValue]="familyHomeVisitDate"
+    [DateCtlId]="'familyHomeVisitDate'"
+    (dateCtlSelectedEvent)="onFamilyHomeVisitDateChange($event)"
+  ></mdate>
+
+  <div class="form-group">
+    <label for="comments">
+      <h6 class="text-primary">Comments</h6>
+    </label>
+    <textarea rows="4" class="form-control" id="comments" name="comments" formControlName="comments" (change)="onCommentsChange($event)" placeholder=""></textarea>
+  </div>
+
+</form>

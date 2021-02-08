@@ -23,15 +23,12 @@ export class MdateComponent implements OnInit {
   ngOnInit(): void {
   }
   ngOnChanges(changes: any): void {
-    console.log('mdate===', changes);
     if (changes.dateValue && changes.dateValue.currentValue) {
       const val = changes.dateValue.currentValue;
       if (this.util.isDate(val)) {
         // Ang requires 3 parts of dates. parse
         const dateFmt = this.util.getIsoDateString(val);
-        console.log('dateFmt===', dateFmt);
         const arr: string[] = dateFmt.split('-');
-        console.log('===', Number(arr[0]), Number(arr[1]), Number(arr[2]))
         if (arr.length === 3) {
           this.datectlForm.controls['datectl'].setValue({ year: Number(arr[0]), month: Number(arr[1]), day: Number(arr[2]) });
         }

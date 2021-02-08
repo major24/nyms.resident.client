@@ -63,13 +63,8 @@ export class ResidentProfileEditComponent implements OnInit {
     this.middleNameUpdated.emit(event);
   }
   onDobChange(event: any): void {
-    this.dobUpdated.emit(event); //this.util.convertAngDateToJsDate(event));
+    this.dobUpdated.emit(event);
   }
-  // onDobBlur(event: any): void {
-  //   if (event) {
-  //     this.dobUpdated.emit(this.util.convertStringDateToJsDate(event.target.value));
-  //   }
-  // }
   onGenderChange(event: any): void {
     this.genderUpdated.emit(event);
   }

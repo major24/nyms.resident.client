@@ -34,8 +34,8 @@ import { NextOfKinComponent } from './residents/templ-edit/next-of-kin/next-of-k
 import { ContactInfoComponent } from './residents/templ-edit/contact-info/contact-info.component';
 import { ReferralInfoComponent } from './residents/templ-edit/referral-info/referral-info.component';
 import { ResidentEditSummaryComponent } from './residents/templ-edit/resident-edit-summary/resident-edit-summary.component';
-// import { MdateComponent } from './residents/templ-edit/mdate/mdate.component';
 import { MdateModule } from './residents/templ-edit/mdate/mdateModule';
+import { ResidentMiscEditComponent } from './residents/templ-edit/resident-misc-edit/resident-misc-edit.component';
 // import { SplitPipe } from './common/split.pipe';
 // import { ModalSetExitComponent } from './common/modal-set-exit/modal-set-exit.component';
 // import { MainPipe } from
@@ -84,7 +84,7 @@ export function tokenGetter() {
     ContactInfoComponent,
     ReferralInfoComponent,
     ResidentEditSummaryComponent,
-    // MdateComponent,
+    ResidentMiscEditComponent,
     // SplitPipe
   ],
   providers: [

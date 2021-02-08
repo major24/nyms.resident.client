@@ -24,7 +24,7 @@ export class ReportListWithValidationComponent implements OnInit {
   displayComments: string[] = [];
 
   public isCollapsed = false;
-  
+
   reportListWithValidationForm = new FormGroup({
     isValid: new FormControl(null),
     transactionAmount: new FormControl(''),
@@ -129,12 +129,20 @@ export class ReportListWithValidationComponent implements OnInit {
 
   updateSaveFlags(): void {
     this.hasDataToSave = false;
-    const validated = this.invoiceData.invoiceResidents.map(ir => ir.schedulePayments.filter(sp => sp.invoiceValidatedModel.validated === 'Y' && sp.invoiceValidatedModel.id === 0));
-    if (validated && validated[0].length > 0) this.hasDataToSave = true;
-
+    const schedPayments = this.invoiceData.invoiceResidents.map(ir => ir.schedulePayments.filter(sp => sp.invoiceValidatedModel.validated === 'Y' && sp.invoiceValidatedModel.id === 0));
+    if (schedPayments && schedPayments.length > 0) {
+      // checkto see if any data found
+      schedPayments.map((sp) => {
+        sp.map((sx) => {
+          if (sx.invoiceValidatedModel.validated === 'Y'){
+            this.hasDataToSave = true;
+            return;
+          }
+        })
+      });
+    }
   }
 
-//x = Object.assign(x, { validated: event.target.checked ? 'Y' : '' });
   onActualPaymentChange(event: any): void {
     this.transactionAmount = +event.target.value;
   }

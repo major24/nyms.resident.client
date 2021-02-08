@@ -1,7 +1,4 @@
 <div class="mt-3">
-  <!-- <div>==={{resident | json}}</div> -->
-  <!-- <div>==={{resident.contactInfos | json}}</div> -->
-  <!-- <div>===>>{{noks | json}}</div> -->
   <div class="container">
     <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
       <li [ngbNavItem]="1">
@@ -216,17 +213,16 @@
             <span class="navbar-brand mb-0 text-info h5">Admission</span>
           </nav>
 
-          <enquiry-misc-edit
-            [moveInDate]="resident.moveInDate"
-            [labelDateCtl]="'Admission Date'"
-            [familyHomeVisitDate]="resident.familyHomeVisitDate"
-            [comments]="resident.comments"
-            [labelMoveInDate]="'Admission Date'"
-            (moveInDateUpdated)="onMoveInDateUpdated($event)"
-            (familyHomeVisitDateUpdated)="onFamilyHomeVisitDateUpdated($event)"
-            (commentsUpdated)="onCommentsUpdated($event)"
+          <resident-misc-edit
+          [admissionDate]="resident.admissionDate"
+          [familyHomeVisitDate]="resident.familyHomeVisitDate"
+          [comments]="resident.comments"
+          (admissionDateUpdated)="onAdmissionDateUpdated($event)"
+          (familyHomeVisitDateUpdated)="onFamilyHomeVisitDateUpdated($event)"
+          (commentsUpdated)="onCommentsUpdated($event)"
           >
-          </enquiry-misc-edit>
+          </resident-misc-edit>
+
         </ng-template>
       </li>
       <li [ngbNavItem]="7">
