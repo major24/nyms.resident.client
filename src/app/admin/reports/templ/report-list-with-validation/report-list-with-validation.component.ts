@@ -47,6 +47,7 @@ export class ReportListWithValidationComponent implements OnInit {
       if(sp.invoiceValidatedModel.validated === 'Y' && sp.invoiceValidatedModel.id === 0) {
         list.push( {
           id: 0,
+          scheduleId: sp.id,
           localAuthorityId: sp.localAuthorityId,
           billingCycleId: billingCycleId,
           residentId: sp.residentId,

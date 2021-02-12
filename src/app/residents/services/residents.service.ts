@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ResidentsService {
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   getAllResidents(careHomeId: number): Observable<Resident[]> {
     return this.apiService.getAllResidents(careHomeId);
@@ -18,8 +18,8 @@ export class ResidentsService {
     return this.apiService.loadResidentByReferenceId(referenceId);
   }
 
-  updateExitDate(referenceId: string, exitDate: string): Observable<any> {
-    return this.apiService.updateExitDate(referenceId, exitDate);
+  dischargeResident(referenceId: string, exitDate: string): Observable<any> {
+    return this.apiService.dischargeResident(referenceId, exitDate);
   }
 
   loadCareHomeDetailByResidentReferenceId(referenceId: string): Observable<CareHome> {

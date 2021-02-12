@@ -22,7 +22,10 @@
       <div><strong>Admission</strong></div>
     </div>
     <div class="col-sm">
-      <div><strong>Discharge</strong></div>
+      <div><strong>&nbsp;</strong></div>
+    </div>
+    <div class="col-sm">
+      <div><strong>&nbsp;</strong></div>
     </div>
   </div>
 
@@ -55,12 +58,12 @@
         <a [attr.data-cy-res-view]="res.foreName+'_'+res.surName" [routerLink]="['/residents-view', res.referenceId]">View</a>
       </span>
     </div>
-    <!-- <div class="col-sm">
+    <div class="col-sm">
       <div *ngIf="res.exitDate < '9999-11-30T00:00:00'">{{res.exitDate | date}}</div>
-      <div *ngIf="res.exitDate > '9999-11-30T00:00:00' && showExitButton">
-        <button type="button" class="btn btn-outline-dark btn-sm" (click)="openModal(content, res.referenceId)">Discharge</button>
+      <div *ngIf="res.exitDate > '9999-11-30T00:00:00' && showDischargeButton">
+        <button type="button" class="btn btn-outline-dark btn-sm"  [attr.data-cy-discharge]="res.foreName+'_'+res.surName" (click)="openModal(content, res.referenceId)">Discharge</button>
       </div>
-    </div> -->
+    </div>
     <div class="h-divider"></div>
   </div>
 
@@ -69,26 +72,23 @@
 
   <ng-template #content let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Profile Exit - {{selectedName}}</h4>
+      <h4 class="modal-title" id="modal-basic-title">Discharge - {{selectedName}}</h4>
       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
       <form>
-        <div class="form-group">
-          <label for="dateOfBirth">Exit Date</label>
-          <div class="input-group">
-            <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" (dateSelect)="onExitDateChange($event)" ngbDatepicker #dp="ngbDatepicker">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar"  (click)="dp.toggle()" type="button"></button>
-            </div>
-          </div>
-        </div>
+        <mdate
+        [dateValue]="dischargeDate"
+        [labelDateCtl]="'Discharge Date'"
+        [DateCtlId]="'dischargeDate'"
+        (dateCtlSelectedEvent)="onDischargeDateChange($event)"
+        ></mdate>
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="saveExitDate()">Save</button>
+      <button type="button" class="btn btn-outline-dark" id="save" name="save" (click)="dischargeResident()">Save</button>
     </div>
   </ng-template>
 

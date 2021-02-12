@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ResidentsService } from '../services/residents.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Resident } from '../models';
-import { UserService } from  '../../services/index';
+import { UserService } from '../../services/index';
 import { CareHomeUser } from '../../models/index';
 
 @Component({
@@ -17,8 +17,8 @@ export class ResidentsListComponent implements OnInit {
   closeResult = '';
   selectedRefId = '';
   selectedName = '';
-  exitDate: string;
-  showExitButton: boolean = false;
+  dischargeDate: string;
+  showDischargeButton: boolean = false;
   loading: boolean = false;
 
   constructor(private residentService: ResidentsService, private modalService: NgbModal, private userService: UserService) { }
@@ -41,28 +41,28 @@ export class ResidentsListComponent implements OnInit {
 
     // Do other work
     this.loadResidnets(1); // Hardcoding to Pennine care id=1
-    this.showExitButton = this.userService.isInRoleFromToken('Admin');
+    this.showDischargeButton = this.userService.isInRoleFromToken('Admin');
   }
 
   loadResidnets(careHomeId: number): void {
     this.loading = true;
     this.residentService.getAllResidents(careHomeId)
-    .subscribe({
-      next: (data) => {
-        Object.assign(this.residents, [...data]);
-        console.log('>>>2', data);
-        this.loading = false;
-      },
-      error: (error) => {
-        console.log('Error loading residents ', error);
-        this.loading = false;
-       }
-    });
+      .subscribe({
+        next: (data) => {
+          Object.assign(this.residents, [...data]);
+          console.log('>>>2', data);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.log('Error loading residents ', error);
+          this.loading = false;
+        }
+      });
   }
 
-  onExitDateChange(event: any): void {
+  onDischargeDateChange(event: any): void {
     if (event) {
-      this.exitDate = `${event.year}-${event.month}-${event.day}`;
+      this.dischargeDate = event;
     }
   }
 
@@ -74,19 +74,21 @@ export class ResidentsListComponent implements OnInit {
     this.open(content);
   }
 
-  saveExitDate(): void {
-    this.residentService.updateExitDate(this.selectedRefId, this.exitDate)
-    .subscribe({
-      next: (data) => {
-        console.log('>>saved', data);
-        this.modalService.dismissAll()
-    },
-      error: (error) => { console.log('Error saving exit date for resident ', error); }
-    });
+  dischargeResident(): void {
+    if (!this.dischargeDate) return;
+
+    this.residentService.dischargeResident(this.selectedRefId, this.dischargeDate)
+      .subscribe({
+        next: (data) => {
+          console.log('>>saved', data);
+          this.modalService.dismissAll()
+        },
+        error: (error) => { console.log('Error saving exit date for resident ', error); }
+      });
   }
 
   open(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
