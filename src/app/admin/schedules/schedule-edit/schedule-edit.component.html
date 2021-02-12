@@ -120,6 +120,17 @@
 
       <form [formGroup]="createScheduleForm">
         <div class="form-group">
+          <label for="localAuthority">Local Authority</label>
+          <div class="input-group">
+            <select id="localAuthority" formControlName="localAuthority" class="form-control" (change)="onLocalAuthorityChange($event)">
+              <option *ngFor="let la of _localAuthorities; let i = index" [value]="la.key">
+                {{la.value}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label for="paymentFrom">Payment Providers</label>
           <div class="input-group">
             <select id="paymentFrom" formControlName="paymentFrom" class="form-control" (change)="onPaymentFromChange($event)">

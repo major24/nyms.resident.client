@@ -5,6 +5,7 @@ import { ScheduleService } from '../../services/index';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Util } from '../../../helpers/index';
+import LocalAuthorities from '../../../helpers/data-local-authorities';
 
 @Component({
   selector: 'schedule-edit',
@@ -19,8 +20,8 @@ export class ScheduleEditComponent implements OnInit {
   @Input() scheduleBeginDate: any = undefined;
   @Input() labelDateCtl: string = 'Date';
   @Input() scheduleEndDate: any = undefined;
-  @Output() scheduleBeginDateUpdated = new EventEmitter<any>();
-  @Output() scheduleEndDateUpdated = new EventEmitter<any>();
+  // @Output() scheduleBeginDateUpdated = new EventEmitter<any>();
+  // @Output() scheduleEndDateUpdated = new EventEmitter<any>();
 
   closeResult = '';
   selectedScheduleId: number = 0;
@@ -30,9 +31,10 @@ export class ScheduleEditComponent implements OnInit {
   saving: boolean = false;
   paymentProviders: any = [];
   paymentTypes: any = [];
-  // disablePaymentDescriptionText: boolean = true;
+  _localAuthorities: any = [];
 
   createScheduleForm = new FormGroup({
+    localAuthority: new FormControl(''),
     paymentFrom: new FormControl(''),
     paymentType: new FormControl(''),
     description: new FormControl(''),//({value:'', disabled: true}),
@@ -50,7 +52,8 @@ export class ScheduleEditComponent implements OnInit {
   ngOnInit(): void {
     this.loadPaymentProviders();
     this.loadPaymentTypes();
-
+    // set la
+    this._localAuthorities = LocalAuthorities.find((data) => data.la.id === 1).la.list;
     this._Activatedroute.paramMap.subscribe((params) => {
       if (params && params.get('referenceId')) {
         this.referenceId = params.get('referenceId');
@@ -67,6 +70,7 @@ export class ScheduleEditComponent implements OnInit {
         next: (data) => {
           Object.assign(this.residentSchedules, data);
           this.loading = false;
+          console.log('>>??', this.residentSchedules)
         },
         error: (error) => {
           console.log('Error fetching schedules ', error);
@@ -97,6 +101,9 @@ export class ScheduleEditComponent implements OnInit {
   }
 
   // add new schedule related
+  onLocalAuthorityChange(event: any): void {
+    this.newSchedule = Object.assign(this.newSchedule, { localAuthorityId: +event.target.value });
+  }
   onPaymentFromChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { paymentProviderId: +event.target.value });
   }
@@ -123,12 +130,7 @@ export class ScheduleEditComponent implements OnInit {
   onScheduleEndDateChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: event });    // this.util.convertAngDateToJsDate(event) });
   }
-    // onScheduleBeginDateBlur(event: any): void {
-  //   this.newSchedule = Object.assign(this.newSchedule, { scheduleBeginDate: this.util.convertStringDateToJsDate(event.target.value) });
-  // }
-  // onScheduleEndDateBlur_2(event: any): void {
-  //   this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: this.util.convertStringDateToJsDate(event.target.value) });
-  // }
+
   onWeeklyFeeChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { weeklyFee: +event.target.value });
   }

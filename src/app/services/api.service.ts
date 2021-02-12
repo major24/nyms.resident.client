@@ -87,8 +87,8 @@ export class ApiService {
     return this.http.get<Resident>(`/api/residents/${referenceId}`);
   }
 
-  updateExitDate(referenceId: string, exitDate: string): Observable<any> {
-    return this.http.post<any>(`/api/residents/${referenceId}/exit-date`, { referenceId: referenceId, exitDate: exitDate });
+  dischargeResident(referenceId: string, exitDate: string): Observable<any> {
+    return this.http.post<any>(`/api/residents/${referenceId}/discharge`, { referenceId: referenceId, exitDate: exitDate });
   }
   // === endof resident related ===
 
