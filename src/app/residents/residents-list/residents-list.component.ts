@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { ResidentsService } from '../services/residents.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Resident } from '../models';
 import { UserService } from '../../services/index';
 import { CareHomeUser } from '../../models/index';
@@ -21,7 +22,12 @@ export class ResidentsListComponent implements OnInit {
   showDischargeButton: boolean = false;
   loading: boolean = false;
 
-  constructor(private residentService: ResidentsService, private modalService: NgbModal, private userService: UserService) { }
+  constructor(
+    private _Activatedroute: ActivatedRoute,
+    private _router: Router,
+    private residentService: ResidentsService,
+    private modalService: NgbModal,
+    private userService: UserService) { }
 
   ngOnInit(): void {
     //=== reload user on refresh =====================================
@@ -40,11 +46,40 @@ export class ResidentsListComponent implements OnInit {
     // ================================================================
 
     // Do other work
-    this.loadResidnets(1); // Hardcoding to Pennine care id=1
+    // is active or all residents?
+    let activeOrAll: string = '';
+    this._Activatedroute.paramMap.subscribe((params) =>{
+      if (params && params.get('activeorall')) {
+        activeOrAll = params.get('activeorall');
+      }
+    });
+
+    if (activeOrAll === 'active') {
+      this.loadActiveResidents(1); // HARD code for now
+    } else {
+      this.loadAllResidents(1); // HARD code for now
+    }
+
     this.showDischargeButton = this.userService.isInRoleFromToken('Admin');
   }
 
-  loadResidnets(careHomeId: number): void {
+  loadActiveResidents(careHomeId: number): void {
+    this.loading = true;
+    this.residentService.getActiveResidents(careHomeId)
+      .subscribe({
+        next: (data) => {
+          Object.assign(this.residents, [...data]);
+          console.log('>>>2', data);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.log('Error loading residents ', error);
+          this.loading = false;
+        }
+      });
+  }
+
+  loadAllResidents(careHomeId: number): void {
     this.loading = true;
     this.residentService.getAllResidents(careHomeId)
       .subscribe({
@@ -81,11 +116,25 @@ export class ResidentsListComponent implements OnInit {
       .subscribe({
         next: (data) => {
           console.log('>>saved', data);
-          this.modalService.dismissAll()
+          this.modalService.dismissAll();
+          location.reload();
         },
         error: (error) => { console.log('Error saving exit date for resident ', error); }
       });
   }
+
+  activateResident(): void {
+    this.residentService.activateResident(this.selectedRefId)
+    .subscribe({
+      next: (data) => {
+        console.log('>>activated resident', data);
+        this.modalService.dismissAll();
+        location.reload();
+      },
+      error: (error) => { console.log('Error saving exit date for resident ', error); }
+    });
+  }
+
 
   open(content) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {

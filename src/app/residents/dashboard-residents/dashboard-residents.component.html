@@ -13,13 +13,18 @@
       </div>
     </div>
     <div class="col-md">
-      <div class="card" style="width: 18rem; height: 11rem;">
+      <div class="card" style="width: 18rem; height: 14rem;">
         <div class="card-header bg-info text-white">
           <h5 class="card-title">Residents</h5>
         </div>
         <div class="card-body bg-light">
           <p class="card-text">Manage residents information</p>
-          <button id="residents-btn" class="btn btn-primary" (click)="navToResidents()">Residents</button>
+          <div>
+            <button id="residents-btn" class="btn btn-primary" style="width: 12rem;" (click)="navActiveToResidents()">Active Residents</button>
+          </div>
+          <div>
+            <button id="residents-btn" class="btn btn-primary mt-2" style="width: 12rem;"  (click)="navToAllResidents()">All Residents</button>
+          </div>
         </div>
       </div>
     </div>

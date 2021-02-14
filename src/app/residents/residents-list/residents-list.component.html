@@ -59,10 +59,21 @@
       </span>
     </div>
     <div class="col-sm">
-      <div *ngIf="res.exitDate < '9999-11-30T00:00:00'">{{res.exitDate | date}}</div>
+      <div *ngIf="res.active === 'N'">
+        <span style="font-size: smaller;">
+          &#10132; {{res.exitDate | date}}
+        </span>
+        <button type="button" class="btn btn-outline-dark btn-sm"  [attr.data-cy-activate]="res.foreName+'_'+res.surName" (click)="openModal(contentActivate, res.referenceId)">Activate</button>
+      </div>
+      <div *ngIf="res.active === 'Y'">
+        <button type="button" class="btn btn-outline-dark btn-sm"  [attr.data-cy-discharge]="res.foreName+'_'+res.surName" (click)="openModal(contentDischarge, res.referenceId)">Discharge</button>
+      </div>
+
+
+      <!-- <div *ngIf="res.exitDate < '9999-11-30T00:00:00'">{{res.exitDate | date}}</div>
       <div *ngIf="res.exitDate > '9999-11-30T00:00:00' && showDischargeButton">
         <button type="button" class="btn btn-outline-dark btn-sm"  [attr.data-cy-discharge]="res.foreName+'_'+res.surName" (click)="openModal(content, res.referenceId)">Discharge</button>
-      </div>
+      </div> -->
     </div>
     <div class="h-divider"></div>
   </div>
@@ -70,7 +81,7 @@
   <div class="mt-4"></div>
 
 
-  <ng-template #content let-modal>
+  <ng-template #contentDischarge let-modal>
     <div class="modal-header">
       <h4 class="modal-title" id="modal-basic-title">Discharge - {{selectedName}}</h4>
       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
@@ -89,6 +100,21 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" id="save" name="save" (click)="dischargeResident()">Save</button>
+    </div>
+  </ng-template>
+
+  <ng-template #contentActivate let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Activate - {{selectedName}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to activate?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" id="saveActivate" name="saveActivate" (click)="activateResident()">Activate</button>
     </div>
   </ng-template>
 
