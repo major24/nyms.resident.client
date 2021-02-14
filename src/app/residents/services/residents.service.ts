@@ -14,12 +14,20 @@ export class ResidentsService {
     return this.apiService.getAllResidents(careHomeId);
   }
 
+  getActiveResidents(careHomeId: number): Observable<Resident[]> {
+    return this.apiService.getActiveResidents(careHomeId);
+  }
+
   loadResidentByReferenceId(referenceId: string): Observable<Resident> {
     return this.apiService.loadResidentByReferenceId(referenceId);
   }
 
   dischargeResident(referenceId: string, exitDate: string): Observable<any> {
     return this.apiService.dischargeResident(referenceId, exitDate);
+  }
+
+  activateResident(referenceId: string): Observable<any> {
+    return this.apiService.activateResident(referenceId);
   }
 
   loadCareHomeDetailByResidentReferenceId(referenceId: string): Observable<CareHome> {

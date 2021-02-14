@@ -30,7 +30,7 @@ const routes: Routes = [
         // resolve: { mydata: AuthResidentsResolver }
     },
     {
-        path: 'residents',
+        path: 'residents/:activeorall',
         component: ResidentsListComponent,
         canActivate: [AuthGuard]
     },

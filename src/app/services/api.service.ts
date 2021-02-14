@@ -80,6 +80,10 @@ export class ApiService {
 
   // === resident related ===
   getAllResidents(careHomeId: number): Observable<Resident[]> {
+    return this.http.get<Resident[]>(`/api/carehomes/${careHomeId}/residents`);
+  }
+
+  getActiveResidents(careHomeId: number): Observable<Resident[]> {
     return this.http.get<Resident[]>(`/api/carehomes/${careHomeId}/residents/active`);
   }
 
@@ -89,6 +93,10 @@ export class ApiService {
 
   dischargeResident(referenceId: string, exitDate: string): Observable<any> {
     return this.http.post<any>(`/api/residents/${referenceId}/discharge`, { referenceId: referenceId, exitDate: exitDate });
+  }
+
+  activateResident(referenceId: string): Observable<any> {
+    return this.http.post<any>(`/api/residents/${referenceId}/activate`, { referenceId: referenceId });
   }
   // === endof resident related ===
 

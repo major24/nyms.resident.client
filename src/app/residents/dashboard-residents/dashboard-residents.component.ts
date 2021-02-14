@@ -37,8 +37,12 @@ export class DashboardResidentsComponent implements OnInit {
     this.router.navigate(['/enquires', {}]);
   }
 
-  navToResidents(): void {
-    this.router.navigate(['/residents', {}])
+  navActiveToResidents(): void {
+    this.router.navigate(['/residents', 'active'])
+  }
+
+  navToAllResidents(): void {
+    this.router.navigate(['/residents', 'all'])
   }
 
 }
