@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { InvoiceService } from '../../services/index';
-import { InvoiceResident, InvoiceSummary, InvoiceData } from '../../models/index';
+import { InvoiceResident, InvoiceSummary, InvoiceData, InvoiceValidationsReportResponse } from '../../models/index';
 import { FileService } from '../../../services/index';
 import { saveAs } from 'file-saver';
 
@@ -19,6 +19,12 @@ export class ReportByDateRangeComponent implements OnInit {
   startDate: string;
   endDate: string;
   downloading: boolean = false;
+  reportSelector: string = "1";
+
+  // Validations reponse model
+  invoiceValidationsReportResponse: InvoiceValidationsReportResponse[] = [];
+  rawInvoiceValidationsReportResponse: InvoiceValidationsReportResponse[] = [];
+
 
   constructor(private invoiceService: InvoiceService, private fileService: FileService) { }
 
@@ -26,15 +32,19 @@ export class ReportByDateRangeComponent implements OnInit {
   }
 
   onStartDateSelectEvent(event: any): void {
-    this.startDate = event;  //`${event.year}-${event.month}-${event.day}`;
+    this.startDate = event;
   }
   onEndDateSelectEvent(event: any): void {
-    this.endDate = event; // `${event.year}-${event.month}-${event.day}`;
+    this.endDate = event;
   }
 
   getReport(): void {
     if (this.startDate && this.endDate){
-      this.loadInvoiceByDate(this.startDate, this.endDate);
+      if (this.reportSelector === "2") {
+        this.loadValidationsDataByDate(this.startDate, this.endDate);
+      } else {
+        this.loadInvoiceByDate(this.startDate, this.endDate);
+      }
     }
   }
 
@@ -66,6 +76,7 @@ export class ReportByDateRangeComponent implements OnInit {
         Object.assign(this.invoices, [...data.invoiceResidents]);
         Object.assign(this.rawInvoices, [...data.invoiceResidents]);
         this.makeSummaryTotals(this.invoices);
+        console.log('>>>>>', this.rawInvoices);
         this.loading = false;
       },
       error: (error) => {
@@ -73,7 +84,27 @@ export class ReportByDateRangeComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
 
+  loadValidationsDataByDate(startDate: string, endDate: string): void {
+    this.invoiceValidationsReportResponse = [];
+    if (startDate === '' || endDate === null) {
+      throw new console.error('Date not selected');
+    }
+
+    this.loading = true;
+    this.invoiceService.loadValidationsDataByDate(startDate, endDate)
+    .subscribe({
+      next: (data) => {
+          this.rawInvoiceValidationsReportResponse = data;
+          Object.assign(this.invoiceValidationsReportResponse, [...data]);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.log('Error getting invoice:', error);
+        this.loading = false;
+      }
+    });
   }
 
   localAuthorityChanged(event: any): void {
@@ -88,6 +119,20 @@ export class ReportByDateRangeComponent implements OnInit {
     this.makeSummaryTotals(this.invoices);
   }
 
+  reportSelectorChanged(event: any): void {
+    this.reportSelector = event.target.value;
+  }
+
+
+
+
+
+
+
+
+
+  // **************************************************************************************
+  // *** REQUIRED for Summary ***
   getLaTotal(invoices: InvoiceResident[], la: number): number {
     // const x = invoices.map(i => i.schedulePayments.filter(s => s.paymentFromName === la && s.paymentProviderId === 1)); // LA
     const x = invoices.map(i => i.schedulePayments.filter(s => s.localAuthorityId === la && s.paymentProviderId === 1)); // LA
@@ -152,9 +197,8 @@ export class ReportByDateRangeComponent implements OnInit {
 
     Object.assign(this.invoicesSummary, [...invSummary]);
   }
+  // *** End of Summary ***
+  // **************************************************************************************
 
-  convertToJsDate(event: any): Date {
-    return new Date(event.year, event.month-1, event.day);
-  }
 
 }

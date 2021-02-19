@@ -19,13 +19,22 @@
       ></mdate>
     </div>
 
-    <div class="col-sm">
+    <!-- <div class="col-sm">
       <div class="form-group">
         <label for="localAuthority"><strong>Local Authorities</strong></label>
         <select class="custom-select" name="localAuthority" id="localAuthority" formControlName="localAuthority" (change)="onLocalAuthorityChange($event)">
           <option *ngFor="let la of localAuthrities;" [value]="la.key">
             {{la.value}}
           </option>
+        </select>
+      </div>
+    </div> -->
+    <div class="col-sm">
+      <div class="form-group">
+        <label for="reportSelector">Report Selector</label>
+        <select class="custom-select" name="reportSelector" id="reportSelector" formControlName="reportSelector" (change)="onReportSelectorChange($event)">
+          <option value="1" [selected]="1">Summary</option>
+          <option value="2">Validations</option>
         </select>
       </div>
     </div>

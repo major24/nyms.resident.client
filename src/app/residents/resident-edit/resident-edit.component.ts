@@ -136,6 +136,7 @@ export class ResidentEditComponent implements OnInit {
             (dataEnquiry) => {
               console.log('>>2', dataEnquiry);
               this.resident = Object.assign(this.resident, dataEnquiry);
+              this.careHomeChanged(this.resident.careHomeId);
             },
             (error2) => {
               console.log('Error getting enquiry', error2);
@@ -439,7 +440,7 @@ export class ResidentEditComponent implements OnInit {
       this.errors.push('Name is required');
     if (this.resident.admissionDate === '')
       this.errors.push('Admission date is required');
-
+    if (this.resident.localAuthorityId <= 0) this.errors.push('Local Authority (Provider) is required')
     if (this.errors.length > 0) return;
 
     this.saving = true;
