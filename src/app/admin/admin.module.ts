@@ -17,6 +17,7 @@ import { ReportListWithValidationComponent } from './reports/templ/report-list-w
 import { ReportListComponent } from './reports/templ/report-list/report-list.component';
 // import { MdateComponent } from '../residents/templ-edit/mdate/mdate.component';
 import { MdateModule } from '../residents/templ-edit/mdate/mdateModule';
+import { ReportValidatedUnvalidatedComponent } from './reports/templ/report-validated-unvalidated/report-validated-unvalidated.component';
 
 // import { SplitPipe } from '../common/split.pipe';
 
@@ -33,6 +34,7 @@ import { MdateModule } from '../residents/templ-edit/mdate/mdateModule';
     DateRangeSelectionComponent,
     ReportListWithValidationComponent,
     ReportListComponent,
+    ReportValidatedUnvalidatedComponent,
     // MdateComponent,
     // SplitPipe
   ],

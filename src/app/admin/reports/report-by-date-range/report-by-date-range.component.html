@@ -4,18 +4,19 @@
     (startDateSelectEvent)="onStartDateSelectEvent($event)"
     (endDateSelectEvent)="onEndDateSelectEvent($event)"
     (localAuthorityChangedEvent)="localAuthorityChanged($event)"
+    (reportSelectorChangedEvent)="reportSelectorChanged($event)"
     (getReportEvent)="getReport()"
     (downloadReportEvent)="downloadReport()">
   </date-range-selection>
 
   <div *ngIf="loading" class="spinner-border"></div>
 
-  <!-- <summary-info
-    [invoicesSummary]="invoicesSummary">
-  </summary-info> -->
-
-  <report-list
+  <report-list *ngIf="reportSelector === '1'"
     [invoices]="invoices">
   </report-list>
+
+  <report-validated-unvalidated *ngIf="reportSelector === '2'"
+  [invoiceValidationsReportResponse]="invoiceValidationsReportResponse">
+  </report-validated-unvalidated>
 
 </div>

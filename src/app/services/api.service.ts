@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser } from '../models/index';
 import { EnquiryResident, CareHome, Resident, EnquiryAction } from '../residents/models/index';
-import { InvoiceData, InvoiceResident, InvoiceCommentsRequest, BillingCycle, InvoiceValidatedRequest } from '../admin/models/index';
+import { InvoiceData, InvoiceCommentsRequest, BillingCycle, InvoiceValidatedRequest, InvoiceValidationsReportResponse } from '../admin/models/index';
 import { ResidentSchedule, Schedule } from '../admin/models/index';
 
 @Injectable({
@@ -119,6 +118,10 @@ export class ApiService {
   // === invoice reports ===
   loadInvoiceByDate(startDate: string, endDate: string): Observable<InvoiceData> {
     return this.http.get<InvoiceData>(`/api/invoices/all/${startDate}/${endDate}`);
+  }
+
+  loadValidationsDataByDate(startDate: string, endDate: string): Observable<InvoiceValidationsReportResponse[]> {
+    return this.http.get<InvoiceValidationsReportResponse[]>(`api/invoices/validations/${startDate}/${endDate}`);
   }
 
   loadInvoiceByBillingCycle(localAuthorityId: number, billingCycleId: number): Observable<InvoiceData> {
