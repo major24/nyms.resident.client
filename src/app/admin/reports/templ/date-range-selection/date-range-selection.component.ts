@@ -13,7 +13,8 @@ export class DateRangeSelectionComponent implements OnInit {
   invoiceForm = new FormGroup({
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
-    localAuthority: new FormControl('')
+    reportSelector: new FormControl('')
+    // localAuthority: new FormControl('')
   });
 
   // downloading: boolean = false;
@@ -22,6 +23,7 @@ export class DateRangeSelectionComponent implements OnInit {
   @Output() startDateSelectEvent = new EventEmitter<any>();
   @Output() endDateSelectEvent = new EventEmitter<any>();
   @Output() localAuthorityChangedEvent = new EventEmitter<any>();
+  @Output() reportSelectorChangedEvent = new EventEmitter<any>();
   @Output() getReportEvent = new EventEmitter<any>();
   @Output() downloadReportEvent = new EventEmitter<any>();
 
@@ -52,6 +54,10 @@ export class DateRangeSelectionComponent implements OnInit {
 
   onLocalAuthorityChange(event: any): void {
     this.localAuthorityChangedEvent.emit(event);
+  }
+
+  onReportSelectorChange(event: any): void {
+    this.reportSelectorChangedEvent.emit(event);
   }
 
   getReportByDate(): void {

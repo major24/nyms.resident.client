@@ -1,0 +1,62 @@
+<div class="container">
+  <!-- header -->
+  <!-- <div class="container"> -->
+    <div class="row bg-info text-white mb-3">
+      <div class="col-4">
+        Name
+      </div>
+      <div class="col-2">
+        Billing
+      </div>
+      <div class="col-2">
+        Amount Due
+      </div>
+      <div class="col-4">
+        Validation
+      </div>
+    </div>
+  <!-- </div> -->
+  <!-- end of header-->
+
+  <!-- body-->
+  <!-- <div class="container"> -->
+    <div class="row border" *ngFor="let inv of invoiceValidationsReportResponse">
+      <div class="col-4 mb-4">
+        <h6>{{inv.name}}</h6>
+        <div style="font-size: small;">
+          {{inv.localAuthority}}
+        </div>
+        <span style="font-size: small;">
+          {{inv.description}}
+        </span>
+      </div>
+      <div class="col-2">
+        <h6>{{inv.billingCycleId}}</h6>
+        <span style="font-size: small;">
+          {{inv.periodStartDate | date:'dd-MMM-yy'}} - {{inv.periodEndDate | date:'dd-MMM-yy'}}
+        </span>
+      </div>
+      <div class="col-2">
+        <span [attr.data-cy-amount-due]="inv.name+'_'+inv.amountDue">
+          {{inv.amountDue | number:'1.2-2'}}
+        </span>
+      </div>
+      <div class="col-4">
+        <div *ngIf="inv.validated === 'Y'">
+            {{inv.validatedAmount | number:'1.2-2'}} &#10004;
+          <div>
+            By: {{inv.updatedBy}} On: {{inv.updatedDate | date:'dd-MMM-yy'}}
+          </div>
+        </div>
+        <div *ngIf="inv.validated != 'Y'">
+          <h6>&#10060;</h6>
+        </div>
+      </div>
+
+      <hr />
+    </div>
+  <!-- </div> -->
+  <!-- end of body -->
+
+
+</div>
