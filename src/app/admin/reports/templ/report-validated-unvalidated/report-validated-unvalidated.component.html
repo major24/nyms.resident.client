@@ -1,6 +1,5 @@
 <div class="container">
   <!-- header -->
-  <!-- <div class="container"> -->
     <div class="row bg-info text-white mb-3">
       <div class="col-4">
         Name
@@ -15,12 +14,10 @@
         Validation
       </div>
     </div>
-  <!-- </div> -->
   <!-- end of header-->
 
   <!-- body-->
-  <!-- <div class="container"> -->
-    <div class="row border" *ngFor="let inv of invoiceValidationsReportResponse">
+    <div class="row border" *ngFor="let inv of invoiceValidationsReportResponse" [attr.data-cy-vals-row]="inv.name+'_'+inv.billingCycleId+'_'+inv.description">
       <div class="col-4 mb-4">
         <h6>{{inv.name}}</h6>
         <div style="font-size: small;">
@@ -37,7 +34,7 @@
         </span>
       </div>
       <div class="col-2">
-        <span [attr.data-cy-amount-due]="inv.name+'_'+inv.amountDue">
+        <span>
           {{inv.amountDue | number:'1.2-2'}}
         </span>
       </div>
@@ -52,10 +49,7 @@
           <h6>&#10060;</h6>
         </div>
       </div>
-
-      <hr />
     </div>
-  <!-- </div> -->
   <!-- end of body -->
 
 
