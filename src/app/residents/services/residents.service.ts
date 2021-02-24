@@ -22,6 +22,10 @@ export class ResidentsService {
     return this.apiService.loadResidentByReferenceId(referenceId);
   }
 
+  updateResident(referenceId: string, resident: Resident, ): Observable<Resident> {
+    return this.apiService.updateResident(referenceId, resident);
+  }
+
   dischargeResident(referenceId: string, exitDate: string): Observable<any> {
     return this.apiService.dischargeResident(referenceId, exitDate);
   }

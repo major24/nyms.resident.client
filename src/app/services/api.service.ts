@@ -90,6 +90,10 @@ export class ApiService {
     return this.http.get<Resident>(`/api/residents/${referenceId}`);
   }
 
+  updateResident(referenceId: string, resident: Resident): Observable<Resident> {
+    return this.http.post<any>(`/api/residents/${referenceId}`, resident);
+  }
+
   dischargeResident(referenceId: string, exitDate: string): Observable<any> {
     return this.http.post<any>(`/api/residents/${referenceId}/discharge`, { referenceId: referenceId, exitDate: exitDate });
   }

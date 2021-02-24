@@ -31,7 +31,6 @@ export interface EnquiryResident {
 
 const address = {
   id: 0,
-  refType: 'enquiry',
   addrType: 'home',
   street1: '',
   street2: '',

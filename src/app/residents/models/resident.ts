@@ -37,7 +37,6 @@ export interface Resident {
 // addr default to 'home'. in future if we want to differenciate, use this flag
 const address = {
   id: 0,
-  refType: 'resident',
   addrType: 'home',
   street1: '',
   street2: '',
@@ -48,8 +47,6 @@ const address = {
 const contactInfoEmail = {
   id: 0,
   residentId: 0,
-  nokId: 0,
-  refType: 'resident',
   contactType: 'emailAddress',
   data: '',
 };

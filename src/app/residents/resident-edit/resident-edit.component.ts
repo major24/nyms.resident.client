@@ -463,7 +463,17 @@ export class ResidentEditComponent implements OnInit {
       );
     } else {
       console.log('>>>rdy to save (update existing resident)', this.resident);
-      // TODO
+      this.residentServcie.updateResident(this.resident.referenceId, this.resident)
+      .subscribe(
+        (data) => {
+          console.log('>>Resident updated', data);
+          this.saving = false;
+          this._router.navigate(['/residents', {}]);
+        },
+        (error) => {
+          console.log('Error updating resident', error);
+        }
+    );
     }
 
 

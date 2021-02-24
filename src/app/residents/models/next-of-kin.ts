@@ -9,8 +9,8 @@ export interface NextOfKin {
   contactInfos: ContactInfo[];
 }
 
-const address = { id: 0, refType: "resident", addrType: 'home', street1: '', street2: '', city: '', county: '', postCode: '' };
-const contactInfo = { id: 0, residentId: 0, nokId: 0, refType: 'resident', contactType: "", data: "" }
+const address = { id: 0, addrType: 'home', street1: '', street2: '', city: '', county: '', postCode: '' };
+const contactInfo = { id: 0, residentId: 0, contactType: "", data: "" }
 
 export function createInstanceOfNok() {
   let model: NextOfKin = {
