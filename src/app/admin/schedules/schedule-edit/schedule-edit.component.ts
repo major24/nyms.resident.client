@@ -5,7 +5,7 @@ import { ScheduleService } from '../../services/index';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Util } from '../../../helpers/index';
-import LocalAuthorities from '../../../helpers/data-local-authorities';
+import CareHomeDetails from '../../../helpers/data-carehome-details';
 
 @Component({
   selector: 'schedule-edit',
@@ -14,14 +14,12 @@ import LocalAuthorities from '../../../helpers/data-local-authorities';
 })
 export class ScheduleEditComponent implements OnInit {
   residentSchedules: ResidentSchedule = { referenceId: '', localAuthorityId: 0, paymentFromName: '', foreName: '', surName: '', schedules: [] };
-  initSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0, active: 'Y' };
-  newSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: 0, amountDue: 0, active: 'Y' };
+  initSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: undefined, amountDue: 0, active: 'Y' };
+  newSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: undefined, amountDue: 0, active: 'Y' };
 
   @Input() scheduleBeginDate: any = undefined;
   @Input() labelDateCtl: string = 'Date';
   @Input() scheduleEndDate: any = undefined;
-  // @Output() scheduleBeginDateUpdated = new EventEmitter<any>();
-  // @Output() scheduleEndDateUpdated = new EventEmitter<any>();
 
   closeResult = '';
   selectedScheduleId: number = 0;
@@ -37,7 +35,7 @@ export class ScheduleEditComponent implements OnInit {
     localAuthority: new FormControl(''),
     paymentFrom: new FormControl(''),
     paymentType: new FormControl(''),
-    description: new FormControl(''),//({value:'', disabled: true}),
+    description: new FormControl(''),
     // scheduleEndDate: new FormControl({ year: 9999, month: 12, day: 31 }),
     weeklyFee: new FormControl('')
   });
@@ -52,8 +50,11 @@ export class ScheduleEditComponent implements OnInit {
   ngOnInit(): void {
     this.loadPaymentProviders();
     this.loadPaymentTypes();
-    // set la
-    this._localAuthorities = LocalAuthorities.find((data) => data.la.id === 1).la.list;
+    // set la/funders
+    // TODO - carehome id
+    let careHomeId = 1;
+    this._localAuthorities = CareHomeDetails.filter((ch) => ch.careHomeId === careHomeId).map(home => home.funders)[0];
+    console.log('>>LA>>', this._localAuthorities);
     this._Activatedroute.paramMap.subscribe((params) => {
       if (params && params.get('referenceId')) {
         this.referenceId = params.get('referenceId');
@@ -136,11 +137,12 @@ export class ScheduleEditComponent implements OnInit {
   }
 
   createNewSchdule(): void {
+    this.error = '';
     if (!this.referenceId) {
       this.error = 'Error: Reference Id not found';
       return;
     }
-    if (this.newSchedule.scheduleBeginDate === '' || this.newSchedule.paymentProviderId === 0 || this.newSchedule.paymentTypeId === 0) {
+    if (this.newSchedule.localAuthorityId === 0 || this.newSchedule.scheduleBeginDate === '' || this.newSchedule.paymentProviderId === 0 || this.newSchedule.paymentTypeId === 0) {
       this.error = 'Missing required fields';
       return;
     }

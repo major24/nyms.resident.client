@@ -120,7 +120,8 @@
 
       <form [formGroup]="createScheduleForm">
         <div class="form-group">
-          <label for="localAuthority">Local Authority</label>
+          <label class="text-primary" for="localAuthority">LA / Fund Providers</label>
+          <span class="text-danger ml-1">*</span>
           <div class="input-group">
             <select id="localAuthority" formControlName="localAuthority" class="form-control" (change)="onLocalAuthorityChange($event)">
               <option *ngFor="let la of _localAuthorities; let i = index" [value]="la.key">
@@ -131,7 +132,8 @@
         </div>
 
         <div class="form-group">
-          <label for="paymentFrom">Payment Providers</label>
+          <label class="text-primary" for="paymentFrom">Payment Providers</label>
+          <span class="text-danger ml-1">*</span>
           <div class="input-group">
             <select id="paymentFrom" formControlName="paymentFrom" class="form-control" (change)="onPaymentFromChange($event)">
               <!-- <option *ngIf="newSchedule.id == 0" value='' selected>Choose</option> -->
@@ -143,7 +145,8 @@
         </div>
 
         <div class="form-group">
-          <label for="paymentType">Payment Type</label>
+          <label class="text-primary" for="paymentType">Payment Type</label>
+          <span class="text-danger ml-1">*</span>
           <div class="input-group">
             <select id="paymentType" formControlName="paymentType" class="form-control" (change)="onPaymentTypeChange($event)">
               <!-- <option value='' selected>Choose</option> -->
@@ -155,7 +158,8 @@
         </div>
 
         <div class="form-group">
-          <label for="description">Description</label>
+          <label class="text-primary" for="description">Description</label>
+          <span class="text-danger ml-1">*</span>
           <div class="input-group">
             <input type="text" class="form-control" formControlName="description"  id="description" name="description" (change)="onDescriptionChange($event)" placeholder="" [value]="newSchedule.description">
           </div>
@@ -176,7 +180,8 @@
         ></mdate>
 
         <div class="form-group">
-          <label for="description">Weekly Fee</label>
+          <label class="text-primary" for="description">Weekly Fee</label>
+          <span class="text-danger ml-1">*</span>
           <div class="input-group">
             <input type="number" class="form-control" formControlName="weeklyFee" id="weeklyFee" name="weeklyFee" (change)="onWeeklyFeeChange($event)" placeholder="">
           </div>
