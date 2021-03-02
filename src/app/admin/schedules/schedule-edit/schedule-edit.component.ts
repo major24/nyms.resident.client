@@ -125,12 +125,11 @@ export class ScheduleEditComponent implements OnInit {
   }
 
   onScheduleBeginDateChange(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { scheduleBeginDate: event }); //this.util.convertAngDateToJsDate(event) });
+    this.newSchedule = Object.assign(this.newSchedule, { scheduleBeginDate: event });
   }
 
   onScheduleEndDateChange(event: any): void {
-    this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: event });    // this.util.convertAngDateToJsDate(event) });
-  }
+    this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: event });   }
 
   onWeeklyFeeChange(event: any): void {
     this.newSchedule = Object.assign(this.newSchedule, { weeklyFee: +event.target.value });
@@ -142,6 +141,7 @@ export class ScheduleEditComponent implements OnInit {
       this.error = 'Error: Reference Id not found';
       return;
     }
+
     if (this.newSchedule.localAuthorityId === 0 || this.newSchedule.scheduleBeginDate === '' || this.newSchedule.paymentProviderId === 0 || this.newSchedule.paymentTypeId === 0) {
       this.error = 'Missing required fields';
       return;
