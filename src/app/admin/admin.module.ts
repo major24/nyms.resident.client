@@ -18,6 +18,7 @@ import { ReportListComponent } from './reports/templ/report-list/report-list.com
 // import { MdateComponent } from '../residents/templ-edit/mdate/mdate.component';
 import { MdateModule } from '../residents/templ-edit/mdate/mdateModule';
 import { ReportValidatedUnvalidatedComponent } from './reports/templ/report-validated-unvalidated/report-validated-unvalidated.component';
+import { ReportListOccupFeeComponent } from './reports/templ/report-list-occup-fee/report-list-occup-fee.component';
 
 // import { SplitPipe } from '../common/split.pipe';
 
@@ -35,6 +36,7 @@ import { ReportValidatedUnvalidatedComponent } from './reports/templ/report-vali
     ReportListWithValidationComponent,
     ReportListComponent,
     ReportValidatedUnvalidatedComponent,
+    ReportListOccupFeeComponent,
     // MdateComponent,
     // SplitPipe
   ],

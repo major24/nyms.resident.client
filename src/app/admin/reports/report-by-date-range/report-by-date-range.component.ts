@@ -40,16 +40,26 @@ export class ReportByDateRangeComponent implements OnInit {
 
   getReport(): void {
     if (this.startDate && this.endDate){
-      if (this.reportSelector === "2") {
-        this.loadValidationsDataByDate(this.startDate, this.endDate);
-      } else {
-        this.loadInvoiceByDate(this.startDate, this.endDate);
+      // 1=summary, 2=avg occupancy, 3=validations
+      switch(this.reportSelector) {
+        case "1":
+          this.loadInvoiceByDate(this.startDate, this.endDate);
+          break;
+        case "2":
+          this.loadInvoiceByDate(this.startDate, this.endDate);
+          break;
+        case "3":
+          this.loadValidationsDataByDate(this.startDate, this.endDate);
+          break;
+        default:
+          this.loadInvoiceByDate(this.startDate, this.endDate);
+          break;
       }
     }
   }
 
   downloadReport(): void {
-    // const url = `/api/invoices/all/2020-09-01/2020-09-10/download`;
+    // const url = `/api/reports/invoices/summary/2020-09-01/2020-09-10/download`;
     if (this.startDate === '' || this.endDate === null) {
       throw new console.error('Date not selected');
     }

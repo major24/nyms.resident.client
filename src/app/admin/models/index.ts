@@ -10,3 +10,4 @@ export * from './init-data';
 export * from './invoice-validated-request';
 export * from './invoice-comments-request';
 export * from './invoice-validations-report-response';
+export * from './avg-occupancy-report';

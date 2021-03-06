@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { KeyPair } from '../../../../models/index';
 import { Output, EventEmitter } from '@angular/core';
+import CareHomeDetails from '../../../../helpers/data-carehome-details';
 
 @Component({
   selector: 'date-range-selection',
@@ -13,8 +14,8 @@ export class DateRangeSelectionComponent implements OnInit {
   invoiceForm = new FormGroup({
     startDate: new FormControl('', [Validators.required]),
     endDate: new FormControl('', [Validators.required]),
-    reportSelector: new FormControl('')
-    // localAuthority: new FormControl('')
+    reportSelector: new FormControl(''),
+    localAuthority: new FormControl('')
   });
 
   // downloading: boolean = false;
@@ -28,17 +29,19 @@ export class DateRangeSelectionComponent implements OnInit {
   @Output() downloadReportEvent = new EventEmitter<any>();
 
     // LA for dropdown
-    localAuthrities: KeyPair[] = [
-      { key:'all', value:'All'},
-      { key: '1', value: 'Derbyshire County Council'},
-      { key: '2', value:'Manchester City Council'},
-      { key: '3', value:'Tameside Metropolitan Borough Council'},
-      { key: '101', value:'Private'}
-    ];
+    localAuthrities: KeyPair[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
+    this.loadLocalAuthorites(1); // HARD FOR NOW. PCare
+  }
+
+  loadLocalAuthorites(careHomeId: number): void {
+    if (CareHomeDetails) {
+      let chd = CareHomeDetails.filter(ch => ch.careHomeId === careHomeId)[0];
+      this.localAuthrities = Object.assign(this.localAuthrities, chd.funders);
+    }
   }
 
   onStartDateChange(event: any): void {

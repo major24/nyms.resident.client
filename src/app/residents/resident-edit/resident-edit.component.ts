@@ -97,10 +97,6 @@ export class ResidentEditComponent implements OnInit {
             (dataEnquiry) => {
               console.log('>>21', this.resident);
               console.log('>>22', dataEnquiry);
-              // this.resident = JSON.parse(JSON.stringify(this.rawResident));
-              // this.resident = Object.assign(this.resident, dataEnquiry);
-              // Assing ONLY resident related fields.
-              // Notes: Enq.moveInDate is Res.admissionDate, todo: find other reqd fields and map it
               for (const key of Object.keys(dataEnquiry)) {
                 if (key in this.resident) { // or obj1.hasOwnProperty(key)
                   this.resident[key] = dataEnquiry[key];

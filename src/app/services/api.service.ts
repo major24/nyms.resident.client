@@ -121,11 +121,11 @@ export class ApiService {
 
   // === invoice reports ===
   loadInvoiceByDate(startDate: string, endDate: string): Observable<InvoiceData> {
-    return this.http.get<InvoiceData>(`/api/invoices/all/${startDate}/${endDate}`);
+    return this.http.get<InvoiceData>(`/api/reports/invoices/summary/${startDate}/${endDate}`);
   }
 
   loadValidationsDataByDate(startDate: string, endDate: string): Observable<InvoiceValidationsReportResponse[]> {
-    return this.http.get<InvoiceValidationsReportResponse[]>(`api/invoices/validations/${startDate}/${endDate}`);
+    return this.http.get<InvoiceValidationsReportResponse[]>(`api/reports/invoices/validations/${startDate}/${endDate}`);
   }
 
   loadInvoiceByBillingCycle(localAuthorityId: number, billingCycleId: number): Observable<InvoiceData> {
@@ -133,7 +133,7 @@ export class ApiService {
   }
 
   downloadFile(billingStart: string, billingEnd: string): Observable<any> {
-    const url = `/api/invoices/all/${billingStart}/${billingEnd}/download`;
+    const url = `/api/reports/invoices/summary/${billingStart}/${billingEnd}/download`;
     return this.http.get(url, { responseType: 'blob' });
   }
 
