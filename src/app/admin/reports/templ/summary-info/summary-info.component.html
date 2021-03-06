@@ -1,13 +1,38 @@
-<div>
-    <div *ngIf="invoicesSummary">
-      <div class="row" *ngFor="let inv of invoicesSummary">
-        <div class="col-md">
-          <div><strong>{{inv.localAuthority}}</strong></div>
-        </div>
-        <div class="col-md text-right">
-          <div><strong>{{inv.totalLaFee | number : '1.2-2' }}</strong></div>
-        </div>
-        <div class="h-divider"></div>
-      </div>
-    </div>
+<div class="container">
+  <!-- summary -->
+  <h6 *ngIf="_avgDivisionsOccupancySummary && _avgDivisionsOccupancySummary.length > 0">
+    <span class="text-primary">Average occupancy and fee by division</span>
+  </h6>
+  <div class="row bg-info text-white mb-3" *ngIf="_avgDivisionsOccupancySummary && _avgDivisionsOccupancySummary.length > 0">
+    <div class="col-4">Name</div>
+    <div class="col-2 text-right"># Of Res.</div>
+    <div class="col-2 text-right">Total Stays</div>
+    <div class="col-2 text-right">Avg. Occupancy</div>
+    <div class="col-2 text-right">Avg. Fee</div>
+  </div>
+  <div class="row" *ngFor="let sm of _avgDivisionsOccupancySummary">
+    <div class="col-4">{{sm.name}}</div>
+    <div class="col-2 text-right">{{sm.numOfResidents}}</div>
+    <div class="col-2 text-right">{{sm.totalStays}}</div>
+    <div class="col-2 text-right">{{sm.avgOccupancy | number: '1.2-2'}}</div>
+    <div class="col-2 text-right">{{sm.avgFee | number: '1.2-2'}}</div>
+  </div>
+  <hr *ngIf="_avgDivisionsOccupancySummary && _avgDivisionsOccupancySummary.length > 0" />
+
+  <!-- Provider Summary -->
+  <h6 *ngIf="_avgFundProviderSummary && _avgFundProviderSummary.length > 0">
+    <span class="text-primary">Average fee by provider</span>
+  </h6>
+  <div class="row bg-info text-white mb-3" *ngIf="_avgFundProviderSummary && _avgFundProviderSummary.length > 0">
+    <div class="col-8">Name</div>
+    <div class="col-2 text-right"># Of Res.</div>
+    <div class="col-2 text-right">Avg. Weekly Fee</div>
+  </div>
+  <div class="row" *ngFor="let sm of _avgFundProviderSummary">
+    <div class="col-8">{{sm.name}}</div>
+    <div class="col-2 text-right">{{sm.numOfResidents}}</div>
+    <div class="col-2 text-right">{{sm.avgFee | number: '1.2-2'}}</div>
+  </div>
+  <hr *ngIf="_avgDivisionsOccupancySummary && _avgDivisionsOccupancySummary.length > 0" />
+
 </div>

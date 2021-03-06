@@ -15,8 +15,22 @@
     [invoices]="invoices">
   </report-list>
 
-  <report-validated-unvalidated *ngIf="reportSelector === '2'"
-  [invoiceValidationsReportResponse]="invoiceValidationsReportResponse">
+  <!-- below both components shows in one page -->
+  <summary-info *ngIf="reportSelector === '2'"
+    [invoices]="invoices"
+    [startDate]="startDate"
+    [endDate]="endDate">
+  </summary-info>
+
+  <report-list-occup-fee *ngIf="reportSelector === '2'"
+    [invoices]="invoices"
+    [startDate]="startDate"
+    [endDate]="endDate">
+  </report-list-occup-fee>
+
+  <report-validated-unvalidated *ngIf="reportSelector === '3'"
+    [invoiceValidationsReportResponse]="invoiceValidationsReportResponse">
   </report-validated-unvalidated>
+
 
 </div>
