@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { InvoiceData, BillingCycle, InvoiceDataInit } from '../../models/index';
 import { InvoiceService } from '../../services/index';
-import { KeyPair } from '../../../models/index';
+// import { KeyPair } from '../../../models/index';
+import CareHomeDetails from '../../../helpers/data-carehome-details';
 
 @Component({
   selector: 'app-report-by-billing-cycle',
@@ -12,31 +13,28 @@ export class ReportByBillingCycleComponent implements OnInit {
   billingCyclesSource: BillingCycle[] = [];
   billingCycles: BillingCycle[] = [];
 
-  // LA for dropdown. Hardcode for now
-  localAuthorities: KeyPair[] = [
-    { key: '1', value: 'Derbyshire County Council'},
-    { key: '2', value:'Manchester City Council'},
-    { key: '3', value:'Tameside Metropolitan Borough Council'},
-    { key: '100', value:'Private'}
-  ];
   _localAuthorityId: number = 0;
   _billingCycleId: number = 0;
   _invoiceData: InvoiceData;
   _invoices: any = []; // TODO: chg to conc obj
   error: string = '';
   loading: boolean = false;
+  _localAuthorities: any = [];
 
   constructor(private invoiceService: InvoiceService) { }
 
   ngOnInit(): void {
-      this.invoiceService.loadBillingCycles()
-      .subscribe({
-        next: (data) => {
-          console.log('..', data);
-          this.billingCyclesSource = Object.assign(this.billingCyclesSource, [...data]);
-        },
-        error: (error) => { console.log('Error loading billing cycles', error); }
-      })
+    let careHomeId = 1; // TODO - Hardcode for now
+    this._localAuthorities = CareHomeDetails.filter((ch) => ch.careHomeId === careHomeId).map(home => home.funders)[0];
+    console.log('>>LA>>', this._localAuthorities);
+    // load billing cycle in advance
+    this.invoiceService.loadBillingCycles()
+    .subscribe({
+      next: (data) => {
+        this.billingCyclesSource = Object.assign(this.billingCyclesSource, [...data]);
+      },
+      error: (error) => { console.log('Error loading billing cycles', error); }
+    });
   }
 
   onLocalAuthorityChange(event: any): void {

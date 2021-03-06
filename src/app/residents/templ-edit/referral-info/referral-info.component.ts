@@ -12,16 +12,19 @@ export class ReferralInfoComponent implements OnInit {
   @Input() laId: string;
   @Input() nhsNumber: string;
   @Input() poNumber: string;
+  @Input() nymsId: string;
   @Output() localAuthorityUpdated = new EventEmitter<any>();
   @Output() laIdUpdated = new EventEmitter<any>();
   @Output() nhsNumberUpdated = new EventEmitter<any>();
   @Output() poNumberUpdated = new EventEmitter<any>();
+  @Output() nymsIdUpdated = new EventEmitter<any>();
 
   referralForm = new FormGroup({
     localAuthority: new FormControl(''),
     laId: new FormControl(''),
     nhsNumber: new FormControl(''),
     poNumber: new FormControl(''),
+    nymsId: new FormControl(''),
   });
 
   constructor() { }
@@ -34,6 +37,7 @@ export class ReferralInfoComponent implements OnInit {
     if (changes.laId) { this.referralForm.controls['laId'].setValue(changes.laId.currentValue); }
     if (changes.nhsNumber) { this.referralForm.controls['nhsNumber'].setValue(changes.nhsNumber.currentValue); }
     if (changes.poNumber) { this.referralForm.controls['poNumber'].setValue(changes.poNumber.currentValue); }
+    if (changes.nymsId) { this.referralForm.controls['nymsId'].setValue(changes.nymsId.currentValue); }
   }
 
   onLocalAuthorityChange(event: any): void {
@@ -50,6 +54,10 @@ export class ReferralInfoComponent implements OnInit {
 
   onPoNumberChange(event: any): void {
     this.poNumberUpdated.emit(event);
+  }
+
+  onNymsIdChange(event: any): void {
+    this.nymsIdUpdated.emit(event);
   }
 
 }

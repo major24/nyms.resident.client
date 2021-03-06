@@ -133,7 +133,8 @@ export class ApiService {
   }
 
   downloadFile(billingStart: string, billingEnd: string): Observable<any> {
-    const url = `/api/reports/invoices/summary/${billingStart}/${billingEnd}/download`;
+    //api/invoices/all/{billingBeginDate}/{billingEndDate}/download
+    const url = `/api/invoices/all/${billingStart}/${billingEnd}/download`;
     return this.http.get(url, { responseType: 'blob' });
   }
 

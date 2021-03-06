@@ -52,7 +52,7 @@ export class ScheduleEditComponent implements OnInit {
     this.loadPaymentTypes();
     // set la/funders
     // TODO - carehome id
-    let careHomeId = 1;
+    let careHomeId = 1; // TODO-Hard code for now
     this._localAuthorities = CareHomeDetails.filter((ch) => ch.careHomeId === careHomeId).map(home => home.funders)[0];
     console.log('>>LA>>', this._localAuthorities);
     this._Activatedroute.paramMap.subscribe((params) => {

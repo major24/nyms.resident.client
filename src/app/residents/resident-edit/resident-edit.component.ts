@@ -90,20 +90,20 @@ export class ResidentEditComponent implements OnInit {
       .loadCareHomeDetailByEnquiryReferenceId(referenceId)
       .subscribe(
         (dataChDetail) => {
-          console.log('>>1', dataChDetail);
+          console.log('>>1-CareHomeDetails: ', dataChDetail);
           this.careHomeDetail = dataChDetail;
           //---------------------------------------------
           this.loadEnquiryByReferenceId(referenceId).subscribe(
             (dataEnquiry) => {
-              console.log('>>21', this.resident);
-              console.log('>>22', dataEnquiry);
+              // console.log('>>2-Enqiry : ', this.resident);
+              console.log('>>2-Enquiry: ', dataEnquiry);
               for (const key of Object.keys(dataEnquiry)) {
                 if (key in this.resident) { // or obj1.hasOwnProperty(key)
                   this.resident[key] = dataEnquiry[key];
                 }
               }
               this.resident.admissionDate = dataEnquiry.moveInDate;
-              console.log('>>>23', this.resident);
+              console.log('>>3-ResidentObj: ', this.resident);
               // set respective select control
               this.careHomeChanged(this.resident.careHomeId);
               this.setupEnquiryEditForm(dataEnquiry);
@@ -125,12 +125,12 @@ export class ResidentEditComponent implements OnInit {
       .loadCareHomeDetailByResidentReferenceId(referenceId)
       .subscribe(
         (dataChDetail) => {
-          console.log('>>1', dataChDetail);
+          console.log('>>1-CareHomeDetails: ', dataChDetail);
           this.careHomeDetail = dataChDetail;
           //---------------------------------------------
           this.loadResidentByReferenceId(referenceId).subscribe(
             (dataEnquiry) => {
-              console.log('>>2', dataEnquiry);
+              console.log('>>2-Resident: ', dataEnquiry);
               this.resident = Object.assign(this.resident, dataEnquiry);
               this.careHomeChanged(this.resident.careHomeId);
             },
@@ -361,6 +361,12 @@ export class ResidentEditComponent implements OnInit {
       poNumber: event.target.value,
     });
   }
+  onNymsIdUpdated(event: any): void {
+    this.resident = Object.assign(this.resident, {
+      nymsId: event.target.value,
+    })
+  }
+
 
   // === contact info - resident ======================
   onEmailUpdated(event: any): void {

@@ -2,7 +2,7 @@
 
   <billing-date-selection
     [billingCycles]="billingCycles"
-    [localAuthorities]="localAuthorities"
+    [localAuthorities]="_localAuthorities"
     (localAuthorityChangedEvent)="onLocalAuthorityChange($event)"
     (billingCycleChangedEvent)="onBillingCycleChangedEvent($event)"
     (getReportEvent)="onGetReportEvent()">

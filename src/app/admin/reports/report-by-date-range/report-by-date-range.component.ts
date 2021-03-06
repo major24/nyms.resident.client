@@ -186,11 +186,6 @@ export class ReportByDateRangeComponent implements OnInit {
     });
     const uq = [...new Set(temp)]
 
-    /**0: "Tameside Metropolitan Borough Council"
-    1: "Manchester City Council"
-    2: "Derbyshire County Council"
-    3: "Client Contribution"
-    4: "Private" */
     console.log('>>??', uq)
     uq.map(u => {
       let obj = {} as InvoiceSummary;
