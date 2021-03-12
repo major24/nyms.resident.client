@@ -104,12 +104,18 @@ export class SummaryInfoComponent implements OnInit {
         tmpNumRes++;
       });
 
+      let tmpTotalPayments = 0;
+      this._avgOccupancyReport.filter(r => r.divisionName === divName).map(rbyDiv => {
+        tmpTotalPayments += (rbyDiv.weeklyFee / 7) * rbyDiv.numberOfDays;
+      });
+
       let divisionSummary:  AvgDivisionsOccupancySummary = {
         name: divName,
         totalStays: tmpTtl,
         numOfResidents: tmpNumRes,
         avgOccupancy: tmpTtl / this._numOfReportDays,
-        avgFee: tmpFee / tmpNumRes
+        avgFee: tmpFee / tmpNumRes,
+        totalPayment: tmpTotalPayments
       };
       this._avgDivisionsOccupancySummary.push(divisionSummary);
     });
@@ -118,36 +124,45 @@ export class SummaryInfoComponent implements OnInit {
     let tmpTtl = 0;
     let tmpFee = 0;
     let tmpNumRes = 0;
+    let tmpTotalPayments = 0;
     this._avgOccupancyReport.map(data => {
       tmpTtl += data.numberOfDays;
       tmpFee += data.weeklyFee;
       tmpNumRes++;
+      tmpTotalPayments += (data.weeklyFee / 7) * data.numberOfDays;
     });
     let summary:  AvgDivisionsOccupancySummary = {
       name: 'Pennine Care Centre',  // HARD code for now
       totalStays: tmpTtl,
       numOfResidents: tmpNumRes,
       avgOccupancy: tmpTtl / this._numOfReportDays,
-      avgFee: tmpFee / tmpNumRes
+      avgFee: tmpFee / tmpNumRes,
+      totalPayment: tmpTotalPayments,
     };
     this._avgDivisionsOccupancySummary.push(summary);
-    console.log('>>DivSummary', this._avgDivisionsOccupancySummary);
+    console.log('>>DivisionSummary', this._avgDivisionsOccupancySummary);
   }
 
   prepareFundProviderSummary(): void {
     this._uniqueFundProviders.map(provName => {
-      let tmpTtl = 0;
+      let tmpDays = 0;
       let tmpFee = 0;
       let tmpNumRes = 0;
       this._avgOccupancyReport.filter(r => r.fundProvider === provName).map(rbyProv => {
-        tmpTtl += rbyProv.numberOfDays;
+        tmpDays += rbyProv.numberOfDays;
         tmpFee += rbyProv.weeklyFee;
         tmpNumRes++;
+      });
+
+      let tmpTotalPayments = 0;
+      this._avgOccupancyReport.filter(r => r.fundProvider === provName).map(rbyProv => {
+        tmpTotalPayments += (rbyProv.weeklyFee / 7) * rbyProv.numberOfDays;
       });
       let fundProvSummary: AvgFundProviderSummary = {
         name: provName,
         numOfResidents: tmpNumRes,
-        avgFee: tmpFee / tmpNumRes
+        avgFee: tmpFee / tmpNumRes,
+        totalPayment: tmpTotalPayments
       };
       this._avgFundProviderSummary.push(fundProvSummary);
     });
