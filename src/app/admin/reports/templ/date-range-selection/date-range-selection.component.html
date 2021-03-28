@@ -19,16 +19,6 @@
       ></mdate>
     </div>
 
-    <!-- <div class="col-sm">
-      <div class="form-group">
-        <label for="localAuthority"><strong>Local Authorities</strong></label>
-        <select class="custom-select" name="localAuthority" id="localAuthority" formControlName="localAuthority" (change)="onLocalAuthorityChange($event)">
-          <option *ngFor="let la of localAuthrities;" [value]="la.key">
-            {{la.value}}
-          </option>
-        </select>
-      </div>
-    </div> -->
     <div class="col-sm">
       <div class="form-group">
         <label for="reportSelector">Report Selector</label>
@@ -36,6 +26,7 @@
           <option value="1" [selected]="1">Summary</option>
           <option value="2">Avg. Occupancy & Fees</option>
           <option value="3">Validations</option>
+          <option value="4">Occupancy</option>
         </select>
       </div>
     </div>
@@ -44,7 +35,6 @@
       <div>&nbsp;</div>
       <button class="btn btn-primary mt-1" id="go-btn"  (click)="getReportByDate()">Go</button>
       <button class="btn btn-primary mt-1 ml-4" (click)="downloadReportByDate()">Download
-        <!-- <span *ngIf="downloading" class="spinner-border spinner-border-sm mr-1"></span> -->
       </button>
     </div>
   </div>

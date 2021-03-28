@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser } from '../models/index';
 import { EnquiryResident, CareHome, Resident, EnquiryAction } from '../residents/models/index';
-import { InvoiceData, InvoiceCommentsRequest, BillingCycle, InvoiceValidatedRequest, InvoiceValidationsReportResponse } from '../admin/models/index';
+import { InvoiceData, InvoiceCommentsRequest, BillingCycle, InvoiceValidatedRequest, InvoiceValidationsReportResponse, OccupancyByDate } from '../admin/models/index';
 import { ResidentSchedule, Schedule } from '../admin/models/index';
 
 @Injectable({
@@ -137,6 +137,12 @@ export class ApiService {
     const url = `/api/invoices/all/${billingStart}/${billingEnd}/download`;
     return this.http.get(url, { responseType: 'blob' });
   }
+
+  loadOccupancyByDate(startDate: string, endDate: string): Observable<OccupancyByDate[]> {
+    return this.http.get<OccupancyByDate[]>(`api/reports/occupancy/${startDate}/${endDate}`);
+  }
+
+
 
   updateInvoicePaymentsWithValidation(invoiceValidatedRequests: InvoiceValidatedRequest[]): Observable<any> {
     return this.http.post<any>(`/api/invoices/validations`, invoiceValidatedRequests);

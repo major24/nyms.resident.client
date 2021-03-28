@@ -19,7 +19,8 @@ import { ReportListComponent } from './reports/templ/report-list/report-list.com
 import { MdateModule } from '../residents/templ-edit/mdate/mdateModule';
 import { ReportValidatedUnvalidatedComponent } from './reports/templ/report-validated-unvalidated/report-validated-unvalidated.component';
 import { ReportListOccupFeeComponent } from './reports/templ/report-list-occup-fee/report-list-occup-fee.component';
-
+import { ReportOccupancyByDayComponent } from './reports/templ/report-occupancy-by-day/report-occupancy-by-day.component';
+import { ChartsModule } from 'ng2-charts';
 // import { SplitPipe } from '../common/split.pipe';
 
 @NgModule({
@@ -37,6 +38,7 @@ import { ReportListOccupFeeComponent } from './reports/templ/report-list-occup-f
     ReportListComponent,
     ReportValidatedUnvalidatedComponent,
     ReportListOccupFeeComponent,
+    ReportOccupancyByDayComponent,
     // MdateComponent,
     // SplitPipe
   ],
@@ -45,6 +47,7 @@ import { ReportListOccupFeeComponent } from './reports/templ/report-list-occup-f
     ReactiveFormsModule,
     NgbModule,
     MdateModule,
+    ChartsModule,
     RouterModule.forChild(routes)
   ],
   providers: []

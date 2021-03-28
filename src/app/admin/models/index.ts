@@ -11,3 +11,4 @@ export * from './invoice-validated-request';
 export * from './invoice-comments-request';
 export * from './invoice-validations-report-response';
 export * from './avg-occupancy-report';
+export * from './occupancy-by-date-report';
