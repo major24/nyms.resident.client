@@ -1,0 +1,58 @@
+<div *ngIf="loading" class="spinner-border"></div>
+
+<!-- Occupancy by division -->
+<div style="display: block;" class="mt-2">
+  <div *ngIf="barChartLabels.length > 0 && barChartData.length > 0">
+    <h6>Occpancy by divisions</h6>
+
+    <canvas baseChart
+    [datasets]="barChartData"
+    [labels]="barChartLabels"
+    [options]="barChartOptions"
+    [colors]="barChartColors"
+    [plugins]="barChartPlugins"
+    [legend]="barChartLegend"
+    [chartType]="barChartType">
+  </canvas>
+  </div>
+</div>
+
+
+<!-- Occupancy by fund providers -->
+<div style="display: block;" class="mt-3">
+  <div *ngIf="barChartLabelsFundProviders.length > 0 && barChartDataFundProviders.length > 0">
+    <h6>Occpancy by providers</h6>
+
+    <canvas baseChart
+    [datasets]="barChartDataFundProviders"
+    [labels]="barChartLabelsFundProviders"
+    [options]="barChartOptions"
+    [colors]="barChartColors"
+    [plugins]="barChartPlugins"
+    [legend]="barChartLegend"
+    [chartType]="barChartType">
+  </canvas>
+  </div>
+</div>
+
+<div class="mb-3">
+  &nbsp;
+</div>
+
+
+  <!-- <hr /> -->
+  <!-- <p>Show Data</p>
+  <div>
+    <table border="1">
+      <th>Date</th>
+      <th>Division</th>
+      <th>Occpancy Count</th>
+      <tbody *ngFor="let x of serverData">
+        <td>{{x.thisDate}}</td>
+        <td>{{x.division}}</td>
+        <td>{{x.occupancyCount}}</td>
+      </tbody>
+    </table>
+  </div>
+  <hr /> -->
+<!-- </div> -->

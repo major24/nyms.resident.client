@@ -3,7 +3,6 @@
   <date-range-selection
     (startDateSelectEvent)="onStartDateSelectEvent($event)"
     (endDateSelectEvent)="onEndDateSelectEvent($event)"
-    (localAuthorityChangedEvent)="localAuthorityChanged($event)"
     (reportSelectorChangedEvent)="reportSelectorChanged($event)"
     (getReportEvent)="getReport()"
     (downloadReportEvent)="downloadReport()">
@@ -31,6 +30,11 @@
   <report-validated-unvalidated *ngIf="reportSelector === '3'"
     [invoiceValidationsReportResponse]="invoiceValidationsReportResponse">
   </report-validated-unvalidated>
+
+  <report-occupancy-by-day *ngIf="reportSelector === '4'"
+    [startDate]="startDate"
+    [endDate]="endDate">
+  </report-occupancy-by-day>
 
 
 </div>

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { InvoiceService } from '../../services/index';
-import { InvoiceResident, InvoiceSummary, InvoiceData, InvoiceValidationsReportResponse } from '../../models/index';
+import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { InvoiceService, ReportService } from '../../services/index';
+import { InvoiceResident, InvoiceSummary, InvoiceData, InvoiceValidationsReportResponse, OccupancyByDate } from '../../models/index';
 import { FileService } from '../../../services/index';
 import { saveAs } from 'file-saver';
+
+import { ReportOccupancyByDayComponent } from '../templ/report-occupancy-by-day/report-occupancy-by-day.component';
 
 @Component({
   selector: 'report-by-date-range',
@@ -14,6 +16,7 @@ export class ReportByDateRangeComponent implements OnInit {
   rawInvoices: InvoiceResident[] = [];
   invoices: InvoiceResident[] = [];
   invoicesSummary: InvoiceSummary[] = [];
+  occupancyByDateResponse: OccupancyByDate[] = [];
   loading: boolean = false;
 
   startDate: string;
@@ -26,7 +29,12 @@ export class ReportByDateRangeComponent implements OnInit {
   rawInvoiceValidationsReportResponse: InvoiceValidationsReportResponse[] = [];
 
 
-  constructor(private invoiceService: InvoiceService, private fileService: FileService) { }
+  // view child
+  @ViewChild(ReportOccupancyByDayComponent)
+  private reportOccupancyByDayComponent: ReportOccupancyByDayComponent;
+
+
+  constructor(private invoiceService: InvoiceService, private fileService: FileService, private reportService: ReportService) { }
 
   ngOnInit(): void {
   }
@@ -40,7 +48,7 @@ export class ReportByDateRangeComponent implements OnInit {
 
   getReport(): void {
     if (this.startDate && this.endDate){
-      // 1=summary, 2=avg occupancy, 3=validations
+      // 1=summary, 2=avg occupancy, 3=validations, 4=Occupancy by Day
       switch(this.reportSelector) {
         case "1":
           this.loadInvoiceByDate(this.startDate, this.endDate);
@@ -50,6 +58,9 @@ export class ReportByDateRangeComponent implements OnInit {
           break;
         case "3":
           this.loadValidationsDataByDate(this.startDate, this.endDate);
+          break;
+        case "4":
+          this.reportOccupancyByDayComponent.getReport();
           break;
         default:
           this.loadInvoiceByDate(this.startDate, this.endDate);
@@ -117,17 +128,6 @@ export class ReportByDateRangeComponent implements OnInit {
     });
   }
 
-  localAuthorityChanged(event: any): void {
-    console.log(event.target.value);
-    this.invoices.splice(0, this.invoices.length);
-    if (event.target.value === 'all'){
-      Object.assign(this.invoices, [...this.rawInvoices]);
-    } else {
-      let filtered = this.rawInvoices.filter(i => i.localAuthorityId === +event.target.value);
-      Object.assign(this.invoices, [...filtered]);
-    }
-    this.makeSummaryTotals(this.invoices);
-  }
 
   reportSelectorChanged(event: any): void {
     this.reportSelector = event.target.value;
