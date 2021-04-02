@@ -24,7 +24,6 @@
         <label for="reportSelector">Report Selector</label>
         <select class="custom-select" name="reportSelector" id="reportSelector" formControlName="reportSelector" (change)="onReportSelectorChange($event)">
           <option value="1" [selected]="1">Summary</option>
-          <option value="2">Avg. Occupancy & Fees</option>
           <option value="3">Validations</option>
           <option value="4">Occupancy</option>
         </select>
@@ -38,5 +37,10 @@
       </button>
     </div>
   </div>
-  </form>
+
+  <div class="row" *ngIf="error">
+    <div class="col-6 text-danger">{{error}}</div>
+  </div>
+
+</form>
 </div>
