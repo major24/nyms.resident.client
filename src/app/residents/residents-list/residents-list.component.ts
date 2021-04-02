@@ -19,6 +19,7 @@ export class ResidentsListComponent implements OnInit {
   selectedRefId = '';
   selectedName = '';
   dischargeDate: string;
+  exitDate: string;
   showDischargeButton: boolean = false;
   loading: boolean = false;
 
@@ -116,6 +117,26 @@ export class ResidentsListComponent implements OnInit {
       .subscribe({
         next: (data) => {
           console.log('>>saved', data);
+          this.modalService.dismissAll();
+          location.reload();
+        },
+        error: (error) => { console.log('Error saving discharge date for resident ', error); }
+      });
+  }
+
+  onExitDateChange(event: any): void {
+    if (event) {
+      this.exitDate = event;
+    }
+  }
+
+  exitResidentSchedule(): void {
+    if (!this.exitDate) return;
+
+    this.residentService.exitResidentSchedule(this.selectedRefId, this.exitDate)
+      .subscribe({
+        next: (data) => {
+          console.log('>>saved-exitResidientSchedule', data);
           this.modalService.dismissAll();
           location.reload();
         },

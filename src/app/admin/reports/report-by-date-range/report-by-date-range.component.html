@@ -8,27 +8,20 @@
     (downloadReportEvent)="downloadReport()">
   </date-range-selection>
 
-  <div *ngIf="loading" class="spinner-border"></div>
-
-  <report-list *ngIf="reportSelector === '1'"
-    [invoices]="invoices">
-  </report-list>
-
-  <!-- below both components shows in one page -->
-  <summary-info *ngIf="reportSelector === '2'"
-    [invoices]="invoices"
+  <!-- below both components shows in one page [Summary] page contains full rpt and summary ttls -->
+  <summary-info *ngIf="reportSelector === '1'"
     [startDate]="startDate"
     [endDate]="endDate">
   </summary-info>
 
-  <report-list-occup-fee *ngIf="reportSelector === '2'"
-    [invoices]="invoices"
+  <report-list *ngIf="reportSelector === '1'"
     [startDate]="startDate"
     [endDate]="endDate">
-  </report-list-occup-fee>
+  </report-list>
 
   <report-validated-unvalidated *ngIf="reportSelector === '3'"
-    [invoiceValidationsReportResponse]="invoiceValidationsReportResponse">
+    [startDate]="startDate"
+    [endDate]="endDate">
   </report-validated-unvalidated>
 
   <report-occupancy-by-day *ngIf="reportSelector === '4'"

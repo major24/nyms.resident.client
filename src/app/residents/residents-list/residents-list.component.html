@@ -13,14 +13,15 @@
       <div><strong>Dob</strong></div>
     </div>
     <div class="col-sm">
-      <div><strong>PO Id</strong></div>
-    </div>
-    <div class="col-sm">
-      <div><strong>LA Id</strong></div>
-    </div>
-    <div class="col-sm">
       <div><strong>Admission</strong></div>
     </div>
+    <div class="col-sm">
+      <div><strong>Discharged From Home</strong></div>
+    </div>
+    <div class="col-sm">
+      <div><strong>Exit (Schedule)</strong></div>
+    </div>
+
     <div class="col-sm">
       <div><strong>&nbsp;</strong></div>
     </div>
@@ -32,9 +33,6 @@
   <div *ngIf="loading" class="spinner-border"></div>
 
   <div class="row" *ngFor="let res of residents">
-    <!-- <div class="col-sm">
-      <div>{{res.referenceId}}</div>
-    </div> -->
     <div class="col-sm">
       <div>{{res.foreName}} {{res.surName}}</div>
     </div>
@@ -42,14 +40,15 @@
       <div>{{res.dob | date:'dd-MMM-yy'}}</div>
     </div>
     <div class="col-sm">
-      <div>{{res.poNumber}}</div>
-    </div>
-    <div class="col-sm">
-      <div>{{res.laId}}</div>
-    </div>
-    <div class="col-sm">
       <div>{{res.admissionDate | date:'dd-MMM-yy'}}</div>
     </div>
+    <div class="col-sm">
+      <div>{{res.dischargedFromHomeDate | date:'dd-MMM-yy'}}</div>
+    </div>
+    <div class="col-sm">
+      <div>{{res.exitDate | date:'dd-MMM-yy'}}</div>
+    </div>
+
     <div class="col-sm">
       <span>
         <a [attr.data-cy-res-edit]="res.foreName+'_'+res.surName" [routerLink]="['/residents-edit', res.referenceId]">Edit</a>
@@ -59,21 +58,16 @@
       </span>
     </div>
     <div class="col-sm">
-      <div *ngIf="res.active === 'N'">
-        <span style="font-size: smaller;">
-          &#10132; {{res.exitDate | date}}
-        </span>
-        <button type="button" class="btn btn-outline-dark btn-sm"  [attr.data-cy-activate]="res.foreName+'_'+res.surName" (click)="openModal(contentActivate, res.referenceId)">Activate</button>
+      <!--  -->
+      <div *ngIf="res.dischargedFromHomeDate === '9999-12-31T00:00:00'">
+        <button type="button" class="btn btn-outline-danger btn-sm" style="width: 7.5em;"  [attr.data-cy-discharge]="res.foreName+'_'+res.surName" (click)="openModal(contentDischarge, res.referenceId)">Discharge</button>
       </div>
-      <div *ngIf="res.active === 'Y'">
-        <button type="button" class="btn btn-outline-dark btn-sm"  [attr.data-cy-discharge]="res.foreName+'_'+res.surName" (click)="openModal(contentDischarge, res.referenceId)">Discharge</button>
+      <div *ngIf="res.exitDate === '9999-12-31T00:00:00'">
+        <button type="button" class="btn btn-outline-dark btn-sm" style="width: 7.5em;" [attr.data-cy-exitdate]="res.foreName+'_'+res.surName" (click)="openModal(contentExitSchedule, res.referenceId)">Exit Schedule</button>
       </div>
-
-
-      <!-- <div *ngIf="res.exitDate < '9999-11-30T00:00:00'">{{res.exitDate | date}}</div>
-      <div *ngIf="res.exitDate > '9999-11-30T00:00:00' && showDischargeButton">
-        <button type="button" class="btn btn-outline-dark btn-sm"  [attr.data-cy-discharge]="res.foreName+'_'+res.surName" (click)="openModal(content, res.referenceId)">Discharge</button>
-      </div> -->
+      <div *ngIf="res.exitDate !== '9999-12-31T00:00:00'">
+        <button type="button" class="btn btn-outline-dark btn-sm" style="width: 7.5em;" [attr.data-cy-activate]="res.foreName+'_'+res.surName" (click)="openModal(contentActivate, res.referenceId)">Activate</button>
+      </div>
     </div>
     <div class="h-divider"></div>
   </div>
@@ -100,6 +94,28 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" id="save" name="save" (click)="dischargeResident()">Save</button>
+    </div>
+  </ng-template>
+
+  <ng-template #contentExitSchedule let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Exit Schedule - {{selectedName}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <mdate
+        [dateValue]="exitDate"
+        [labelDateCtl]="'Exit Date'"
+        [DateCtlId]="'exitDate'"
+        (dateCtlSelectedEvent)="onExitDateChange($event)"
+        ></mdate>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" id="save" name="save" (click)="exitResidentSchedule()">Save</button>
     </div>
   </ng-template>
 

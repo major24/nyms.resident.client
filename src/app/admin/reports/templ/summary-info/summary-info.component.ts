@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { InvoiceResident, AvgOccupancyReport, AvgDivisionsOccupancySummary, AvgFundProviderSummary } from '../../../models/index';
+import { InvoiceResident, InvoiceSummary, SchedulePayment } from '../../../models/index';
+import { InvoiceService } from '../../../services/index';
 
 @Component({
   selector: 'summary-info',
@@ -7,169 +8,111 @@ import { InvoiceResident, AvgOccupancyReport, AvgDivisionsOccupancySummary, AvgF
   styleUrls: ['./summary-info.component.css']
 })
 export class SummaryInfoComponent implements OnInit {
-  @Input() invoices: InvoiceResident[] = [];
   @Input() startDate: string = '';
   @Input() endDate: string = '';
-  // local fields to hold dates
-  _startDateNum: number;
-  _endDateNum: number;
-  _avgOccupancyReport: AvgOccupancyReport[] = [];
-  // ---- ave occupancy fields -------
-  _numOfReportDays: number = 0;
-  _totalNumberOfResidentStays: number = 0;
-  _averageOccupancy: number = 0;
-  //-----------------------------------
-  _uniqueDivisionNames: string[] = [];
-  _uniqueFundProviders: string[] = [];
+  invoices: InvoiceResident[] = [];
+  loading: boolean = false;
+  invSummaries: InvoiceSummary[] = [];
 
-  _avgDivisionsOccupancySummary: AvgDivisionsOccupancySummary[] = [];
-  _avgFundProviderSummary: AvgFundProviderSummary[] = [];
-
-  constructor() { }
+  constructor(private invoiceService: InvoiceService) { }
 
   ngOnInit(): void {
   }
 
-  ngOnChanges(changes: any): void {
-    if (changes.startDate) {
-      this._startDateNum = Date.parse(changes.startDate.currentValue);
+  getReport(): void {
+    if (this.startDate === '' || this.endDate === null) {
+      throw new console.error('Date not selected');
     }
-    if (changes.endDate){
-      this._endDateNum = Date.parse(changes.endDate.currentValue);
-    }
-    if (isNaN(this._endDateNum) === false && isNaN(this._startDateNum) === false) {
-      this._numOfReportDays = (this._endDateNum - this._startDateNum) / (1000*3600*24) + 1;
-    }
-
-    if (changes.invoices && changes.invoices.currentValue.length > 0) {
-      const _data = changes.invoices.currentValue;
-      console.log('ngOnChg-ReportSummary ', _data);
-      // clear arrays
-      this._avgOccupancyReport = [];
-      this._uniqueDivisionNames = [];
-      this._uniqueFundProviders = [];
-      this._avgDivisionsOccupancySummary = [];
-      this._avgFundProviderSummary = [];
-
-      _data.map((inv) => {
-        // prepare main table data
-        if (inv.schedulePayments && inv.schedulePayments.length > 0) {
-          let sumOfNumOfDays: number = 0;
-          // get uniq number of stays and add them together
-          const uniqueNumberOfStays = [...new Set(inv.schedulePayments.map(item => item.numberOfDays))];
-          if (this.isNumberArray(uniqueNumberOfStays)) {
-            sumOfNumOfDays = uniqueNumberOfStays.reduce((a, b) => a + b, 0);
-          }
-
-          let _avgOccRpt: AvgOccupancyReport = {
-            name: inv.name,
-            fundProvider: inv.localAuthorityName,
-            numberOfDays: sumOfNumOfDays,
-            weeklyFee: inv.residentWeeklyFee,
-            divisionName: inv.careHomeDivisionName
-          }
-          this._avgOccupancyReport.push(_avgOccRpt);
-        }
-      });
-
-      // extract unique division names and providers, so we can iterate in ui
-      this._uniqueDivisionNames = [...new Set(this._avgOccupancyReport.map(item => item.divisionName))];
-      this._uniqueFundProviders = [...new Set(this._avgOccupancyReport.map(item => item.fundProvider))];
-      console.log('uniqDivs', this._uniqueDivisionNames);
-      console.log('uniqFundP', this._uniqueFundProviders);
-      // prepare summary
-      this.prepareAverageOccupancy();
-      this.prepareDivisionSummary();
-      this.prepareFundProviderSummary();
-    }
-  } // ngOnchanges..
-
-  // prepare summaries
-  prepareAverageOccupancy(): void {
-    // Find Average Occupancy
-    this._avgOccupancyReport.map((r) => {
-      this._totalNumberOfResidentStays += r.numberOfDays
-    });
-    this._averageOccupancy = this._totalNumberOfResidentStays / this._numOfReportDays;
+    this.loadInvoiceByDate(this.startDate, this.endDate);
   }
 
-  prepareDivisionSummary(): void {
-    this._uniqueDivisionNames.map(divName => {
-      let tmpTtl = 0;
-      let tmpFee = 0;
-      let tmpNumRes = 0;
-      this._avgOccupancyReport.filter(r => r.divisionName === divName).map(rbyDiv => {
-        tmpTtl += rbyDiv.numberOfDays;
-        tmpFee += rbyDiv.weeklyFee;
-        tmpNumRes++;
-      });
+  loadInvoiceByDate(startDate: string, endDate: string): void {
+    this.invoices.splice(0, this.invoices.length);
+    this.invSummaries.splice(0, this.invSummaries.length);
 
-      let tmpTotalPayments = 0;
-      this._avgOccupancyReport.filter(r => r.divisionName === divName).map(rbyDiv => {
-        tmpTotalPayments += (rbyDiv.weeklyFee / 7) * rbyDiv.numberOfDays;
-      });
-
-      let divisionSummary:  AvgDivisionsOccupancySummary = {
-        name: divName,
-        totalStays: tmpTtl,
-        numOfResidents: tmpNumRes,
-        avgOccupancy: tmpTtl / this._numOfReportDays,
-        avgFee: tmpFee / tmpNumRes,
-        totalPayment: tmpTotalPayments
-      };
-      this._avgDivisionsOccupancySummary.push(divisionSummary);
+    this.loading = true;
+    this.invoiceService.loadInvoiceByDate(startDate, endDate)
+    .subscribe({
+      next: (data) => {
+        Object.assign(this.invoices, [...data.invoiceResidents]);
+        // console.log(this.invoices);
+        if (this.invoices && this.invoices.length > 0) {
+          this.prepareFundProviderSummary();
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        console.log('Error getting invoice:', error);
+        this.loading = false;
+      }
     });
-
-    // Once the division summary is done, do a full summary for ALL div (i.e.CareHome)
-    let tmpTtl = 0;
-    let tmpFee = 0;
-    let tmpNumRes = 0;
-    let tmpTotalPayments = 0;
-    this._avgOccupancyReport.map(data => {
-      tmpTtl += data.numberOfDays;
-      tmpFee += data.weeklyFee;
-      tmpNumRes++;
-      tmpTotalPayments += (data.weeklyFee / 7) * data.numberOfDays;
-    });
-    let summary:  AvgDivisionsOccupancySummary = {
-      name: 'Pennine Care Centre',  // HARD code for now
-      totalStays: tmpTtl,
-      numOfResidents: tmpNumRes,
-      avgOccupancy: tmpTtl / this._numOfReportDays,
-      avgFee: tmpFee / tmpNumRes,
-      totalPayment: tmpTotalPayments,
-    };
-    this._avgDivisionsOccupancySummary.push(summary);
-    console.log('>>DivisionSummary', this._avgDivisionsOccupancySummary);
   }
 
   prepareFundProviderSummary(): void {
-    this._uniqueFundProviders.map(provName => {
-      let tmpDays = 0;
-      let tmpFee = 0;
-      let tmpNumRes = 0;
-      this._avgOccupancyReport.filter(r => r.fundProvider === provName).map(rbyProv => {
-        tmpDays += rbyProv.numberOfDays;
-        tmpFee += rbyProv.weeklyFee;
-        tmpNumRes++;
+    const fundProviders = this.extractUniqueFundProviders();
+    // console.log('fundProviders', fundProviders);
+    // let allSchedulePayments = this.invoices.map(i => i.schedulePayments);
+    // make a flat list all sps into one SINGLE array, else it will be multi array
+    let allSchedulePayments: SchedulePayment[] = [];
+    this.invoices.map(i => {
+      i.schedulePayments.map(sp => {
+        allSchedulePayments.push(sp);
       });
-
-      let tmpTotalPayments = 0;
-      this._avgOccupancyReport.filter(r => r.fundProvider === provName).map(rbyProv => {
-        tmpTotalPayments += (rbyProv.weeklyFee / 7) * rbyProv.numberOfDays;
-      });
-      let fundProvSummary: AvgFundProviderSummary = {
-        name: provName,
-        numOfResidents: tmpNumRes,
-        avgFee: tmpFee / tmpNumRes,
-        totalPayment: tmpTotalPayments
-      };
-      this._avgFundProviderSummary.push(fundProvSummary);
     });
-    console.log('>>fundProvSummary', this._avgFundProviderSummary);
+    // console.log('>>', allSchedulePayments);
+
+    let total = 0;
+    fundProviders.map(fp => {
+      // get each provider by filtering
+      const spsByProv = allSchedulePayments.filter(sp => sp.paymentFromName === fp);
+      total = 0;
+      if (fp === 'Private') { // payment type is diff for private
+        total = this.extractTotalFromSchedulePayments(spsByProv, 3); // Private type id
+      } else {
+        total = this.extractTotalFromSchedulePayments(spsByProv, 1); // LA
+      }
+
+      let invSummary = {
+        localAuthority: fp,
+        totalLaFee: total
+      };
+      this.invSummaries.push(invSummary);
+    });
+
+    // Now get client contributions..
+    total = 0;
+    const spsCC = allSchedulePayments.filter(sp => sp.paymentTypeId === 2);
+    total = this.extractTotalFromSchedulePayments(spsCC, 2); // CC
+    let invSummary = {
+      localAuthority: 'Client Contribution',
+      totalLaFee: total
+    };
+    this.invSummaries.push(invSummary);
+    console.log(this.invSummaries);
   }
 
+  extractUniqueFundProviders(): string[] {
+    let uniqueFundProviders: string[] = [];
+    this.invoices.map(i => {
+      i.schedulePayments.map(sp => {
+        if (!uniqueFundProviders.includes(sp.paymentFromName)) {
+          uniqueFundProviders.push(sp.paymentFromName);
+        }
+        return;
+      })
+    });
+    return uniqueFundProviders;
+  }
 
+  extractTotalFromSchedulePayments(sps: SchedulePayment[], paymentTypeId: number): number {
+    let amt = 0;
+    sps.map(sp => {
+      if (sp.paymentTypeId === paymentTypeId) {
+        amt += sp.amountDue;
+      }
+    });
+    return amt;
+  }
 
   isNumberArray(value: unknown): value is number[] {
     return (

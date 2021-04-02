@@ -94,8 +94,12 @@ export class ApiService {
     return this.http.post<any>(`/api/residents/${referenceId}`, resident);
   }
 
-  dischargeResident(referenceId: string, exitDate: string): Observable<any> {
-    return this.http.post<any>(`/api/residents/${referenceId}/discharge`, { referenceId: referenceId, exitDate: exitDate });
+  dischargeResident(referenceId: string, dischargeDate: string): Observable<any> {
+    return this.http.post<any>(`/api/residents/${referenceId}/discharge`, { referenceId: referenceId, dischargedFromHomeDate: dischargeDate });
+  }
+
+  exitResidentSchedule(referenceId: string, exitDate: string): Observable<any> {
+    return this.http.post<any>(`/api/residents/${referenceId}/exitschedule`, { referenceId: referenceId, exitDate: exitDate });
   }
 
   activateResident(referenceId: string): Observable<any> {
