@@ -139,7 +139,7 @@ export class ReportOccupancyByDayComponent implements OnInit {
     this.printData.splice(0, this.printData.length);
     const diviData = data.filter(d => d.groupBy === "Division");
     // above creates multiple arrays. hard to resolve counts.
-    // get occpancy data for each divisions into a single array
+    // get occupancy data for each divisions into a single array
     diviData.map(d =>{
       const name = d.name;
       d.occupancyCountByDates.map(dts => {

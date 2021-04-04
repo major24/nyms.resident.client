@@ -11,5 +11,11 @@
     <div class="col-6">{{sm.localAuthority}}</div>
     <div class="col-6 text-right">{{sm.totalLaFee | number: '1.2-2'}}</div>
   </div>
+  <!-- grand total-->
+  <div class="h-divider" *ngIf="invSummaries && invSummaries.length > 0"></div>
+  <div class="row" *ngIf="invSummaries && invSummaries.length > 0">
+    <div class="col-6 text-primary">Grand Total</div>
+    <div class="col-6 text-right">{{grandTotalForSummary | number: '1.2-2'}}</div>
+  </div>
 
 </div>

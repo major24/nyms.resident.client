@@ -13,6 +13,7 @@ export class SummaryInfoComponent implements OnInit {
   invoices: InvoiceResident[] = [];
   loading: boolean = false;
   invSummaries: InvoiceSummary[] = [];
+  grandTotalForSummary: number = 0;
 
   constructor(private invoiceService: InvoiceService) { }
 
@@ -88,7 +89,24 @@ export class SummaryInfoComponent implements OnInit {
       totalLaFee: total
     };
     this.invSummaries.push(invSummary);
-    console.log(this.invSummaries);
+
+    // Now get the adjustments summary
+    total = 0;
+    const spsAdjustments = allSchedulePayments.filter(sp => sp.paymentTypeId === 5);
+    total = this.extractTotalFromSchedulePayments(spsAdjustments, 5); // Adj
+    invSummary = {
+      localAuthority: 'Adjustments',
+      totalLaFee: total
+    };
+    this.invSummaries.push(invSummary);
+
+    // Grand Total: Now add each providers+adj to get grand total
+    total = 0;
+    this.invSummaries.map(iv => {
+      this.grandTotalForSummary += iv.totalLaFee;
+    });
+
+    // console.log(this.invSummaries);
   }
 
   extractUniqueFundProviders(): string[] {
