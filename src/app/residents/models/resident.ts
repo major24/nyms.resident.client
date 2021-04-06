@@ -33,6 +33,7 @@ export interface Resident {
   phoneNumber: string;
   socialWorker: SocialWorker;
   nextOfKins: NextOfKin[];
+  careHomeDivisionId: number;
 }
 // addr default to 'home'. in future if we want to differenciate, use this flag
 const address = {
@@ -81,6 +82,7 @@ export function createInstanceOfResident() {
     address: address,
     emailAddress: '',
     phoneNumber: '',
+    careHomeDivisionId: 0,
     socialWorker: {
       foreName: '',
       surName: '',

@@ -20,6 +20,7 @@ import { RoomLocation } from '../models/index';
 import CareNeeds from '../../helpers/data-care-needs';
 import StayTypes from '../../helpers/data-stay-types';
 import EnquiryStatuses from '../../helpers/data-enquiry-status';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-resident-edit',
@@ -49,10 +50,14 @@ export class ResidentEditComponent implements OnInit {
   careNeeds: any[] = CareNeeds;
   stayTypes: any[] = StayTypes;
   statuses: any[] = EnquiryStatuses;
+  careHomeDivisions: any[] = [];
 
   errors: string[] = [];
   saving: boolean = false;
   isUpdatingResident: boolean = false;
+  residentEditForm = new FormGroup({
+    careHomeDivision: new FormControl('')
+  });
 
   constructor(
     private _Activatedroute: ActivatedRoute,
@@ -106,7 +111,7 @@ export class ResidentEditComponent implements OnInit {
               console.log('>>3-ResidentObj: ', this.resident);
               // set respective select control
               this.careHomeChanged(this.resident.careHomeId);
-              this.setupEnquiryEditForm(dataEnquiry);
+              // this.setupResidentEditForm(dataEnquiry);
             },
             (error2) => {
               console.log('Error getting enquiry', error2);
@@ -133,6 +138,7 @@ export class ResidentEditComponent implements OnInit {
               console.log('>>2-Resident: ', dataEnquiry);
               this.resident = Object.assign(this.resident, dataEnquiry);
               this.careHomeChanged(this.resident.careHomeId);
+              this.setupResidentEditForm(this.resident);
             },
             (error2) => {
               console.log('Error getting enquiry', error2);
@@ -160,7 +166,9 @@ export class ResidentEditComponent implements OnInit {
     return this.residentServcie.loadResidentByReferenceId(referenceId);
   }
 
-  setupEnquiryEditForm(data: EnquiryResident): void {}
+  setupResidentEditForm(redident: Resident): void {
+    this.residentEditForm.controls['careHomeDivision'].setValue(this.resident.careHomeDivisionId);
+  }
 
   //=====================================================
   // === carehome dropdown change ===
@@ -170,6 +178,7 @@ export class ResidentEditComponent implements OnInit {
     // update enq res
     this.updateCareHomeId(selCareHomeId);
   }
+
   careHomeChanged(selCareHomeId: number): void {
     // RoomLocations
     this.roomLocations.splice(0, this.roomLocations.length);
@@ -185,10 +194,19 @@ export class ResidentEditComponent implements OnInit {
     // Load local authorites
     let z = this.careHomeDetail.localAuthorities;
     Object.assign(this.localAuthorities, z);
+
+    this.careHomeDivisions.splice(0, this.careHomeDivisions.length);
+    Object.assign(this.careHomeDivisions, this.careHomeDetail.careHomeDivisions);
   }
 
   updateCareHomeId(id: number): void {
     this.resident = Object.assign(this.resident, { careHomeId: id });
+  }
+
+  onCareHomeDivisionChange(event: any): void {
+    if (event.target.value) {
+      this.resident = Object.assign(this.resident, { careHomeDivisionId: event.target.value });
+    }
   }
 
   //======================================================
@@ -437,12 +455,24 @@ export class ResidentEditComponent implements OnInit {
   // === submit button ======================================
   onSubmit(event: any): void {
     this.errors = [];
-    if (this.resident.careHomeId <= 0) this.errors.push('Carehome is required');
-    if (this.resident.foreName === '' || this.resident.surName === '')
+    if (this.resident.careHomeId <= 0) {
+      this.errors.push('Carehome is required');
+    }
+    if (this.resident.foreName === '' || this.resident.surName === ''){
       this.errors.push('Name is required');
-    if (this.resident.admissionDate === '')
+    }
+    if (this.resident.admissionDate === '') {
       this.errors.push('Admission date is required');
-    if (this.resident.localAuthorityId <= 0) this.errors.push('Local Authority (Provider) is required')
+    }
+    if (this.resident.localAuthorityId <= 0) {
+      this.errors.push('Local Authority (Provider) is required');
+    }
+    if (this.resident.careHomeDivisionId <= 0) {
+      this.errors.push('Care Home Division is required');
+    }
+    if (this.resident.admissionDate === '' || this.resident.admissionDate === null) {
+      this.errors.push('Admission Date is required');
+    }
     if (this.errors.length > 0) return;
 
     this.saving = true;

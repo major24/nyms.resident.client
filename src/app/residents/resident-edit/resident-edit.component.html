@@ -12,6 +12,22 @@
               <h6 class="text-primary">{{ careHomeDetail?.name }}</h6>
             </label>
           </div>
+          <form [formGroup]="residentEditForm">
+            <div class="form-group">
+              <lable for="careHomeDivision">
+                <h6 class="text-primary">Care Home Division</h6>
+              </lable>
+              <div>
+                <select class="custom-select" formControlName="careHomeDivision" (change)="onCareHomeDivisionChange($event)" id="careHomeDivision" name="careHomeDivision">
+                  <option value="" selected>Choose...</option>
+                  <option  *ngFor="let chd of careHomeDivisions"
+                    [value]="chd.id">
+                    {{ chd.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </form>
 
           <resident-profile-edit
             [foreName]="resident.foreName"

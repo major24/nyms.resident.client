@@ -7,4 +7,5 @@ export class CareHome {
   roomLocations: RoomLocation[];
   careCategories: any[];
   localAuthorities: any[];
+  careHomeDivisions: any[];
 }
