@@ -51,8 +51,9 @@ export class SummaryInfoComponent implements OnInit {
 
   prepareFundProviderSummary(): void {
     const fundProviders = this.extractUniqueFundProviders();
-    // console.log('fundProviders', fundProviders);
-    // let allSchedulePayments = this.invoices.map(i => i.schedulePayments);
+    const uniquePaymentTypeIds = this.extractUniquePaymentTypeIds();
+    console.log('fundProviders', fundProviders);
+    console.log('uniquePaymentTypeIds', uniquePaymentTypeIds);
     // make a flat list all sps into one SINGLE array, else it will be multi array
     let allSchedulePayments: SchedulePayment[] = [];
     this.invoices.map(i => {
@@ -60,7 +61,7 @@ export class SummaryInfoComponent implements OnInit {
         allSchedulePayments.push(sp);
       });
     });
-    // console.log('>>', allSchedulePayments);
+    console.log('>>', allSchedulePayments);
 
     let total = 0;
     fundProviders.map(fp => {
@@ -120,6 +121,19 @@ export class SummaryInfoComponent implements OnInit {
       })
     });
     return uniqueFundProviders;
+  }
+
+  extractUniquePaymentTypeIds(): number[] {
+    let uniquePaymentTypeIds: number[] = [];
+    this.invoices.map(i => {
+      i.schedulePayments.map(sp => {
+        if (!uniquePaymentTypeIds.includes(sp.paymentTypeId)) {
+          uniquePaymentTypeIds.push(sp.paymentTypeId);
+        }
+        return;
+      });
+    });
+    return uniquePaymentTypeIds;
   }
 
   extractTotalFromSchedulePayments(sps: SchedulePayment[], paymentTypeId: number): number {
