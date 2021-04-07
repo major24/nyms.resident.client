@@ -1,4 +1,4 @@
 export interface InvoiceSummary {
-  localAuthority: string;
-  totalLaFee: number;
+  fundProvider: string;
+  totalFee: number;
 }
