@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { InvoiceResident, InvoiceSummary, SchedulePayment } from '../../../models/index';
 import { InvoiceService } from '../../../services/index';
+import { KeyPair } from '../../../../models/index';
 
 @Component({
   selector: 'summary-info',
@@ -14,6 +15,14 @@ export class SummaryInfoComponent implements OnInit {
   loading: boolean = false;
   invSummaries: InvoiceSummary[] = [];
   grandTotalForSummary: number = 0;
+
+  paymentTypeIdDesc: KeyPair[] = [
+    { "key": 1, "value": "Local Authority" },
+    { "key": 2, "value": "Client Contribution" },
+    { "key": 3, "value": "Private" },
+    { "key": 4, "value": "Covid Supplement" },
+    { "key": 5, "value": "Adjustments" }
+  ];
 
   constructor(private invoiceService: InvoiceService) { }
 
@@ -30,8 +39,9 @@ export class SummaryInfoComponent implements OnInit {
   loadInvoiceByDate(startDate: string, endDate: string): void {
     this.invoices.splice(0, this.invoices.length);
     this.invSummaries.splice(0, this.invSummaries.length);
-
+    this.grandTotalForSummary = 0;
     this.loading = true;
+
     this.invoiceService.loadInvoiceByDate(startDate, endDate)
     .subscribe({
       next: (data) => {
@@ -50,9 +60,9 @@ export class SummaryInfoComponent implements OnInit {
   }
 
   prepareFundProviderSummary(): void {
-    const fundProviders = this.extractUniqueFundProviders();
-    const uniquePaymentTypeIds = this.extractUniquePaymentTypeIds();
-    console.log('fundProviders', fundProviders);
+    const fundProviders = this.extractUniqueFundProviders().sort();
+    const uniquePaymentTypeIds = this.extractUniquePaymentTypeIds().sort();
+    const paymentProviderIdForLA = 1;
     console.log('uniquePaymentTypeIds', uniquePaymentTypeIds);
     // make a flat list all sps into one SINGLE array, else it will be multi array
     let allSchedulePayments: SchedulePayment[] = [];
@@ -61,53 +71,41 @@ export class SummaryInfoComponent implements OnInit {
         allSchedulePayments.push(sp);
       });
     });
-    console.log('>>', allSchedulePayments);
 
     let total = 0;
     fundProviders.map(fp => {
-      // get each provider by filtering
-      const spsByProv = allSchedulePayments.filter(sp => sp.paymentFromName === fp);
-      total = 0;
-      if (fp === 'Private') { // payment type is diff for private
-        total = this.extractTotalFromSchedulePayments(spsByProv, 3); // Private type id
-      } else {
-        total = this.extractTotalFromSchedulePayments(spsByProv, 1); // LA
+      // get each provider by filtering, exclude 'Private' for now. Include in next step
+      if (fp !== 'Private') {
+        const spsByProv = allSchedulePayments.filter(sp => sp.paymentFromName === fp);
+        total = 0;
+        total = this.extractTotalFromSchedulePayments(spsByProv, paymentProviderIdForLA); // LA = 1
+        let invSummary = {
+          fundProvider: fp,
+          totalFee: total
+        };
+        this.invSummaries.push(invSummary);
       }
-
-      let invSummary = {
-        localAuthority: fp,
-        totalLaFee: total
-      };
-      this.invSummaries.push(invSummary);
     });
 
-    // Now get client contributions..
-    total = 0;
-    const spsCC = allSchedulePayments.filter(sp => sp.paymentTypeId === 2);
-    total = this.extractTotalFromSchedulePayments(spsCC, 2); // CC
-    let invSummary = {
-      localAuthority: 'Client Contribution',
-      totalLaFee: total
-    };
-    this.invSummaries.push(invSummary);
-
-    // Now get the adjustments summary
-    total = 0;
-    const spsAdjustments = allSchedulePayments.filter(sp => sp.paymentTypeId === 5);
-    total = this.extractTotalFromSchedulePayments(spsAdjustments, 5); // Adj
-    invSummary = {
-      localAuthority: 'Adjustments',
-      totalLaFee: total
-    };
-    this.invSummaries.push(invSummary);
+    uniquePaymentTypeIds.map(pid => {
+      total = 0;
+      // Exclude LA. Already done in previous step
+      if (pid > paymentProviderIdForLA) {
+        const sps = allSchedulePayments.filter(sp => sp.paymentTypeId === pid);
+        total = this.extractTotalFromSchedulePayments(sps, pid);
+        let invSummary = {
+          fundProvider: this.paymentTypeIdDesc.find(pd => pd.key === pid).value,
+          totalFee: total
+        };
+        this.invSummaries.push(invSummary);
+      }
+    });
 
     // Grand Total: Now add each providers+adj to get grand total
     total = 0;
     this.invSummaries.map(iv => {
-      this.grandTotalForSummary += iv.totalLaFee;
+      this.grandTotalForSummary += iv.totalFee;
     });
-
-    // console.log(this.invSummaries);
   }
 
   extractUniqueFundProviders(): string[] {
@@ -123,17 +121,30 @@ export class SummaryInfoComponent implements OnInit {
     return uniqueFundProviders;
   }
 
-  extractUniquePaymentTypeIds(): number[] {
-    let uniquePaymentTypeIds: number[] = [];
+  extractUniqueFundProviderIds(): number[] {
+    let unqFundProviderIds: number[] = [];
     this.invoices.map(i => {
       i.schedulePayments.map(sp => {
-        if (!uniquePaymentTypeIds.includes(sp.paymentTypeId)) {
-          uniquePaymentTypeIds.push(sp.paymentTypeId);
+        if (!unqFundProviderIds.includes(sp.localAuthorityId)) {
+          unqFundProviderIds.push(sp.localAuthorityId);
+        }
+        return;
+      })
+    });
+    return unqFundProviderIds;
+  }
+
+  extractUniquePaymentTypeIds(): number[] {
+    let unqPaymentTypeIds: number[] = [];
+    this.invoices.map(i => {
+      i.schedulePayments.map(sp => {
+        if (!unqPaymentTypeIds.includes(sp.paymentTypeId)) {
+          unqPaymentTypeIds.push(sp.paymentTypeId);
         }
         return;
       });
     });
-    return uniquePaymentTypeIds;
+    return unqPaymentTypeIds;
   }
 
   extractTotalFromSchedulePayments(sps: SchedulePayment[], paymentTypeId: number): number {
