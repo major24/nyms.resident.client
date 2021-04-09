@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" id="summary-grid">
   <!-- NEW summary -->
   <h6 *ngIf="invSummaries && invSummaries.length > 0">
     <span class="text-primary">Total Amount Due</span>
@@ -7,15 +7,24 @@
     <div class="col-6">Name</div>
     <div class="col-6 text-right">Amount</div>
   </div>
+  <!-- <span [attr.data-cy-amount]="invoice.name+'_'+schedule.amountDue">{{schedule.amountDue | number : '1.2-2'}}</span>-->
   <div class="row" *ngFor="let sm of invSummaries">
-    <div class="col-6">{{sm.fundProvider}}</div>
-    <div class="col-6 text-right">{{sm.totalFee | number: '1.2-2'}}</div>
+    <div class="col-6">
+      <span [attr.data-cy-fundprovider]="sm.fundProvider">{{sm.fundProvider}}</span>
+    </div>
+    <div class="col-6 text-right">
+      <span [attr.data-cy-amount]="sm.fundProvider+'_'+sm.totalFee">{{sm.totalFee | number: '1.2-2'}}</span>
+    </div>
   </div>
   <!-- grand total-->
   <div class="h-divider" *ngIf="invSummaries && invSummaries.length > 0"></div>
   <div class="row" *ngIf="invSummaries && invSummaries.length > 0">
-    <div class="col-6 text-primary">Grand Total</div>
-    <div class="col-6 text-right">{{grandTotalForSummary | number: '1.2-2'}}</div>
+    <div class="col-6 text-primary">
+      <span [attr.data-cy-fundprovider]="GrandTotal">Grand Total</span>
+    </div>
+    <div class="col-6 text-right">
+      <span [attr.data-cy-amount]="GrandTotal">{{grandTotalForSummary | number: '1.2-2'}}</span>
+    </div>
   </div>
 
 </div>
