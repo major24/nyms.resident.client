@@ -1,7 +1,6 @@
 <div class="container mt-4">
 
   <h1 class="display-4">Edit Schedules</h1>
-
   <div *ngIf="loading" class="spinner-border"></div>
 
   <div class="container">
@@ -124,7 +123,7 @@
           <span class="text-danger ml-1">*</span>
           <div class="input-group">
             <select id="localAuthority" formControlName="localAuthority" class="form-control" (change)="onLocalAuthorityChange($event)">
-              <option *ngFor="let la of _localAuthorities; let i = index" [value]="la.key">
+              <option  *ngFor="let la of _localAuthorities; let index" [value]=la.key>
                 {{la.value}}
               </option>
             </select>
@@ -136,7 +135,6 @@
           <span class="text-danger ml-1">*</span>
           <div class="input-group">
             <select id="paymentFrom" formControlName="paymentFrom" class="form-control" (change)="onPaymentFromChange($event)">
-              <!-- <option *ngIf="newSchedule.id == 0" value='' selected>Choose</option> -->
               <option *ngFor="let pp of paymentProviders; let i = index" [value]="pp.id">
                 {{pp.name}}
               </option>
@@ -149,7 +147,6 @@
           <span class="text-danger ml-1">*</span>
           <div class="input-group">
             <select id="paymentType" formControlName="paymentType" class="form-control" (change)="onPaymentTypeChange($event)">
-              <!-- <option value='' selected>Choose</option> -->
               <option *ngFor="let pt of paymentTypes; let i = index" [value]="pt.id">
                 {{pt.name}}
               </option>
