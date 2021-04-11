@@ -1,11 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ResidentSchedule, Schedule } from '../../models/index';
 import { ScheduleService } from '../../services/index';
+import { ResidentsService } from '../../../residents/services/residents.service';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Util } from '../../../helpers/index';
 import CareHomeDetails from '../../../helpers/data-carehome-details';
+import { Resident } from '../../../residents/models/index';
 
 @Component({
   selector: 'schedule-edit',
@@ -16,6 +18,7 @@ export class ScheduleEditComponent implements OnInit {
   residentSchedules: ResidentSchedule = { referenceId: '', localAuthorityId: 0, paymentFromName: '', foreName: '', surName: '', schedules: [] };
   initSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: undefined, amountDue: 0, active: 'Y' };
   newSchedule: Schedule = { id: 0, residentId: 0, localAuthorityId: 0, paymentTypeId: 0, paymentProviderId: 0, paymentFromName: '', description: '', scheduleBeginDate: '', scheduleEndDate: '', weeklyFee: undefined, amountDue: 0, active: 'Y' };
+  resident: Resident = undefined;
 
   @Input() scheduleBeginDate: any = undefined;
   @Input() labelDateCtl: string = 'Date';
@@ -42,8 +45,8 @@ export class ScheduleEditComponent implements OnInit {
 
   constructor(
     private _Activatedroute: ActivatedRoute,
-    private _router: Router,
     private scheduleService: ScheduleService,
+    private residentServcie: ResidentsService,
     private modalService: NgbModal,
     private readonly util: Util) { }
 
@@ -54,10 +57,10 @@ export class ScheduleEditComponent implements OnInit {
     // TODO - carehome id
     let careHomeId = 1; // TODO-Hard code for now
     this._localAuthorities = CareHomeDetails.filter((ch) => ch.careHomeId === careHomeId).map(home => home.funders)[0];
-    console.log('>>LA>>', this._localAuthorities);
     this._Activatedroute.paramMap.subscribe((params) => {
       if (params && params.get('referenceId')) {
         this.referenceId = params.get('referenceId');
+        this.loadResidentByReferenceId();
         this.loadSchedules(this.referenceId);
       }
     });
@@ -71,7 +74,6 @@ export class ScheduleEditComponent implements OnInit {
         next: (data) => {
           Object.assign(this.residentSchedules, data);
           this.loading = false;
-          console.log('>>??', this.residentSchedules)
         },
         error: (error) => {
           console.log('Error fetching schedules ', error);
@@ -91,6 +93,17 @@ export class ScheduleEditComponent implements OnInit {
     });
   }
 
+  loadResidentByReferenceId(): void {
+    this.residentServcie.loadResidentByReferenceId(this.referenceId)
+    .subscribe({
+      next: (data) => {
+        this.resident = data;
+        this.initScheduleDialog();
+      },
+      error: (error) => { console.log('Error loading resident'); }
+    });
+  }
+
   loadPaymentTypes(): void {
     this.scheduleService.loadPaymentTypes()
     .subscribe({
@@ -100,6 +113,26 @@ export class ScheduleEditComponent implements OnInit {
       error: (error) => { console.log('Error loading payment providers'); }
     });
   }
+
+  initScheduleDialog(): void {
+    if (this.resident != undefined) {
+      const laId = this.resident.localAuthorityId;
+      const paymentProviderIdPrivate = 3;
+      if (laId > 0) {
+        this.createScheduleForm.controls['localAuthority'].setValue(laId);
+        this.createScheduleForm.controls['localAuthority'].disable();
+      }
+      if (laId === 100) {
+        // If LA id == private (100) set payment providers to Private only
+        this.paymentProviders = this.paymentProviders.filter(p => p.id === paymentProviderIdPrivate);
+        this.paymentTypes = this.paymentTypes.filter(p => p.id === paymentProviderIdPrivate);
+      } else {
+        this.paymentProviders = this.paymentProviders.filter(p => p.id !== paymentProviderIdPrivate);
+        this.paymentTypes = this.paymentTypes.filter(p => p.id !== paymentProviderIdPrivate);
+      }
+    }
+  }
+
 
   // add new schedule related
   onLocalAuthorityChange(event: any): void {
@@ -141,7 +174,6 @@ export class ScheduleEditComponent implements OnInit {
       this.error = 'Error: Reference Id not found';
       return;
     }
-
     if (this.newSchedule.localAuthorityId === 0 || this.newSchedule.scheduleBeginDate === '' || this.newSchedule.paymentProviderId === 0 || this.newSchedule.paymentTypeId === 0) {
       this.error = 'Missing required fields';
       return;
@@ -149,7 +181,7 @@ export class ScheduleEditComponent implements OnInit {
     if (this.newSchedule.scheduleEndDate === '') {
       this.newSchedule = Object.assign(this.newSchedule, { scheduleEndDate: new Date('9999-12-31') });
     }
-    console.log('>>>>rdy save', this.newSchedule);
+    console.log('>>>ready to save', this.newSchedule);
 
     this.saving = true;
     this.scheduleService.createSchedule(this.referenceId, this.newSchedule)
@@ -197,7 +229,6 @@ export class ScheduleEditComponent implements OnInit {
   }
 
   disableSchedule(): void {
-    console.log('rdy to disable ', this.selectedScheduleId);
     if (this.selectedScheduleId <= 0) return;
 
     this.saving = true;
@@ -232,6 +263,8 @@ export class ScheduleEditComponent implements OnInit {
     } else {
       this.newSchedule = Object.assign(this.newSchedule, this.initSchedule)
     }
+    // add laid from resident
+    this.newSchedule = Object.assign(this.newSchedule, { localAuthorityId: this.resident.localAuthorityId });
 
     this.createScheduleForm.controls['paymentFrom'].setValue(this.newSchedule.paymentProviderId);
     this.createScheduleForm.controls['paymentType'].setValue(this.newSchedule.paymentTypeId);
