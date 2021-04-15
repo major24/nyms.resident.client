@@ -1,8 +1,10 @@
 <div class="container mt-1">
 
   <billing-date-selection
+    [careHomes]="careHomes"
+    [localAuthorities]="localAuthorities"
     [billingCycles]="billingCycles"
-    [localAuthorities]="_localAuthorities"
+    (careHomeChangedEvent)="onCareHomeChange($event)"
     (localAuthorityChangedEvent)="onLocalAuthorityChange($event)"
     (billingCycleChangedEvent)="onBillingCycleChangedEvent($event)"
     (getReportEvent)="onGetReportEvent()">

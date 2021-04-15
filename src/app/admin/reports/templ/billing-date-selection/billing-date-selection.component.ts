@@ -11,13 +11,16 @@ import { KeyPair } from '../../../../models/index';
   styleUrls: ['./billing-date-selection.component.css']
 })
 export class BillingDateSelectionComponent implements OnInit {
+  @Input() careHomes: KeyPair[] = [];
+  @Input() localAuthorities: any[] = [];
   @Input() billingCycles: BillingCycle[] = [];
-  @Input() localAuthorities: KeyPair[] = [];
+  @Output() careHomeChangedEvent = new EventEmitter<any>();
   @Output() localAuthorityChangedEvent = new EventEmitter<any>();
   @Output() billingCycleChangedEvent = new EventEmitter<any>();
   @Output() getReportEvent = new EventEmitter<any>();
 
   invoiceForm = new FormGroup({
+    careHome: new FormControl(''),
     localAuthority: new FormControl(''),
     billingCycle: new FormControl('', [Validators.required]),
   });
@@ -25,6 +28,10 @@ export class BillingDateSelectionComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onCareHomeChange(event: any): void {
+    this.careHomeChangedEvent.emit(event);
   }
 
   onLocalAuthorityChange(event: any): void {

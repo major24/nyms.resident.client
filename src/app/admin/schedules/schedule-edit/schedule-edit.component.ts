@@ -6,7 +6,6 @@ import { ResidentsService } from '../../../residents/services/residents.service'
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Util } from '../../../helpers/index';
-import CareHomeDetails from '../../../helpers/data-carehome-details';
 import { Resident } from '../../../residents/models/index';
 
 @Component({
@@ -39,7 +38,6 @@ export class ScheduleEditComponent implements OnInit {
     paymentFrom: new FormControl(''),
     paymentType: new FormControl(''),
     description: new FormControl(''),
-    // scheduleEndDate: new FormControl({ year: 9999, month: 12, day: 31 }),
     weeklyFee: new FormControl('')
   });
 
@@ -53,14 +51,11 @@ export class ScheduleEditComponent implements OnInit {
   ngOnInit(): void {
     this.loadPaymentProviders();
     this.loadPaymentTypes();
-    // set la/funders
-    // TODO - carehome id
-    let careHomeId = 1; // TODO-Hard code for now
-    this._localAuthorities = CareHomeDetails.filter((ch) => ch.careHomeId === careHomeId).map(home => home.funders)[0];
     this._Activatedroute.paramMap.subscribe((params) => {
       if (params && params.get('referenceId')) {
         this.referenceId = params.get('referenceId');
         this.loadResidentByReferenceId();
+        this.loadCareHomeDetails(this.referenceId);
         this.loadSchedules(this.referenceId);
       }
     });
@@ -99,6 +94,7 @@ export class ScheduleEditComponent implements OnInit {
       next: (data) => {
         this.resident = data;
         this.initScheduleDialog();
+        console.log('>>Resident', this.resident)
       },
       error: (error) => { console.log('Error loading resident'); }
     });
@@ -111,6 +107,21 @@ export class ScheduleEditComponent implements OnInit {
         this.paymentTypes = data;
       },
       error: (error) => { console.log('Error loading payment providers'); }
+    });
+  }
+
+  loadCareHomeDetails(referenceId: string): void {
+    this._localAuthorities.splice(0, this._localAuthorities.length);
+    this.residentServcie.loadCareHomeDetailByResidentReferenceId(referenceId)
+    .subscribe({
+      next: (data) => {
+        console.log('>>ChDetails', data);
+        this._localAuthorities = Object.assign(this._localAuthorities, data.localAuthorities);
+      },
+      error: (error) => {
+        console.log('Error loading carehome details ', error);
+        this.loading = false;
+      }
     });
   }
 

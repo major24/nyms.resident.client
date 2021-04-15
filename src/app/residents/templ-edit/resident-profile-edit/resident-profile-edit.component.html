@@ -99,7 +99,7 @@
     </div>
 
     <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" class="custom-control-input" id="maritalStatusSingle" formControlName="maritalStatus"
+      <input type="radio" [attr.data-cy-maritalstatus]="'single'" class="custom-control-input" id="maritalStatusSingle" formControlName="maritalStatus"
         name="maritalStatus" (change)="onMartialStatusChange($event)" value="single">
       <label class="custom-control-label" for="maritalStatusSingle">Single</label>
     </div>

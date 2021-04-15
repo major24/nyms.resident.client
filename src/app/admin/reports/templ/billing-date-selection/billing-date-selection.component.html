@@ -1,7 +1,18 @@
 <div class="container">
   <form [formGroup]="invoiceForm">
     <div class="row">
-      <div class="col-lg">
+      <div class="col-3">
+        <div class="form-group">
+          <label for="careHome"><strong>Care Homes</strong></label>
+          <select class="custom-select" name="careHome" id="careHome" formControlName="careHome" (change)="onCareHomeChange($event)">
+            <option *ngFor="let ch of careHomes;" [value]="ch.key">
+              {{ch.value}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-4">
         <div class="form-group">
           <label for="localAuthority"><strong>Local Authorities</strong></label>
           <select class="custom-select" name="localAuthority" id="localAuthority" formControlName="localAuthority" (change)="onLocalAuthorityChange($event)">
@@ -12,7 +23,7 @@
         </div>
       </div>
 
-      <div class="col-lg">
+      <div class="col-4">
         <div class="form-group">
           <label for="billingCycle"><strong>Billing Cycle</strong></label>
           <select class="custom-select" name="billingCycle" id="billingCycle" formControlName="billingCycle" (change)="onBillingCycleChange($event)">
@@ -23,7 +34,7 @@
         </div>
       </div>
 
-      <div class="col-sm">
+      <div class="col-1">
         <div>&nbsp;</div>
         <div class="form-group">
           <button id="report-by-billing-btn" class="btn btn-primary mt-1" [disabled]="!invoiceForm.valid" (click)="onGoClicked()">Go</button>
