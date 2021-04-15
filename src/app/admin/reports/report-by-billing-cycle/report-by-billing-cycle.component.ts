@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { InvoiceData, BillingCycle, InvoiceDataInit } from '../../models/index';
 import { InvoiceService } from '../../services/index';
-// import { KeyPair } from '../../../models/index';
-import CareHomeDetails from '../../../helpers/data-carehome-details';
+import { CareHome } from '../../../residents/models/index';
+import { CarehomeService } from '../../../residents/services/index';
+import { Observable } from 'rxjs';
+import { KeyPair } from '../../../models/index';
 
 @Component({
   selector: 'app-report-by-billing-cycle',
@@ -12,29 +14,59 @@ import CareHomeDetails from '../../../helpers/data-carehome-details';
 export class ReportByBillingCycleComponent implements OnInit {
   billingCyclesSource: BillingCycle[] = [];
   billingCycles: BillingCycle[] = [];
+  careHomeDetails: CareHome[] = [];
+  careHomeId = 1; // Default to PCare Centre
+  careHomes: KeyPair[] = [];
+  localAuthorities: KeyPair[] = [];
 
   _localAuthorityId: number = 0;
   _billingCycleId: number = 0;
   _invoiceData: InvoiceData;
-  _invoices: any = []; // TODO: chg to conc obj
+  _invoices: any = [];
   error: string = '';
   loading: boolean = false;
-  _localAuthorities: any = [];
 
-  constructor(private invoiceService: InvoiceService) { }
+  constructor(private invoiceService: InvoiceService, private careHomeService: CarehomeService,) { }
 
   ngOnInit(): void {
-    let careHomeId = 1; // TODO - Hardcode for now
-    this._localAuthorities = CareHomeDetails.filter((ch) => ch.careHomeId === careHomeId).map(home => home.funders)[0];
-    console.log('>>LA>>', this._localAuthorities);
+    this.loading = true;
+    this.loadAllCareHomeDetails().subscribe({
+      next: (dataChDetails) => {
+        this.careHomeDetails = dataChDetails;
+        console.log('CHD', this.careHomeDetails);
+        this.setCareHomes();
+        this.setLocalAuthoritiesByCareHomeId(this.careHomeId);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.log('Error loading carehome details', error);
+        this.loading = false;
+      },
+    });
     // load billing cycle in advance
+    this.loading = true;
     this.invoiceService.loadBillingCycles()
     .subscribe({
       next: (data) => {
         this.billingCyclesSource = Object.assign(this.billingCyclesSource, [...data]);
+        this.loading = false;
+        // console.log('BCycles', this.billingCyclesSource)
       },
-      error: (error) => { console.log('Error loading billing cycles', error); }
+      error: (error) => {
+        console.log('Error loading billing cycles', error);
+        this.loading = false;
+      }
     });
+  }
+
+  loadAllCareHomeDetails(): Observable<CareHome[]> {
+    return this.careHomeService.loadAllCareHomeDetails();
+  }
+
+  onCareHomeChange(event: any): void {
+    if (event.target.value) {
+      this.setLocalAuthoritiesByCareHomeId(+event.target.value)
+    }
   }
 
   onLocalAuthorityChange(event: any): void {
@@ -44,6 +76,26 @@ export class ReportByBillingCycleComponent implements OnInit {
 
   onBillingCycleChangedEvent(event: any): void {
     this._billingCycleId = +event.target.value;
+  }
+
+  setCareHomes(): void {
+    this.careHomeDetails.map(chd => {
+      let kvp = { key: chd.id, value: chd.name };
+      this.careHomes.push(kvp);
+    });
+  }
+
+  setLocalAuthoritiesByCareHomeId(id: number): void {
+    this.localAuthorities.splice(0, this.localAuthorities.length);
+    this.billingCycles.splice(0, this.billingCycles.length);
+    this.careHomeDetails.map(chd => {
+      if (chd.id === id) {
+        chd.localAuthorities.map(la => {
+          let kvp = { key: la.id, value: la.name };
+          this.localAuthorities.push(kvp);
+        });
+      }
+    });
   }
 
   setBillingCycleByLocalAuthorityId(id: number): void {
@@ -77,8 +129,5 @@ export class ReportByBillingCycleComponent implements OnInit {
   onInvoiceValidatedSave(): void {
     this.onGetReportEvent();
   }
-
-
-
 
 }

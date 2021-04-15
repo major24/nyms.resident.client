@@ -7,7 +7,7 @@
     <div class="row">
       <div class="col-md">
         <h5 class="text-primary text-lg font-weight-bold">
-          {{residentSchedules?.foreName}} {{residentSchedules?.surName}}
+          {{resident?.foreName}} {{resident?.surName}}
         </h5>
       </div>
       <div class="col-md text-right">
@@ -123,8 +123,8 @@
           <span class="text-danger ml-1">*</span>
           <div class="input-group">
             <select id="localAuthority" formControlName="localAuthority" class="form-control" (change)="onLocalAuthorityChange($event)">
-              <option  *ngFor="let la of _localAuthorities; let index" [value]=la.key>
-                {{la.value}}
+              <option  *ngFor="let la of _localAuthorities; let index" [value]=la.id>
+                {{la.name}}
               </option>
             </select>
           </div>

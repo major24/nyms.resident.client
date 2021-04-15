@@ -79,11 +79,11 @@ export class ApiService {
 
   // === resident related ===
   getAllResidents(careHomeId: number): Observable<Resident[]> {
-    return this.http.get<Resident[]>(`/api/carehomes/${careHomeId}/residents`);
+    return this.http.get<Resident[]>(`/api/residents?q=all`);
   }
 
   getActiveResidents(careHomeId: number): Observable<Resident[]> {
-    return this.http.get<Resident[]>(`/api/carehomes/${careHomeId}/residents/active`);
+    return this.http.get<Resident[]>(`/api/residents?q=active`);
   }
 
   loadResidentByReferenceId(referenceId: string): Observable<Resident> {
