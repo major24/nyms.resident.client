@@ -12,3 +12,6 @@ export * from './invoice-comments-request';
 export * from './invoice-validations-report-response';
 export * from './avg-occupancy-report';
 export * from './occupancy-by-date-report';
+export * from './spend-master-category';
+export * from './spend-category';
+export * from './spend-budget';

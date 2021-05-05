@@ -1,0 +1,69 @@
+<div class="container mt-4">
+
+  <h1 class="display-4">Budgets</h1>
+  <div *ngIf="loading" class="spinner-border"></div>
+  <div *ngIf="spendBudgets.length === 0">No budgets found.</div>
+
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-md text-right">
+        <button id="add-budget" class="btn btn-primary btn-sm" (click)="navToAddBudget()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- header -->
+  <div class="row bg-info text-white mb-3" *ngIf="spendBudgets.length > 0">
+    <div class="col-5">
+      Budget
+    </div>
+    <div class="col-3">
+      Period
+    </div>
+    <div class="col-1">
+      Allocated
+    </div>
+    <div class="col-1">
+      Spent
+    </div>
+    <div class="col-1">
+      Balance
+    </div>
+    <div class="col-1">
+      &nbsp;
+    </div>
+  </div>
+  <!-- end of header-->
+
+  <div *ngFor="let budget of spendBudgets">
+    <div class="row mt-1 mb-3">
+      <div class="col-5">
+        <div [attr.data-cy-budget-name]="budget.name">
+          <h6 class="text-primary">{{budget.name}}</h6>
+        </div>
+        <div>{{budget.description}}</div>
+        <div [attr.data-cy-carehomename]="budget.careHomeId">{{budget.careHomeName}}</div>
+        <span>({{budget.spendCategoryName}})</span>
+      </div>
+      <div class="col-3">
+        {{budget.dateFrom | date:'dd-MMM-yy'}} - {{budget.dateTo | date:'dd-MMM-yy'}}
+        <div>{{budget.status}}</div>
+      </div>
+      <div class="col-1  text-right">
+        {{budget.budgetTotal | number : '1.2-2'}}
+      </div>
+      <div class="col-1  text-right">
+        <span>{{(budget.spendTotal + budget.vatTotal) | number : '1.2-2'}}</span>
+      </div>
+      <div class="col-1  text-right">
+        <div>{{ (budget.budgetTotal - budget.spendTotal) | number : '1.2-2'}}</div>
+      </div>
+
+      <div class="col-1 d-flex justify-content-end">
+        <a [attr.data-cy-budget-edit]="budget.name" [routerLink]="['/admin/budgets-edit', budget.referenceId]">Edit</a>
+      </div>
+    </div>
+  </div>
+
+
+</div>

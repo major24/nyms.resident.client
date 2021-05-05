@@ -17,6 +17,12 @@ import { AuthGuard, AuthResidentsGuard, AuthAdminGuard } from './helpers';
 import { ResidentsListComponent } from './residents/residents-list/residents-list.component';
 import { ResidentEditComponent } from './residents/resident-edit/resident-edit.component';
 
+import { DashboardUserActionsComponent } from './user-actions/dashboard-user-actions/dashboard-user-actions.component';
+import { CategoriesListComponent } from './admin/spends/categories/categories-list/categories-list.component';
+import { BudgetsListComponent } from './admin/spends/budgets/budgets-list/budgets-list.component';
+import { SpendsListComponent } from './user-actions/spends/spends-list/spends-list.component';
+import { BudgetsEditComponent } from './admin/spends/budgets/budgets-edit/budgets-edit.component';
+import { UserBudgetsListComponent } from './user-actions/spends/budgets/user-budgets-list/user-budgets-list.component';
 const routes: Routes = [
     {
         path: '',
@@ -46,10 +52,6 @@ const routes: Routes = [
     {
         path: 'enquires-add',
         component: EnquiresEditComponent
-    },
-    {
-        path: 'enquires22-add',
-        component: ResidentEditComponent
     },
     {
         path: 'residents-admit/:referenceId',
@@ -92,6 +94,34 @@ const routes: Routes = [
         path: 'schedule-edit/:referenceId',
         component: ScheduleEditComponent,
         canActivate: [AuthAdminGuard]
+    },
+    {
+        path: 'user-actions-dashboard',
+        component: DashboardUserActionsComponent
+    },
+    {
+        path: 'admin/categories-list',
+        component: CategoriesListComponent
+    },
+    {
+        path: 'admin/budgets-list',
+        component: BudgetsListComponent
+    },
+    {
+        path: 'admin/budgets-add',
+        component: BudgetsEditComponent
+    },
+    {
+        path: 'admin/budgets-edit/:referenceId',
+        component: BudgetsEditComponent
+    },
+    {
+        path: 'user/spends-list/:referenceId',
+        component: SpendsListComponent
+    },
+    {
+        path: 'user/budgets-list',
+        component: UserBudgetsListComponent
     },
     {
         path: 'server-error',

@@ -1,0 +1,129 @@
+<div class="container mt-4">
+
+  <h1 class="display-4">Budgets</h1>
+  <div *ngIf="loading" class="spinner-border"></div>
+  <div *ngIf="spendBudgets.length === 0">No approved / opened budgets found.</div>
+
+  <!-- header -->
+  <div class="row bg-info text-white mt-3" *ngIf="spendBudgets.length > 0">
+    <div class="col-4">
+      Budget
+    </div>
+    <div class="col-3">
+      Period
+    </div>
+    <div class="col-1">
+      Allocated
+    </div>
+    <div class="col-1">
+      Spent
+    </div>
+    <div class="col-1">
+      Balance
+    </div>
+    <div class="col-2">
+      &nbsp;
+    </div>
+  </div>
+  <!-- end of header-->
+
+  <div *ngFor="let budget of spendBudgets">
+    <div class="row mt-1 mb-3">
+      <div class="col-4">
+        <div [attr.data-cy-budget-name]="budget.name">
+          <h6 class="text-primary">{{budget.name}}</h6>
+        </div>
+        <div>{{budget.description}}</div>
+        <div [attr.data-cy-carehomename]="budget.careHomeId">{{budget.careHomeName}}</div>
+        <span>({{budget.spendCategoryName}})</span>
+      </div>
+      <div class="col-3">
+        {{budget.dateFrom | date:'dd-MMM-yy'}} - {{budget.dateTo | date:'dd-MMM-yy'}}
+        <div>{{budget.status}}</div>
+      </div>
+      <div class="col-1  text-right">
+        {{budget.budgetTotal | number : '1.2-2'}}
+      </div>
+      <div class="col-1  text-right">
+        <span>{{(budget.spendTotal + budget.vatTotal) | number : '1.2-2'}}</span>
+      </div>
+      <div class="col-1  text-right">
+        <div>{{ (budget.budgetTotal - budget.spendTotal) | number : '1.2-2'}}</div>
+      </div>
+
+      <div class="col-2 text-right">
+        <button type="button" class="btn btn-outline-dark btn-sm" [attr.data-cy-budget-spend-detail]="budget.name"
+        (click)="navToSpendList(budget.referenceId)">&#9776;</button>
+        <button type="button" class="btn btn-outline-dark btn-sm ml-2" [attr.data-cy-budget-ins-spend]="budget.name"
+          (click)="openModal(contentInsertSpendDialog, budget.id)">+</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+  <!-- record spent modal -->
+  <ng-template #contentInsertSpendDialog let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Add Spend</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <h6 class="text-primary">{{selectedSpendBudget.name}}</h6>
+      <div>{{selectedSpendBudget.description}}</div>
+      <hr />
+
+      <form [formGroup]="createAddSpendForm">
+
+        <div class="form-group">
+          <label class="text-primary" for="amount">Amount</label>
+          <span class="text-danger ml-1">*</span>
+          <div class="input-group">
+            <input type="text" class="form-control" formControlName="amount" id="amount" name="amount"
+              (change)="onAmountChange($event)" placeholder="" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="text-primary" for="vat">Vat</label>
+          <div class="input-group">
+            <input type="text" class="form-control" formControlName="vat" id="vat" name="vat"
+              (change)="onVatChange($event)" placeholder="" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="text-primary" for="notes">Notes</label>
+          <span class="text-danger ml-1">*</span>
+          <div class="input-group">
+            <textarea class="form-control" formControlName="notes" id="notes" name="notes"
+              (change)="onNotesChange($event)" placeholder=""></textarea>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-primary">PO#</label>
+          <h4 class="text-success">{{poNumber}}</h4>
+        </div>
+
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <div *ngIf="error" style="color: red">{{error}}</div>
+      <button type="button" id="schedule-delete-btn" [disabled]="saving" class="btn btn-primary"
+        (click)="createSpend()">
+        <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+        Save
+      </button>
+    </div>
+  </ng-template>
+  <!-- endof comfirm modal -->
+
+
+
+
+</div>

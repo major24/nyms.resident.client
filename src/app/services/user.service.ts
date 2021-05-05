@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment'; // '@environments/environment';
-import { User, CareHomeUser } from '../models';
+import { User, CareHomeUser, Role } from '../models';
 import { AuthenticationService } from './authentication.service';
 import { Observable, of } from 'rxjs';
 import { map, tap, mergeMap } from 'rxjs/operators';
@@ -84,6 +84,10 @@ export class UserService extends Store<CareHomeUser> {
       }
     }
     return false;
+  }
+
+  public loadRoles(): Observable<Role[]> {
+    return this.apiService.loadRoles();
   }
 
 

@@ -21,6 +21,10 @@ import { ReportValidatedUnvalidatedComponent } from './reports/templ/report-vali
 import { ReportListOccupFeeComponent } from './reports/templ/report-list-occup-fee/report-list-occup-fee.component';
 import { ReportOccupancyByDayComponent } from './reports/templ/report-occupancy-by-day/report-occupancy-by-day.component';
 import { ChartsModule } from 'ng2-charts';
+import { CategoriesListComponent } from './spends/categories/categories-list/categories-list.component';
+import { BudgetsListComponent } from './spends/budgets/budgets-list/budgets-list.component';
+import { BudgetsEditComponent } from './spends/budgets/budgets-edit/budgets-edit.component';
+import { BudgetEditDialogComponent } from './templates/budget-edit-dialog/budget-edit-dialog.component';
 // import { SplitPipe } from '../common/split.pipe';
 
 @NgModule({
@@ -39,6 +43,10 @@ import { ChartsModule } from 'ng2-charts';
     ReportValidatedUnvalidatedComponent,
     ReportListOccupFeeComponent,
     ReportOccupancyByDayComponent,
+    CategoriesListComponent,
+    BudgetsListComponent,
+    BudgetsEditComponent,
+    BudgetEditDialogComponent,
     // MdateComponent,
     // SplitPipe
   ],

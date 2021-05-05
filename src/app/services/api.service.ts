@@ -1,10 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User, CareHomeUser } from '../models/index';
-import { EnquiryResident, CareHome, Resident, EnquiryAction } from '../residents/models/index';
-import { InvoiceData, InvoiceCommentsRequest, BillingCycle, InvoiceValidatedRequest, InvoiceValidationsReportResponse, OccupancyByDate } from '../admin/models/index';
-import { ResidentSchedule, Schedule } from '../admin/models/index';
+import { User, CareHomeUser, Role, SpendRequest } from '../models/index';
+import { EnquiryResident, CareHome, CareHome0, Resident, EnquiryAction } from '../residents/models/index';
+import { ResidentSchedule, Schedule, SpendBudget, SpendBudgetListResponse } from '../admin/models/index';
+import {
+  InvoiceData,
+  InvoiceCommentsRequest,
+  BillingCycle,
+  InvoiceValidatedRequest,
+  InvoiceValidationsReportResponse,
+  OccupancyByDate,
+  SpendMasterCategory,
+  SpendCategory
+} from '../admin/models/index';
 
 @Injectable({
   providedIn: 'root',
@@ -114,6 +123,9 @@ export class ApiService {
   loadAllCareHomeDetails(): Observable<CareHome[]> {
     return this.http.get<CareHome[]>(`/api/carehomes/details`);
   }
+  loadCareHomes(): Observable<CareHome0[]> {
+    return this.http.get<CareHome0[]>(`/api/carehomes`);
+  }
   loadCareHomeDetailByEnquiryReferenceId(referenceId: string): Observable<CareHome> {
     return this.http.get<CareHome>(`/api/enquires/${referenceId}/carehome/details`);
   }
@@ -191,6 +203,66 @@ export class ApiService {
   loadBillingCycles(): Observable<BillingCycle[]> {
     return this.http.get<BillingCycle[]>(`/api/invoices/billing-cycles`);
   }
+
+
+
+
+  // === Spends and Budgets ===
+  loadMasterCategories(): Observable<SpendMasterCategory[]> {
+    return this.http.get<SpendMasterCategory[]>(`/api/spends/mastercategories`);
+  }
+
+  loadCategories(): Observable<SpendCategory[]> {
+    return this.http.get<SpendCategory[]>(`/api/spends/categories`);
+  }
+
+  createCategory(spendCategory: SpendCategory): Observable<SpendCategory> {
+    return this.http.post<SpendCategory>(`/api/spends/categories`, spendCategory);
+  }
+
+  updateCategory(id: number, spendCategory: SpendCategory): Observable<SpendCategory> {
+    return this.http.post<SpendCategory>(`/api/spends/categories/${id}`, spendCategory);
+  }
+
+  loadBudgetsForAdmin(): Observable<SpendBudgetListResponse[]> {
+    return this.http.get<SpendBudgetListResponse[]>(`/api/spends/admin/budgets`);
+  }
+
+  loadBudgetsForUser(): Observable<SpendBudgetListResponse[]> {
+    return this.http.get<SpendBudgetListResponse[]>(`/api/spends/user/budgets`);
+  }
+
+  // returns with allocation for admin edit
+  loadBudgetAndAllocationsByReferenceId(referenceId: string): Observable<SpendBudget> {
+    return this.http.get<SpendBudget>(`/api/spends/admin/budgets/${referenceId}`);
+  }
+
+  // returns with spends for user as well as admin
+  loadBudgetAndSpendsByReferenceId(referenceId: string): Observable<SpendBudget> {
+    return this.http.get<SpendBudget>(`/api/spends/user/budgets/${referenceId}/spends`);
+  }
+
+  createBudget(spendBudget: SpendBudget): Observable<SpendBudget> {
+    return this.http.post<SpendBudget>(`/api/spends/admin/budgets`, spendBudget);
+  }
+
+  updateBudget(spendBudget: SpendBudget): Observable<SpendBudget> {
+    return this.http.post<SpendBudget>(`/api/spends/admin/budgets/${spendBudget.referenceId}`, spendBudget);
+  }
+
+  createSpend(spendRequest: SpendRequest): Observable<SpendRequest> {
+    return this.http.post<SpendRequest>(`/api/spends/user/spends`, spendRequest);
+  }
+
+
+
+  // === Roles ====
+  loadRoles(): Observable<Role[]> {
+    return this.http.get<Role[]>(`/api/security/roles`);
+  }
+
+
+
 
 
 }
