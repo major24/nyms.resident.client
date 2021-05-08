@@ -2,7 +2,7 @@
 
   <h1 class="display-4">Budgets</h1>
   <div *ngIf="loading" class="spinner-border"></div>
-  <div *ngIf="spendBudgets.length === 0">No budgets found.</div>
+  <div *ngIf="budgets.length === 0">No budgets found.</div>
 
   <div class="container">
     <div class="row mb-3">
@@ -13,7 +13,7 @@
   </div>
 
   <!-- header -->
-  <div class="row bg-info text-white mb-3" *ngIf="spendBudgets.length > 0">
+  <div class="row bg-info text-white mb-3" *ngIf="budgets.length > 0">
     <div class="col-5">
       Budget
     </div>
@@ -35,10 +35,10 @@
   </div>
   <!-- end of header-->
 
-  <div *ngFor="let budget of spendBudgets">
-    <div class="row mt-1 mb-3">
+  <div *ngFor="let budget of budgets">
+    <div class="row mt-1 mb-3" [attr.data-cy-budget-name]="budget.name">
       <div class="col-5">
-        <div [attr.data-cy-budget-name]="budget.name">
+        <div>
           <h6 class="text-primary">{{budget.name}}</h6>
         </div>
         <div>{{budget.description}}</div>
@@ -56,11 +56,18 @@
         <span>{{(budget.spendTotal + budget.vatTotal) | number : '1.2-2'}}</span>
       </div>
       <div class="col-1  text-right">
-        <div>{{ (budget.budgetTotal - budget.spendTotal) | number : '1.2-2'}}</div>
+        <span class="h6 text-success" *ngIf="(budget.budgetTotal - budget.spendTotal) > 0">
+          {{ (budget.budgetTotal - (budget.spendTotal + budget.vatTotal)) | number : '1.2-2'}}
+        </span>
+        <span class="h6 text-danger" *ngIf="(budget.budgetTotal - budget.spendTotal) < 0">
+          {{ (budget.budgetTotal - (budget.spendTotal + budget.vatTotal)) | number : '1.2-2'}}
+        </span>
       </div>
 
-      <div class="col-1 d-flex justify-content-end">
-        <a [attr.data-cy-budget-edit]="budget.name" [routerLink]="['/admin/budgets-edit', budget.referenceId]">Edit</a>
+      <div class="col-1 text-right">
+        <button type="button" class="btn btn-outline-dark btn-md mr-1"
+        [attr.data-cy-budget-edit]="budget.name"
+        (click)="navToEditBudget(budget.referenceId)" style='font-size:14px;'>&#9998;</button>
       </div>
     </div>
   </div>

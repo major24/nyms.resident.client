@@ -17,12 +17,12 @@ export class HomeComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    console.log('>>p>>p>>', this.userService.hasUserToken(), this.userService.getStoreUser());
+    // console.log('>>p>>p>>', this.userService.hasUserToken(), this.userService.getStoreUser());
     //=== reload user on refresh =====================================
     // if user token found and userValue is null, must be reloading or refreshing the page
     // in-memory user is removed. so re-load user
     if (this.userService.hasUserToken() && this.userService.getStoreUser() == null) {
-      console.log('>>sesion found. user hit F5, so get user again.');
+      // console.log('>>sesion found. user hit F5, so get user again.');
       this.isLoading = true;
       this.userService.reloadUser().subscribe(u => {
         // this.user = u;

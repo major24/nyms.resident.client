@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { Observable } from 'rxjs';
-import { SpendBudget, SpendBudgetListResponse, SpendRequest } from '../models/spend-budgets';
+import { Budget, BudgetListResponse, SpendRequest } from '../models/spend-budgets';
 
 @Injectable({
   providedIn: 'root'
@@ -10,28 +10,28 @@ export class BudgetService {
 
   constructor(private apiService: ApiService) { }
 
-  loadBudgetsForAdmin(): Observable<SpendBudgetListResponse[]> {
+  loadBudgetsForAdmin(): Observable<BudgetListResponse[]> {
     return this.apiService.loadBudgetsForAdmin();
   }
 
-  loadBudgetsForUser(): Observable<SpendBudgetListResponse[]> {
+  loadBudgetsForUser(): Observable<BudgetListResponse[]> {
     return this.apiService.loadBudgetsForUser();
   }
 
-  loadBudgetAndAllocationsByReferenceId(referenceId: string): Observable<SpendBudget> {
+  loadBudgetAndAllocationsByReferenceId(referenceId: string): Observable<Budget> {
     return this.apiService.loadBudgetAndAllocationsByReferenceId(referenceId);
   }
 
-  loadBudgetAndSpendsByReferenceId(referenceId: string): Observable<SpendBudget> {
+  loadBudgetAndSpendsByReferenceId(referenceId: string): Observable<Budget> {
     return this.apiService.loadBudgetAndSpendsByReferenceId(referenceId);
   }
 
-  createBudget(spendBudget: SpendBudget): Observable<SpendBudget> {
-    return this.apiService.createBudget(spendBudget);
+  createBudget(budget: Budget): Observable<Budget> {
+    return this.apiService.createBudget(budget);
   }
 
-  updateBudget(spendBudget: SpendBudget): Observable<SpendBudget> {
-    return this.apiService.updateBudget(spendBudget);
+  updateBudget(budget: Budget): Observable<Budget> {
+    return this.apiService.updateBudget(budget);
   }
 
   createSpend(spendRequest: SpendRequest): Observable<SpendRequest> {

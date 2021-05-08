@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser, Role, SpendRequest } from '../models/index';
 import { EnquiryResident, CareHome, CareHome0, Resident, EnquiryAction } from '../residents/models/index';
-import { ResidentSchedule, Schedule, SpendBudget, SpendBudgetListResponse } from '../admin/models/index';
+import { ResidentSchedule, Schedule } from '../admin/models/index';
+import { Budget, BudgetListResponse } from '../models/spend-budgets';
 import {
   InvoiceData,
   InvoiceCommentsRequest,
@@ -224,30 +225,30 @@ export class ApiService {
     return this.http.post<SpendCategory>(`/api/spends/categories/${id}`, spendCategory);
   }
 
-  loadBudgetsForAdmin(): Observable<SpendBudgetListResponse[]> {
-    return this.http.get<SpendBudgetListResponse[]>(`/api/spends/admin/budgets`);
+  loadBudgetsForAdmin(): Observable<BudgetListResponse[]> {
+    return this.http.get<BudgetListResponse[]>(`/api/spends/admin/budgets`);
   }
 
-  loadBudgetsForUser(): Observable<SpendBudgetListResponse[]> {
-    return this.http.get<SpendBudgetListResponse[]>(`/api/spends/user/budgets`);
+  loadBudgetsForUser(): Observable<BudgetListResponse[]> {
+    return this.http.get<BudgetListResponse[]>(`/api/spends/user/budgets`);
   }
 
   // returns with allocation for admin edit
-  loadBudgetAndAllocationsByReferenceId(referenceId: string): Observable<SpendBudget> {
-    return this.http.get<SpendBudget>(`/api/spends/admin/budgets/${referenceId}`);
+  loadBudgetAndAllocationsByReferenceId(referenceId: string): Observable<Budget> {
+    return this.http.get<Budget>(`/api/spends/admin/budgets/${referenceId}/allocations`);
   }
 
-  // returns with spends for user as well as admin
-  loadBudgetAndSpendsByReferenceId(referenceId: string): Observable<SpendBudget> {
-    return this.http.get<SpendBudget>(`/api/spends/user/budgets/${referenceId}/spends`);
+  // returns with money spent for users as well as admin
+  loadBudgetAndSpendsByReferenceId(referenceId: string): Observable<Budget> {
+    return this.http.get<Budget>(`/api/spends/user/budgets/${referenceId}/spends`);
   }
 
-  createBudget(spendBudget: SpendBudget): Observable<SpendBudget> {
-    return this.http.post<SpendBudget>(`/api/spends/admin/budgets`, spendBudget);
+  createBudget(budget: Budget): Observable<Budget> {
+    return this.http.post<Budget>(`/api/spends/admin/budgets`, budget);
   }
 
-  updateBudget(spendBudget: SpendBudget): Observable<SpendBudget> {
-    return this.http.post<SpendBudget>(`/api/spends/admin/budgets/${spendBudget.referenceId}`, spendBudget);
+  updateBudget(budget: Budget): Observable<Budget> {
+    return this.http.post<Budget>(`/api/spends/admin/budgets/${budget.referenceId}`, budget);
   }
 
   createSpend(spendRequest: SpendRequest): Observable<SpendRequest> {

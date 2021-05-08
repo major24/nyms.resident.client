@@ -1,13 +1,15 @@
-export interface SpendBudgetAllocation {
+export interface BudgetAllocation {
   id: number;
-  spendBudgetId: number;
+  budgetId: number;
   amount: number;
   approved: string;
   approvedDate: string;
   approvedBy: string;
+  approvedById: number;
+  reason: string;
 }
 
-export interface SpendBudget {
+export interface Budget {
   id: number;
   referenceId: string;
   spendCategoryId: number;
@@ -22,10 +24,10 @@ export interface SpendBudget {
   updatedDate: string;
   createdBy: string;
   updatedBy: string;
-  spendBudgetAllocations: SpendBudgetAllocation[];
+  budgetAllocations: BudgetAllocation[];
 }
 
-export interface SpendBudgetListResponse {
+export interface BudgetListResponse {
   id: number;
   referenceId: string;
   name: string,
@@ -36,32 +38,48 @@ export interface SpendBudgetListResponse {
   status: string;
   budgetTotal: number;
   spendTotal: number;
+  vatTotal: number;
   careHomeName: string;
   spendCategoryName: string;
+  spendResponses: spendResponse[];
+  careHomeId: number;
 }
 
 export interface SpendRequest {
-  spendBudgetId: number;
+  budgetId: number;
   amount: number;
   vat: number;
   notes: string;
   poNumber: string;
 }
 
-export function createInstanceOfSpendBudgetAllocation() {
-  let model: SpendBudgetAllocation = {
+export interface spendResponse {
+  id: number;
+  budgetId: number;
+  poNumber: string;
+  amount: number;
+  vat: number;
+  notes: string;
+  createdByName: string;
+  createdDate: string;
+}
+
+export function createInstanceOfBudgetAllocation() {
+  let model: BudgetAllocation = {
     id: 0,
-    spendBudgetId: 0,
-    amount: undefined,
+    budgetId: 0,
+    amount: null,
     approved: '',
     approvedDate: '',
-    approvedBy: ''
+    approvedBy: '',
+    approvedById: 0,
+    reason: ''
   }
   return model;
 }
 
-export function createInstanceOfSpendBudget() {
-  let model: SpendBudget = {
+export function createInstanceOfBudget() {
+  let model: Budget = {
     id: 0,
     referenceId: '',
     spendCategoryId: 0,
@@ -76,13 +94,13 @@ export function createInstanceOfSpendBudget() {
     updatedDate: '',
     createdBy: '',
     updatedBy: '',
-    spendBudgetAllocations: [createInstanceOfSpendBudgetAllocation()]
+    budgetAllocations: [createInstanceOfBudgetAllocation()]
   }
   return model;
 }
 
-export function createSpendBudgetListResponse() {
-  let model: SpendBudgetListResponse = {
+export function createBudgetListResponse() {
+  let model: BudgetListResponse = {
     id: 0,
     referenceId: '',
     name: '',
@@ -93,19 +111,36 @@ export function createSpendBudgetListResponse() {
     status: '',
     budgetTotal: 0,
     spendTotal: 0,
+    vatTotal: 0,
     careHomeName: '',
-    spendCategoryName: ''
+    spendCategoryName: '',
+    careHomeId: 0,
+    spendResponses: [createSpendResponse()]
   }
   return model;
 }
 
 export function createSpendRequest() {
   let model: SpendRequest = {
-    spendBudgetId: 0,
+    budgetId: 0,
     amount: 0,
     vat: 0,
     notes: '',
     poNumber: ''
+  }
+  return model;
+}
+
+export function createSpendResponse() {
+  let model: spendResponse = {
+    id: 0,
+    budgetId: 0,
+    poNumber: '',
+    amount: 0,
+    vat: 0,
+    notes: '',
+    createdByName: '',
+    createdDate: ''
   }
   return model;
 }

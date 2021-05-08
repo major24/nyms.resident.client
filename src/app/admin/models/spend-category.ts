@@ -4,5 +4,6 @@ export interface SpendCategory {
   id: number,
   spendMasterCategoryId: number,
   name: string,
+  catCode: string,
   roles: Role[]
 }

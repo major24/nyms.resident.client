@@ -25,13 +25,15 @@ export class CategoriesListComponent implements OnInit {
   error: string = '';
   saving: boolean = false;
   closeResult = '';
+  categoryDialogTitle: string = 'Add Spend Category';
   newRoles: RoleUI[] = [];
-  newSpendCategory: SpendCategory = { id: 0, spendMasterCategoryId: 0, name: '', roles: this.newRoles };
-  initSpendCategory: SpendCategory = { id: 0, spendMasterCategoryId: 0, name: '' , roles: this.newRoles };
+  newSpendCategory: SpendCategory = { id: 0, spendMasterCategoryId: 0, name: '', catCode: '', roles: this.newRoles };
+  initSpendCategory: SpendCategory = { id: 0, spendMasterCategoryId: 0, name: '', catCode: '', roles: this.newRoles };
 
   createCategoryForm = new FormGroup({
     masterCategory: new FormControl(''),
     name: new FormControl(''),
+    catCode: new FormControl(''),
     role: new FormControl('')
   });
 
@@ -103,6 +105,12 @@ export class CategoriesListComponent implements OnInit {
     }
   }
 
+  onCatCodeChange(event: any): void {
+    if (event.target.value) {
+      this.newSpendCategory = Object.assign(this.newSpendCategory, { catCode: event.target.value });
+    }
+  }
+
   onRoleChange(event: any, id: number): void {
     let rolesClone = this.newSpendCategory.roles;
     rolesClone.map(r => {
@@ -114,12 +122,20 @@ export class CategoriesListComponent implements OnInit {
   }
 
   saveCategory(): void {
-    if (this.newSpendCategory.name == '' || this.newSpendCategory.spendMasterCategoryId == 0) return;
+    this.error = '';
+    if (this.newSpendCategory.name == '' || this.newSpendCategory.catCode == '' || this.newSpendCategory.spendMasterCategoryId == 0) {
+      this.error = 'Please fill in all required fields.';
+      return;
+    }
+    if (this.newSpendCategory.catCode.length != 4) {
+      this.error = 'Category code must be 4 characters.';
+      return;
+    }
+
     // assign roles to newSpendCategory
     let newSpendUpdate = Object.assign({}, this.newSpendCategory);
     const rolesToSend = this.newSpendCategory.roles.filter(r => r.isChecked === true);
     newSpendUpdate = Object.assign(newSpendUpdate, { roles: rolesToSend });
-    console.log('>>>>saving33..', newSpendUpdate);
 
     if (this.newSpendCategory.id === 0) {
       this.saving = true;
@@ -162,7 +178,6 @@ export class CategoriesListComponent implements OnInit {
 
     // open from template
     openModal(contentAdd: any, id: number) {
-      console.log('opeining11....', id);
       this.selectedCategoryId = +id;
       this.error = '';
       this.newRoles.splice(0, this.newRoles.length);
@@ -173,8 +188,10 @@ export class CategoriesListComponent implements OnInit {
         selectedCategory.roles.forEach(r => {
           arr.push(r.id);
         });
+        this.categoryDialogTitle = 'Edit Spend Category'
       } else {
         this.newSpendCategory = Object.assign(this.newSpendCategory, this.initSpendCategory);
+        this.categoryDialogTitle = 'Add Spend Category'
       }
       this.roles.forEach(r => {
         this.newRoles.push({ id: r.id, name: r.name, isChecked: arr.includes(r.id) });
@@ -183,6 +200,10 @@ export class CategoriesListComponent implements OnInit {
 
       this.createCategoryForm.controls['masterCategory'].setValue(this.newSpendCategory.spendMasterCategoryId);
       this.createCategoryForm.controls['name'].setValue(this.newSpendCategory.name);
+      this.createCategoryForm.controls['catCode'].setValue(this.newSpendCategory.catCode);
+      if (this.selectedCategoryId > 0) {
+        this.createCategoryForm.controls['catCode'].disable();
+      }
 
       this.open(contentAdd);
     }

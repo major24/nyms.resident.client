@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BudgetService } from '../../../services/budget.service';
-import { SpendBudgetListResponse, createSpendBudgetListResponse } from '../../../models/spend-budgets';
+import { BudgetListResponse, createBudgetListResponse } from '../../../models/spend-budgets';
 
 @Component({
   selector: 'spends-list',
@@ -10,7 +10,7 @@ import { SpendBudgetListResponse, createSpendBudgetListResponse } from '../../..
 })
 export class SpendsListComponent implements OnInit {
   loading: boolean = false;
-  spendBudget: SpendBudgetListResponse = createSpendBudgetListResponse();
+  budget: BudgetListResponse = createBudgetListResponse();
 
   constructor(private router: Router,
     private _Activatedroute: ActivatedRoute,
@@ -29,18 +29,18 @@ export class SpendsListComponent implements OnInit {
   loadBudgetAndSpendsByReferenceId(refereneId: string): void {
     this.loading = true;
     this.budgetService.loadBudgetAndSpendsByReferenceId(refereneId)
-    .subscribe({
-      next: (data) => {
-        console.log(data);
-        this.spendBudget = Object.assign(this.spendBudget, data);
-
-        this.loading = false;
-      },
-      error: (error) => {
-        console.log('Error fetching budgets', error);
-        this.loading = false;
-      }
-    });
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          this.budget = Object.assign(this.budget, data);
+          console.log('>>', data);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.log('Error fetching budgets', error);
+          this.loading = false;
+        }
+      });
   }
 
 

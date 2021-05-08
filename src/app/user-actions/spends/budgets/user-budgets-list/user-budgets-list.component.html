@@ -2,10 +2,10 @@
 
   <h1 class="display-4">Budgets</h1>
   <div *ngIf="loading" class="spinner-border"></div>
-  <div *ngIf="spendBudgets.length === 0">No approved / opened budgets found.</div>
+  <div *ngIf="budgets.length === 0">No approved / opened budgets found.</div>
 
   <!-- header -->
-  <div class="row bg-info text-white mt-3" *ngIf="spendBudgets.length > 0">
+  <div class="row bg-info text-white mt-3" *ngIf="budgets.length > 0">
     <div class="col-4">
       Budget
     </div>
@@ -27,8 +27,8 @@
   </div>
   <!-- end of header-->
 
-  <div *ngFor="let budget of spendBudgets">
-    <div class="row mt-1 mb-3">
+  <div *ngFor="let budget of budgets">
+    <div class="row mt-1 mb-3" [attr.data-cy-budget-name]="budget.name">
       <div class="col-4">
         <div [attr.data-cy-budget-name]="budget.name">
           <h6 class="text-primary">{{budget.name}}</h6>
@@ -47,13 +47,18 @@
       <div class="col-1  text-right">
         <span>{{(budget.spendTotal + budget.vatTotal) | number : '1.2-2'}}</span>
       </div>
-      <div class="col-1  text-right">
-        <div>{{ (budget.budgetTotal - budget.spendTotal) | number : '1.2-2'}}</div>
+      <div class="col-1 text-right">
+        <span class="h6 text-success" *ngIf="(budget.budgetTotal - budget.spendTotal) > 0">
+          {{ (budget.budgetTotal - (budget.spendTotal + budget.vatTotal)) | number : '1.2-2'}}
+        </span>
+        <span class="h6 text-danger" *ngIf="(budget.budgetTotal - budget.spendTotal) < 0">
+          {{ (budget.budgetTotal - (budget.spendTotal + budget.vatTotal)) | number : '1.2-2'}}
+        </span>
       </div>
 
       <div class="col-2 text-right">
         <button type="button" class="btn btn-outline-dark btn-sm" [attr.data-cy-budget-spend-detail]="budget.name"
-        (click)="navToSpendList(budget.referenceId)">&#9776;</button>
+          (click)="navToSpendList(budget.referenceId)">&#9776;</button>
         <button type="button" class="btn btn-outline-dark btn-sm ml-2" [attr.data-cy-budget-ins-spend]="budget.name"
           (click)="openModal(contentInsertSpendDialog, budget.id)">+</button>
       </div>
@@ -74,9 +79,8 @@
       </button>
     </div>
     <div class="modal-body">
-      <h6 class="text-primary">{{selectedSpendBudget.name}}</h6>
-      <div>{{selectedSpendBudget.description}}</div>
-      <hr />
+      <h6 class="text-primary">{{selectedBudget.name}}</h6>
+      <div>{{selectedBudget.description}}</div>
 
       <form [formGroup]="createAddSpendForm">
 
@@ -85,7 +89,7 @@
           <span class="text-danger ml-1">*</span>
           <div class="input-group">
             <input type="text" class="form-control" formControlName="amount" id="amount" name="amount"
-              (change)="onAmountChange($event)" placeholder="" />
+              (change)="onAmountChange($event)" placeholder="" [value]="spendRequest.amount" />
           </div>
         </div>
         <div class="form-group">
@@ -114,7 +118,7 @@
     </div>
     <div class="modal-footer">
       <div *ngIf="error" style="color: red">{{error}}</div>
-      <button type="button" id="schedule-delete-btn" [disabled]="saving" class="btn btn-primary"
+      <button type="button" id="create-spend-btn" name="create-spend-btn" [disabled]="saving" class="btn btn-primary"
         (click)="createSpend()">
         <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
         Save
