@@ -10,6 +10,10 @@
         <a data-cy="nav-link-residents" class="nav-link" [routerLink]="['residents-dashboard']" id="residents-link">Residents</a>
       </li>
 
+      <li class="nav-item" *ngIf="isLoggedIn">
+        <a data-cy="nav-link-user-actions" class="nav-link" [routerLink]="['user-actions-dashboard']" id="user-actions-link">Actions</a>
+      </li>
+
       <!-- Admin only -->
       <li class="nav-item" *ngIf="isAdmin && isLoggedIn">
         <a data-cy="nav-link-admin" class="nav-link" [routerLink]="['admin-dashboard']" id="admin-link">Admin</a>

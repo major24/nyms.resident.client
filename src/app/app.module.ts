@@ -36,6 +36,9 @@ import { ReferralInfoComponent } from './residents/templ-edit/referral-info/refe
 import { ResidentEditSummaryComponent } from './residents/templ-edit/resident-edit-summary/resident-edit-summary.component';
 import { MdateModule } from './residents/templ-edit/mdate/mdateModule';
 import { ResidentMiscEditComponent } from './residents/templ-edit/resident-misc-edit/resident-misc-edit.component';
+import { DashboardUserActionsComponent } from './user-actions/dashboard-user-actions/dashboard-user-actions.component';
+import { SpendsListComponent } from './user-actions/spends/spends-list/spends-list.component';
+import { UserBudgetsListComponent } from './user-actions/spends/budgets/user-budgets-list/user-budgets-list.component'
 // import { SplitPipe } from './common/split.pipe';
 // import { ModalSetExitComponent } from './common/modal-set-exit/modal-set-exit.component';
 // import { MainPipe } from
@@ -85,6 +88,9 @@ export function tokenGetter() {
     ReferralInfoComponent,
     ResidentEditSummaryComponent,
     ResidentMiscEditComponent,
+    DashboardUserActionsComponent,
+    SpendsListComponent,
+    UserBudgetsListComponent,
     // SplitPipe
   ],
   providers: [

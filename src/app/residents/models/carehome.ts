@@ -9,3 +9,10 @@ export class CareHome {
   localAuthorities: any[];
   careHomeDivisions: any[];
 }
+
+export class CareHome0 {
+  id: number;
+  name: string;
+  chCode: string;
+  careHomeDivisions: any[];
+}

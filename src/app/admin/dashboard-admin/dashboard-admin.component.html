@@ -8,7 +8,7 @@
           <h5 class="card-title">Invoice Report</h5>
         </div>
         <div class="card-body bg-light">
-          <p class="card-text">Report on LA and CC invoices</p>
+          <p class="card-text">Report on invoices and occupancy</p>
           <div>
             <button class="btn btn-primary" id="report-by-date-btn" (click)="navToInvReportByDateRange()">By Date Range</button>
           </div>
@@ -25,8 +25,23 @@
           <h5 class="card-title">Schedules</h5>
         </div>
         <div class="card-body bg-light">
-          <p class="card-text">View list of schedules</p>
+          <p class="card-text">Manage resident schedules</p>
           <button class="btn btn-primary" id="schedules-btn" (click)="navToSchedules()">Schedules</button>
+        </div>
+      </div>
+
+      <div class="card mt-4" style="width: 18rem; height: 15rem;">
+        <div class="card-header bg-info text-white">
+          <h5 class="card-title">Spends</h5>
+        </div>
+        <div class="card-body bg-light">
+          <p class="card-text">Manage spend categories and budgets</p>
+          <div>
+            <button class="btn btn-primary" style="width: 12rem;" id="categories-btn" (click)="navToCategories()">Spend Categories</button>
+          </div>
+          <div>
+            <button class="btn btn-primary mt-2" style="width: 12rem;" id="budgets-btn" (click)="navToBudgets()">Budgets</button>
+          </div>
         </div>
       </div>
     </div>

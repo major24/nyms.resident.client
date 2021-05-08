@@ -1,0 +1,76 @@
+<div class="container mt-4">
+
+  <h1 class="display-4">Budgets</h1>
+  <div *ngIf="loading" class="spinner-border"></div>
+  <div *ngIf="budgets.length === 0">No budgets found.</div>
+
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-md text-right">
+        <button id="add-budget" class="btn btn-primary btn-sm" (click)="navToAddBudget()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- header -->
+  <div class="row bg-info text-white mb-3" *ngIf="budgets.length > 0">
+    <div class="col-5">
+      Budget
+    </div>
+    <div class="col-3">
+      Period
+    </div>
+    <div class="col-1">
+      Allocated
+    </div>
+    <div class="col-1">
+      Spent
+    </div>
+    <div class="col-1">
+      Balance
+    </div>
+    <div class="col-1">
+      &nbsp;
+    </div>
+  </div>
+  <!-- end of header-->
+
+  <div *ngFor="let budget of budgets">
+    <div class="row mt-1 mb-3" [attr.data-cy-budget-name]="budget.name">
+      <div class="col-5">
+        <div>
+          <h6 class="text-primary">{{budget.name}}</h6>
+        </div>
+        <div>{{budget.description}}</div>
+        <div [attr.data-cy-carehomename]="budget.careHomeId">{{budget.careHomeName}}</div>
+        <span>({{budget.spendCategoryName}})</span>
+      </div>
+      <div class="col-3">
+        {{budget.dateFrom | date:'dd-MMM-yy'}} - {{budget.dateTo | date:'dd-MMM-yy'}}
+        <div>{{budget.status}}</div>
+      </div>
+      <div class="col-1  text-right">
+        {{budget.budgetTotal | number : '1.2-2'}}
+      </div>
+      <div class="col-1  text-right">
+        <span>{{(budget.spendTotal + budget.vatTotal) | number : '1.2-2'}}</span>
+      </div>
+      <div class="col-1  text-right">
+        <span class="h6 text-success" *ngIf="(budget.budgetTotal - budget.spendTotal) > 0">
+          {{ (budget.budgetTotal - (budget.spendTotal + budget.vatTotal)) | number : '1.2-2'}}
+        </span>
+        <span class="h6 text-danger" *ngIf="(budget.budgetTotal - budget.spendTotal) < 0">
+          {{ (budget.budgetTotal - (budget.spendTotal + budget.vatTotal)) | number : '1.2-2'}}
+        </span>
+      </div>
+
+      <div class="col-1 text-right">
+        <button type="button" class="btn btn-outline-dark btn-md mr-1"
+        [attr.data-cy-budget-edit]="budget.name"
+        (click)="navToEditBudget(budget.referenceId)" style='font-size:14px;'>&#9998;</button>
+      </div>
+    </div>
+  </div>
+
+
+</div>

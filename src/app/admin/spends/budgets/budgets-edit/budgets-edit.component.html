@@ -1,0 +1,151 @@
+<div class="container mt-4">
+
+  <h1 class="display-4">{{pageHeader}}</h1>
+  <div class="mt-2">&nbsp;</div>
+
+  <div *ngIf="loading" class="spinner-border"></div>
+
+  <form [formGroup]="createBudgetForm">
+    <div class="form-group">
+      <label class="text-primary" for="spendCategory">Spend Category</label>
+      <span class="text-danger ml-1">*</span>
+      <div class="input-group">
+        <select id="spendCategory" name="spendCategory" formControlName="spendCategory" class="form-control"
+          (change)="onSpendCategoryChange($event)">
+          <option *ngFor="let cate of spendCategories; let index" [value]=cate.id>
+            {{cate.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="text-primary" for="careHome">Care Home</label>
+      <span class="text-danger ml-1">*</span>
+      <div class="input-group">
+        <select id="careHome" name="careHome" formControlName="careHome" class="form-control"
+          (change)="onCareHomeChange($event)">
+          <option *ngFor="let ch of careHomes; let index" [value]=ch.id>
+            {{ch.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="text-primary" for="name">Name</label>
+      <span class="text-danger ml-1">*</span>
+      <div class="input-group">
+        <input type="text" class="form-control" formControlName="name" id="name" name="name"
+          (change)="onNameChange($event)" placeholder="" [value]="" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="text-primary" for="description">Description</label>
+      <div class="input-group">
+        <textarea class="form-control" formControlName="description" id="description" name="description"
+          (change)="onDescriptionChange($event)" placeholder="" [value]=""></textarea>
+      </div>
+    </div>
+
+    <mdate [dateValue]="budget.dateFrom" [labelDateCtl]="'Date From'" [DateCtlId]="'dateFrom'"
+      (dateCtlSelectedEvent)="onDateFromChange($event)"></mdate>
+
+    <mdate [dateValue]="budget.dateTo" [labelDateCtl]="'Date To'" [DateCtlId]="'dateTo'"
+      (dateCtlSelectedEvent)="onDateToChange($event)"></mdate>
+
+    <div class="form-group">
+      <label class="text-primary" for="poCode">PO Code</label>
+      <div class="input-group">
+        <!-- <span>
+          <input type="text" class="form-control" formControlName="poCode" maxlength="4" id="poCode" name="poCode"
+            (change)="onPoCodeChange($event)" placeholder="" [value]="">
+        </span> -->
+        <span class="ml-2 mt-2"><label>{{budget.poPrefix}}</label></span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="text-primary" for="status">Status</label>
+      <div class="input-group">
+        <select id="status" formControlName="status" class="form-control" (change)="onStatusChange($event)">
+          <option value="">Choose</option>
+          <option *ngFor="let status of statuses; let index" [value]=status.key>
+            {{status.value}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- multil amounts - allocations -->
+    <label class="text-primary" for="amount">Amount</label>
+    <span class="text-danger ml-1">*</span>
+    <span *ngIf="showAddExtraBudgetAmountButton === true">
+      <button type="button" class="btn btn-outline-dark btn-sm ml-4" [attr.data-cy-budget-add-extra-amount]="budget.id"
+        (click)="addAdditionalAmount()">+</button>
+    </span>
+
+    <div *ngFor="let alloc of budget.budgetAllocations; index as i">
+      <!-- approved already - readonly -->
+      <div *ngIf="alloc.approved === 'Y' && alloc.approvedById > 0">
+        <div class="row">
+          <div class="col-2 text-right">
+            <label style="color: green">{{alloc.amount}}</label>
+          </div>
+          <div class="col-2">
+            <label style="color: green">Approved</label>
+          </div>
+          <div class="col-8">
+            <span>{{alloc.reason}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOT approved - editable -->
+      <!-- <div *ngIf="alloc.approved !== 'Y'"> -->
+      <div *ngIf="!alloc.approvedById">
+        <div class="row">
+          <div class="col-2">
+            <input type="text" size="20" class="form-control" formControlName="amount" id="amount" name="amount"
+              (change)="onAmountChange($event, alloc.id)" placeholder="" [ngModel]="alloc.amount">
+          </div>
+          <div class="col-2">
+            <input [attr.data-cy-approve]="'approve'" type="checkbox" name="approve" id="approve"
+              (click)="onApproveChange($event, alloc.id)">
+            <label class="text-primary ml-2" for="approve">Approve</label>
+          </div>
+          <div class="col-3">
+            <textarea rows="2" cols="60" formControlName="reason" id="reason" name="reason"
+              (change)="onReasonChange($event, alloc.id)" [ngModel]="alloc.reason"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- endof allocations -->
+
+  </form>
+  <!-- <div class="mt-5">&nbsp;</div> -->
+
+  <!-- save button -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md">
+        <div *ngIf="errors.length > 0">
+          <div *ngFor="let error of errors" style="color: red">
+            {{ error }}
+          </div>
+        </div>
+      </div>
+      <div class="col-md">
+        <div class="form-group mt-3 float-right">
+          <button id="cancel" name="cancel" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+          <button id="save" name="save" (click)="onSubmit()" [disabled]="saving" [disabled]="budget.status == 'Completed'" class="btn btn-primary ml-3">
+            <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-5">&nbsp;</div>
+
+</div>

@@ -1,0 +1,89 @@
+<div class="container mt-4">
+
+  <h1 class="display-4">Spends</h1>
+  <div *ngIf="loading" class="spinner-border"></div>
+  <div *ngIf="budget && budget.id === 0">No budgets found.</div>
+
+  <div class="row mt-4">
+    <div class="col-4">
+      <span [attr.data-cy-budget-name]="budget.name">
+        <h6 class="text-primary">{{budget.name}}</h6>
+      </span>
+      <div>{{budget.description}}</div>
+      <div [attr.data-cy-carehomename]="budget.careHomeId">{{budget.careHomeName}}</div>
+    </div>
+
+    <div class="col-3">
+      <span>{{budget.dateFrom | date:'dd-MMM-yy'}} - {{budget.dateTo | date:'dd-MMM-yy'}}</span>
+    </div>
+
+    <div class="col-5 text-right">
+      <div class="row">
+        <div class="col-3 text-left">
+          Allocated:
+        </div>
+        <div class="col-3 text-right">
+          <span class="h6">{{budget.budgetTotal | number : '1.2-2'}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3 text-left">
+          Spent:
+        </div>
+        <div class="col-3 text-right">
+          <span class="h6">{{(budget.spendTotal + budget.vatTotal) | number : '1.2-2'}}</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3 text-left">
+          Balance:
+        </div>
+        <div class="col-3 text-right">
+          <span class="h6 text-success" *ngIf="(budget.budgetTotal - budget.spendTotal) > 0">
+            {{ (budget.budgetTotal - (budget.spendTotal + budget.vatTotal)) | number : '1.2-2'}}
+          </span>
+          <span class="h6 text-danger" *ngIf="(budget.budgetTotal - budget.spendTotal) < 0">
+            {{ (budget.budgetTotal - (budget.spendTotal + budget.vatTotal)) | number : '1.2-2'}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- spends done by user for the budget -->
+  <!-- header -->
+  <div class="row bg-info text-white mt-3">
+    <div class="col-2">Date</div>
+    <div class="col-2">PO Number</div>
+    <div class="col-1 text-right">Amount</div>
+    <div class="col-1 text-right">Vat</div>
+    <div class="col-4">Notes</div>
+    <div class="col-2">By</div>
+  </div>
+  <!-- end of header-->
+
+  <div *ngFor="let spend of budget.spendResponses">
+    <div class="row mt-1 mb-1">
+      <div class="col-2">
+        {{spend.createdDate | date:'dd-MMM-yy'}}
+      </div>
+      <div class="col-2">
+        {{spend.poNumber}}
+      </div>
+      <div class="col-1 text-right">
+        {{spend.amount | number : '1.2-2'}}
+      </div>
+      <div class="col-1 text-right">
+        {{spend.vat | number : '1.2-2'}}
+      </div>
+      <div class="col-4">
+        {{spend.notes}}
+      </div>
+      <div class="col-2">
+        {{spend.createdByName}}
+      </div>
+    </div>
+  </div>
+
+</div>
+
