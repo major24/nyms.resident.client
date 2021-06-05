@@ -55,10 +55,6 @@
     <div class="form-group">
       <label class="text-primary" for="poCode">PO Code</label>
       <div class="input-group">
-        <!-- <span>
-          <input type="text" class="form-control" formControlName="poCode" maxlength="4" id="poCode" name="poCode"
-            (change)="onPoCodeChange($event)" placeholder="" [value]="">
-        </span> -->
         <span class="ml-2 mt-2"><label>{{budget.poPrefix}}</label></span>
       </div>
     </div>
@@ -75,13 +71,19 @@
       </div>
     </div>
 
-    <!-- multil amounts - allocations -->
+    <div class="form-group">
+      <label class="text-primary" for="description">Reason</label>
+      <div id="reasonReadonly" name="reasonReadonly">...</div>
+      <div class="input-group">
+        <textarea class="form-control" formControlName="reason" id="reason" name="reason"
+          (change)="onReasonChange($event)" placeholder="" value=""></textarea>
+      </div>
+    </div>
+
+
+    <!-- multi amounts - allocations -->
     <label class="text-primary" for="amount">Amount</label>
     <span class="text-danger ml-1">*</span>
-    <span *ngIf="showAddExtraBudgetAmountButton === true">
-      <button type="button" class="btn btn-outline-dark btn-sm ml-4" [attr.data-cy-budget-add-extra-amount]="budget.id"
-        (click)="addAdditionalAmount()">+</button>
-    </span>
 
     <div *ngFor="let alloc of budget.budgetAllocations; index as i">
       <!-- approved already - readonly -->
@@ -112,20 +114,58 @@
               (click)="onApproveChange($event, alloc.id)">
             <label class="text-primary ml-2" for="approve">Approve</label>
           </div>
-          <div class="col-3">
-            <textarea rows="2" cols="60" formControlName="reason" id="reason" name="reason"
-              (change)="onReasonChange($event, alloc.id)" [ngModel]="alloc.reason"></textarea>
-          </div>
         </div>
       </div>
     </div>
     <!-- endof allocations -->
 
+
+    <!-- Recurrence section -->
+    <div *ngIf="isAddingNewBudget === true">
+      <hr />
+      <label class="text-danger" for="startMonth">Recurrence Section</label>
+
+      <div class="row">
+        <div class="col-lg">
+          <div class="form-group">
+            <label class="text-primary" for="startMonth">Start Month</label>
+            <div class="input-group">
+              <select id="startMonth" name="startMonth" formControlName="startMonth" class="form-control" (change)="onStartMonthChange($event)">
+                <option value="">Choose</option>
+                <option *ngFor="let month of months; let index" [value]=month.key>
+                  {{month.value}}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg">
+          <div class="form-group">
+            <label class="text-primary" for="numberOfMonths">Number of months</label>
+            <div class="input-group">
+              <select id="numberOfMonths" name="numberOfMonths" formControlName="numberOfMonths" class="form-control" (change)="onNumberOfMonthsChange($event)">
+                <option value="">Choose</option>
+                <option *ngFor="let month of months; let index" [value]=month.key>
+                  {{month.key}}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg">
+          <label class="text-danger" for="startMonth">Note: When selecting recurrence, system will ignore [Date From] and [Date To] entered by the user.
+            It will calcuate the start and end dates for each month.</label>
+        </div>
+      </div>
+    </div>
+    <!-- endof recurrence section -->
+
   </form>
-  <!-- <div class="mt-5">&nbsp;</div> -->
 
   <!-- save button -->
-  <div class="container">
+  <div class="container" *ngIf="isBudgetEditable === true">
     <div class="row">
       <div class="col-md">
         <div *ngIf="errors.length > 0">
@@ -136,8 +176,12 @@
       </div>
       <div class="col-md">
         <div class="form-group mt-3 float-right">
+          <span *ngIf="showAddExtraBudgetAmountButton === true">
+            <button type="button" class="btn btn-warning mr-4" [attr.data-cy-budget-add-extra-amount]="budget.id"
+              (click)="openModal(contentIncreaseBudgetAmount, budget.id, this.referenceId)">Increase Amount</button>
+          </span>
           <button id="cancel" name="cancel" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
-          <button id="save" name="save" (click)="onSubmit()" [disabled]="saving" [disabled]="budget.status == 'Completed'" class="btn btn-primary ml-3">
+          <button id="save" name="save" (click)="onSubmit()" [disabled]="saving" class="btn btn-primary ml-3">
             <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
             Save
           </button>
@@ -145,7 +189,67 @@
       </div>
     </div>
   </div>
-
   <div class="mt-5">&nbsp;</div>
+
+
+
+  <!-- dialog for Increase budget amount -->
+  <ng-template #contentIncreaseBudgetAmount let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Increase Budget Amount</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <h6 class="text-primary">title</h6>
+
+      <form [formGroup]="createIncreaseAmountForm">
+
+        <div class="form-group">
+          <label class="text-primary" for="newAmount">Amount</label>
+          <span class="text-danger ml-1">*</span>
+          <div class="input-group">
+            <input type="text" class="form-control" formControlName="newAmount" id="newAmount" name="newAmount"
+              (change)="onNewAmountChange($event)" placeholder="" [value]="" />
+          </div>
+        </div>
+        <div class="form-group">
+          <input [attr.data-cy-approve]="'newApprove'" type="checkbox" name="newApprove" id="newApprove"
+            (click)="onNewApproveChange($event)">
+          <label class="text-primary ml-2" for="newApprove">Approve</label>
+        </div>
+        <div class="form-group">
+          <label class="text-primary" for="newReason">Reason</label>
+          <span class="text-danger ml-1">*</span>
+          <div class="input-group">
+            <textarea class="form-control" formControlName="newReason" id="newReason" name="newReason"
+              (keydown)="onNewReasonChange($event)" placeholder="" [value]=""></textarea>
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <div *ngIf="errorsDialog.length > 0">
+        <div *ngFor="let error of errorsDialog" style="color: red">
+          {{ error }}
+        </div>
+      </div>
+      <button type="button" id="create-spend-btn" name="create-spend-btn" [disabled]="saving" class="btn btn-primary"
+        (click)="saveNewAmount()">
+        <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+        Save
+      </button>
+    </div>
+  </ng-template>
+  <!-- endof comfirm modal -->
+
+
+
+
+
+
 
 </div>

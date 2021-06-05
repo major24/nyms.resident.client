@@ -56,7 +56,6 @@
     <div class="col-2">Date</div>
     <div class="col-2">PO Number</div>
     <div class="col-1 text-right">Amount</div>
-    <div class="col-1 text-right">Vat</div>
     <div class="col-4">Notes</div>
     <div class="col-2">By</div>
   </div>
@@ -72,9 +71,6 @@
       </div>
       <div class="col-1 text-right">
         {{spend.amount | number : '1.2-2'}}
-      </div>
-      <div class="col-1 text-right">
-        {{spend.vat | number : '1.2-2'}}
       </div>
       <div class="col-4">
         {{spend.notes}}

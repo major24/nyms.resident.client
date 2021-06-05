@@ -9,6 +9,11 @@ export interface BudgetAllocation {
   reason: string;
 }
 
+export interface Recurrence {
+  startMonth: number;
+  numberOfMonths: number;
+}
+
 export interface Budget {
   id: number;
   referenceId: string;
@@ -20,11 +25,13 @@ export interface Budget {
   description: string;
   poPrefix: string;
   status: string;
+  reason: string;
   createdDate: string;
   updatedDate: string;
   createdBy: string;
   updatedBy: string;
   budgetAllocations: BudgetAllocation[];
+  recurrence: Recurrence;
 }
 
 export interface BudgetListResponse {
@@ -48,9 +55,9 @@ export interface BudgetListResponse {
 export interface SpendRequest {
   budgetId: number;
   amount: number;
-  vat: number;
   notes: string;
   poNumber: string;
+  tranType: string;
 }
 
 export interface spendResponse {
@@ -58,10 +65,15 @@ export interface spendResponse {
   budgetId: number;
   poNumber: string;
   amount: number;
-  vat: number;
   notes: string;
   createdByName: string;
   createdDate: string;
+}
+
+export interface TransferSpendRequest {
+  transferFromSpendId: number;
+  transferToBudgetReferenceId: string;
+  notes: string;
 }
 
 export function createInstanceOfBudgetAllocation() {
@@ -90,11 +102,13 @@ export function createInstanceOfBudget() {
     description: '',
     poPrefix: '',
     status: '',
+    reason: '',
     createdDate: '',
     updatedDate: '',
     createdBy: '',
     updatedBy: '',
-    budgetAllocations: [createInstanceOfBudgetAllocation()]
+    budgetAllocations: [createInstanceOfBudgetAllocation()],
+    recurrence: { startMonth: 0, numberOfMonths: 0 }
   }
   return model;
 }
@@ -124,9 +138,9 @@ export function createSpendRequest() {
   let model: SpendRequest = {
     budgetId: 0,
     amount: 0,
-    vat: 0,
     notes: '',
-    poNumber: ''
+    poNumber: '',
+    tranType: ''
   }
   return model;
 }
@@ -137,7 +151,6 @@ export function createSpendResponse() {
     budgetId: 0,
     poNumber: '',
     amount: 0,
-    vat: 0,
     notes: '',
     createdByName: '',
     createdDate: ''

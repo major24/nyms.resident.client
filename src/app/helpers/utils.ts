@@ -18,6 +18,17 @@ export class Util {
     return str;
   }
 
+  getFirstDayOfTheMonth(): string {
+    return `${new Date().getFullYear()}-${new Date().getMonth()+1}-01`;
+  }
+
+  getLastDayOfTheMonth(): string {
+    var d = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0); // last day
+    return `${new Date().getFullYear()}-${new Date().getMonth()+1}-${d.getDate()}`;
+  }
+
+
+
   // old
   convertAngDateToJsDate(event: any): Date {
     return new Date(event.year, event.month - 1, event.day);

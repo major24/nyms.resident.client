@@ -21,14 +21,14 @@ export class SpendsListComponent implements OnInit {
     this._Activatedroute.paramMap.subscribe((params) => {
       if (params && params.get('referenceId')) {
         let referenceId: string = params.get('referenceId');
-        this.loadBudgetAndSpendsByReferenceId(referenceId);
+        this.loadBudgetByReferenceId(referenceId);
       }
     });
   } //ngonit
 
-  loadBudgetAndSpendsByReferenceId(refereneId: string): void {
+  loadBudgetByReferenceId(refereneId: string): void {
     this.loading = true;
-    this.budgetService.loadBudgetAndSpendsByReferenceId(refereneId)
+    this.budgetService.loadBudgetByReferenceId(refereneId)
       .subscribe({
         next: (data) => {
           console.log(data);
