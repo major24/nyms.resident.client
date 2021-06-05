@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 // import { BudgetListResponse } from '../../../models/index';
 import { BudgetListResponse } from '../../../../models/spend-budgets';
 import { BudgetService } from '../../../../services/budget.service';
+import { Util } from '../../../../helpers/utils';
 
 @Component({
   selector: 'budgets-list',
@@ -13,12 +14,17 @@ export class BudgetsListComponent implements OnInit {
   budgets: BudgetListResponse[] = []
   loading: boolean = false;
   error: string = '';
+  startDate: string = '';
+  endDate: string = '';
 
   constructor(private router: Router,
-    private budgetService: BudgetService) { }
+    private budgetService: BudgetService,
+    private readonly util: Util) { }
 
   ngOnInit(): void {
-    this.loadBudgetsForAdmin();
+    this.startDate = this.util.getFirstDayOfTheMonth();
+    this.endDate = this.util.getLastDayOfTheMonth();
+    this.loadBudgetsForAdmin(this.startDate, this.endDate);
   }
 
   navToAddBudget(): void {
@@ -29,9 +35,23 @@ export class BudgetsListComponent implements OnInit {
     this.router.navigate(['/admin/budgets-edit', referenceId]);
   }
 
-  loadBudgetsForAdmin(): void {
+  onStartDateChange(event: any): void {
+    this.startDate = event;
+  }
+
+  onEndDateChange(event: any): void {
+    this.endDate = event;
+  }
+
+  getBudgetsByDate(): void {
+    if (this.endDate === '' || this.startDate === '') return;
+    this.loadBudgetsForAdmin(this.startDate, this.endDate);
+  }
+
+  loadBudgetsForAdmin(startDate: string, endDate: string): void {
     this.loading = true;
-    this.budgetService.loadBudgetsForAdmin()
+    this.budgets = Object.assign([], []);
+    this.budgetService.loadBudgetsForAdmin(startDate, endDate)
       .subscribe({
         next: (data) => {
           Object.assign(this.budgets, [...data]);

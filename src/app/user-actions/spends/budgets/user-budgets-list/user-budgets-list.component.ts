@@ -4,6 +4,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { BudgetListResponse, SpendRequest, createSpendRequest } from '../../../../models/spend-budgets';
 import { BudgetService } from '../../../../services/budget.service';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Util } from '../../../../helpers/utils';
 
 @Component({
   selector: 'user-budgets-list',
@@ -16,28 +17,33 @@ export class UserBudgetsListComponent implements OnInit {
   saving: boolean = false;
   error: string = '';
   closeResult = '';
-  selectedId: number = 0;
+  selectedBudgetId: number = 0;
   selectedBudget: BudgetListResponse;
   spendRequest: SpendRequest = createSpendRequest();
   poNumber: string = '...';
+  startDate: string = '';
+  endDate: string = '';
 
   createAddSpendForm = new FormGroup({
     amount: new FormControl(''),
-    vat: new FormControl(''),
     notes: new FormControl('')
   });
 
   constructor(private router: Router,
     private budgetService: BudgetService,
+    private readonly util: Util,
     private modalService: NgbModal) { }
 
   ngOnInit(): void {
-    this.loadBudgetsForUser();
+    this.startDate = this.util.getFirstDayOfTheMonth();
+    this.endDate = this.util.getLastDayOfTheMonth();
+    this.loadBudgetsForUser(this.startDate, this.endDate);
   }
 
-  loadBudgetsForUser(): void {
+  loadBudgetsForUser(startDate: string, endDate: string): void {
     this.loading = true;
-    this.budgetService.loadBudgetsForUser()
+    this.budgets = Object.assign([], []);
+    this.budgetService.loadBudgetsForUser(startDate, endDate)
       .subscribe({
         next: (data) => {
           Object.assign(this.budgets, [...data]);
@@ -51,12 +57,21 @@ export class UserBudgetsListComponent implements OnInit {
       });
   }
 
-  onAmountChange(event: any): void {
-    this.spendRequest = Object.assign(this.spendRequest, { amount: +event.target.value });
+  onStartDateChange(event: any): void {
+    this.startDate = event;
   }
 
-  onVatChange(event: any): void {
-    this.spendRequest = Object.assign(this.spendRequest, { vat: +event.target.value });
+  onEndDateChange(event: any): void {
+    this.endDate = event;
+  }
+
+  getBudgetsByDate(): void {
+    if (this.endDate === '' || this.startDate === '') return;
+    this.loadBudgetsForUser(this.startDate, this.endDate);
+  }
+
+  onAmountChange(event: any): void {
+    this.spendRequest = Object.assign(this.spendRequest, { amount: +event.target.value });
   }
 
   onNotesChange(event: any): void {
@@ -86,13 +101,14 @@ export class UserBudgetsListComponent implements OnInit {
       .subscribe({
         next: (data) => {
           console.log(data);
-          this.poNumber = data.poNumber;
+          this.poNumber = data.poNumber; // to display to user
           this.clearAddSpendDialog();
-          this.loadBudgetsForUser();
+          this.disableAddSpendDialog();
+          this.loadBudgetsForUser(this.startDate, this.endDate);
           this.saving = false;
           // reset spend request with current bud id.
           // Incase user wants to submit more items for the same bud id
-          this.initSpendRequest(this.selectedId);
+          this.initSpendRequest(this.selectedBudget);
         },
         error: (error) => {
           console.log('Error saving spend', error);
@@ -104,28 +120,37 @@ export class UserBudgetsListComponent implements OnInit {
 
   clearAddSpendDialog(): void {
     this.createAddSpendForm.controls['amount'].setValue('');
-    this.createAddSpendForm.controls['vat'].setValue('');
     this.createAddSpendForm.controls['notes'].setValue('');
   }
 
-  initSpendRequest(budgetId: number): void {
+  disableAddSpendDialog(): void {
+    this.createAddSpendForm.controls['amount'].disable();
+    this.createAddSpendForm.controls['notes'].disable();
+  }
+
+  enableAddSpendDialog(): void {
+    this.createAddSpendForm.controls['amount'].enable()
+    this.createAddSpendForm.controls['notes'].enable();
+  }
+
+  initSpendRequest(budget: BudgetListResponse): void {
     this.spendRequest = Object.assign({}, createSpendRequest());
-    this.selectedBudget = this.budgets.find(b => b.id === budgetId);
     this.spendRequest = Object.assign(
       this.spendRequest, {
-      budgetId: this.selectedBudget.id,
-      poNumber: this.selectedBudget.poPrefix
+      budgetId: budget.id,
+      poNumber: budget.poPrefix
     });
   }
 
   // open from template
   openModal(content: any, id: number) {
-    this.selectedId = +id;
+    this.enableAddSpendDialog();
+    this.selectedBudgetId = +id;
     this.error = '';
-    if (this.selectedId <= 0) return;
-    // reset before editing
-    this.clearAddSpendDialog();
-    this.initSpendRequest(this.selectedId);
+    if (this.selectedBudgetId <= 0) return;
+    this.poNumber = '';
+    this.selectedBudget = this.budgets.find(b => b.id === this.selectedBudgetId);
+    this.initSpendRequest(this.selectedBudget);
 
     this.open(content);
   }

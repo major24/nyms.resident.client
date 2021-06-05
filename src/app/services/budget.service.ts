@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { Observable } from 'rxjs';
-import { Budget, BudgetListResponse, SpendRequest } from '../models/spend-budgets';
+import { Budget, BudgetListResponse, SpendRequest, TransferSpendRequest } from '../models/spend-budgets';
 
 @Injectable({
   providedIn: 'root'
@@ -10,20 +10,20 @@ export class BudgetService {
 
   constructor(private apiService: ApiService) { }
 
-  loadBudgetsForAdmin(): Observable<BudgetListResponse[]> {
-    return this.apiService.loadBudgetsForAdmin();
+  loadBudgetsForAdmin(startDate: string, endDate: string): Observable<BudgetListResponse[]> {
+    return this.apiService.loadBudgetsForAdmin(startDate, endDate);
   }
 
-  loadBudgetsForUser(): Observable<BudgetListResponse[]> {
-    return this.apiService.loadBudgetsForUser();
+  loadBudgetsForUser(startDate: string, endDate: string): Observable<BudgetListResponse[]> {
+    return this.apiService.loadBudgetsForUser(startDate, endDate);
   }
 
-  loadBudgetAndAllocationsByReferenceId(referenceId: string): Observable<Budget> {
-    return this.apiService.loadBudgetAndAllocationsByReferenceId(referenceId);
+  loadBudgetsForSummryReport(startDate: string, endDate: string): Observable<BudgetListResponse[]> {
+    return this.apiService.loadBudgetsForSummryReport(startDate, endDate);
   }
 
-  loadBudgetAndSpendsByReferenceId(referenceId: string): Observable<Budget> {
-    return this.apiService.loadBudgetAndSpendsByReferenceId(referenceId);
+  loadBudgetByReferenceId(referenceId: string): Observable<Budget> {
+    return this.apiService.loadBudgetByReferenceId(referenceId);
   }
 
   createBudget(budget: Budget): Observable<Budget> {
@@ -34,7 +34,20 @@ export class BudgetService {
     return this.apiService.updateBudget(budget);
   }
 
+  saveNewAmount(budget: Budget): Observable<Budget> {
+    return this.apiService.saveNewAmount(budget);
+  }
+
   createSpend(spendRequest: SpendRequest): Observable<SpendRequest> {
     return this.apiService.createSpend(spendRequest);
   }
+
+  issueCreditNote(spendRequest: SpendRequest): Observable<SpendRequest> {
+    return this.apiService.issueCreditNote(spendRequest);
+  }
+
+  transferSpend(transferSpendRequest: TransferSpendRequest): Observable<boolean> {
+    return this.apiService.transferSpend(transferSpendRequest);
+  }
+
 }

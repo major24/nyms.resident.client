@@ -1,0 +1,143 @@
+<div class="container mt-4">
+
+  <!-- header -->
+  <!-- <div class="row bg-info text-white mt-3" *ngIf="budgets.length > 0">
+    <div class="col-3">
+      Budget
+    </div>
+    <div class="col-2">
+      PO Number
+    </div>
+    <div class="col-2">
+    </div>
+    <div class="col-2">
+      Spent
+    </div>
+    <div class="col-3">
+      &nbsp;
+    </div>
+  </div> -->
+  <!-- end of header-->
+
+  <div *ngFor="let budget of budgets">
+    <div class="row" [attr.data-cy-budget-name]="budget.name">
+      <div class="col-10">
+        <div [attr.data-cy-budget-name]="budget.name">
+          <h6 class="text-primary">{{budget.name}}</h6>
+        </div>
+      </div>
+      <div class="col-1"></div>
+      <div class="col-1 text-right">
+        <button type="button" class="btn btn-outline-dark btn-sm ml-2" [attr.data-cy-budget-spend-transfer]="budget.name"
+        (click)="openModalForTransfer(contentTransferSpendDialog, budget.id)">TO</button>
+      </div>
+    </div>
+    <div class="row" *ngFor="let sp of budget.spendResponses">
+      <div class="col-4">
+        {{sp.createdDate | date:'dd-MMM-yy'}}
+      </div>
+      <div class="col-3">
+        {{sp.poNumber}}
+      </div>
+      <div class="col-3  text-right">
+        {{sp.amount | number : '1.2-2'}}
+      </div>
+      <div class="col-1  text-right">
+        <button type="button" class="btn btn-outline-dark btn-sm" [attr.data-cy-budget-spend-issue-cr]="budget.name"
+          (click)="openModal(contentIssueCreditNoteDialog, budget.id, sp.id)">CN</button>
+      </div>
+      <div class="col-1  text-right">
+        <label>FR</label>
+          <input type="radio" class="ml-1" [attr.data-cy-transfer-to]="'transferFrom'" name="transferFrom"
+          (change)="onTransferSpendFromChange($event, sp.id)" >
+      </div>
+    </div>
+    <hr />
+  </div>
+
+
+
+
+
+
+  <!-- record issue credit note modal -->
+  <ng-template #contentIssueCreditNoteDialog let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Issue Credit Note</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <h6 class="text-primary">{{spendRequest?.poNumber}}</h6>
+      <h6 class="text-primary">Amount: {{originalAmount | number : '1.2-2'}}</h6>
+
+      <form [formGroup]="issueCreditNoteForm">
+        <div class="form-group">
+          <label class="text-primary" for="amount">Amount</label>
+          <span class="text-danger ml-1">*</span>
+          <div class="input-group">
+            <input type="text" class="form-control" formControlName="amount" id="amount" name="amount"
+              (change)="onAmountChange($event)" placeholder="" [value]="spendRequest.amount" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="text-primary" for="notes">Notes</label>
+          <span class="text-danger ml-1">*</span>
+          <div class="input-group">
+            <textarea class="form-control" formControlName="notes" id="notes" name="notes"
+              (change)="onNotesChange($event)" placeholder=""></textarea>
+          </div>
+        </div>
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <div *ngIf="error" style="color: red">{{error}}</div>
+      <button type="button" id="issue-credit-note" name="issue-credit-note" [disabled]="saving" class="btn btn-primary"
+        (click)="issueCreditNote()">
+        <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+        Save
+      </button>
+    </div>
+  </ng-template>
+  <!-- endof comfirm modal -->
+
+
+
+
+  <!-- record switch spend one budget to another modal -->
+  <ng-template #contentTransferSpendDialog let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Transfer Spend</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="transferSpendForm">
+        <div class="form-group">
+          <label class="text-primary" for="notes">Notes</label>
+          <span class="text-danger ml-1">*</span>
+          <div class="input-group">
+            <textarea class="form-control" formControlName="notes" id="notes" name="notes"
+              (change)="onNotesChange($event)" placeholder=""></textarea>
+          </div>
+        </div>
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <div *ngIf="error" style="color: red">{{error}}</div>
+      <button type="button" id="create-spend-btn" name="create-spend-btn" [disabled]="saving" class="btn btn-primary"
+        (click)="transferSpend()">
+        <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+        Save
+      </button>
+    </div>
+  </ng-template>
+  <!-- endof comfirm modal -->
+
+
+
+</div>

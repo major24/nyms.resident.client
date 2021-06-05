@@ -6,6 +6,7 @@ import { ReportOccupancyByDayComponent } from '../templ/report-occupancy-by-day/
 import { ReportListComponent } from '../templ/report-list/report-list.component';
 import { ReportValidatedUnvalidatedComponent } from '../templ/report-validated-unvalidated/report-validated-unvalidated.component';
 import { SummaryInfoComponent } from '../templ/summary-info/summary-info.component';
+import { ReportSpendAdjustmentsComponent } from '../templ/report-spend-adjustments/report-spend-adjustments.component';
 
 @Component({
   selector: 'report-by-date-range',
@@ -27,6 +28,8 @@ export class ReportByDateRangeComponent implements OnInit {
   private reportValidatedUnvalidatedComponent: ReportValidatedUnvalidatedComponent;
   @ViewChild(SummaryInfoComponent)
   private summaryInfoComponent: SummaryInfoComponent;
+  @ViewChild(ReportSpendAdjustmentsComponent)
+  private reportSpendAdjustmentsComponent: ReportSpendAdjustmentsComponent;
 
   constructor(private fileService: FileService) { }
 
@@ -56,6 +59,8 @@ export class ReportByDateRangeComponent implements OnInit {
         case "4":
           this.reportOccupancyByDayComponent.getReport();
           break;
+        case "5":
+          this.reportSpendAdjustmentsComponent.getReport();
         default:
           break;
       }
