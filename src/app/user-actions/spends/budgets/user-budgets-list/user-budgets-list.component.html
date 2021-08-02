@@ -118,11 +118,24 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="text-primary" for="notes">Notes</label>
+          <label class="text-primary" for="comments">Comments</label>
           <span class="text-danger ml-1">*</span>
           <div class="input-group">
-            <textarea class="form-control" formControlName="notes" id="notes" name="notes"
-              (change)="onNotesChange($event)" placeholder=""></textarea>
+            <textarea class="form-control" formControlName="comments" id="comments" name="comments"
+              (change)="onCommentsChange($event)" placeholder=""></textarea>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="selectedBudget.budgetType > 0">
+          <label class="text-primary" for="spendStatusSelect">Spend Status</label>
+          <span class="text-danger ml-1">*</span>
+          <div class="input-group">
+            <select class="custom-select" name="spendStatusSelect" id="spendStatusSelect" formControlName="spendStatusSelect" (change)="onSpendStatusSelectChange($event)">
+              <option value="">Choose</option>
+              <option *ngFor="let ss of SpendStatus | enumKeyValue" [value]="ss.value">
+                {{ss.key}}
+              </option>
+            </select>
           </div>
         </div>
 
@@ -130,7 +143,6 @@
           <label class="text-primary">PO#</label>
           <h4 class="text-success">{{poNumber}}</h4>
         </div>
-
       </form>
 
     </div>

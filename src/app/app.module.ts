@@ -38,10 +38,10 @@ import { MdateModule } from './residents/templ-edit/mdate/mdateModule';
 import { ResidentMiscEditComponent } from './residents/templ-edit/resident-misc-edit/resident-misc-edit.component';
 import { DashboardUserActionsComponent } from './user-actions/dashboard-user-actions/dashboard-user-actions.component';
 import { SpendsListComponent } from './user-actions/spends/spends-list/spends-list.component';
-import { UserBudgetsListComponent } from './user-actions/spends/budgets/user-budgets-list/user-budgets-list.component'
+import { UserBudgetsListComponent } from './user-actions/spends/budgets/user-budgets-list/user-budgets-list.component';
+import { EnumKeyValuePipe } from './enum-keyvalue.pipe';
 // import { SplitPipe } from './common/split.pipe';
 // import { ModalSetExitComponent } from './common/modal-set-exit/modal-set-exit.component';
-// import { MainPipe } from
 
 export function tokenGetter() {
   return localStorage.getItem('id_token');
@@ -91,6 +91,7 @@ export function tokenGetter() {
     DashboardUserActionsComponent,
     SpendsListComponent,
     UserBudgetsListComponent,
+    EnumKeyValuePipe
     // SplitPipe
   ],
   providers: [

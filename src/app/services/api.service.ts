@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { User, CareHomeUser, Role, SpendRequest, TransferSpendRequest } from '../models/index';
 import { EnquiryResident, CareHome, CareHome0, Resident, EnquiryAction } from '../residents/models/index';
 import { ResidentSchedule, Schedule } from '../admin/models/index';
-import { Budget, BudgetListResponse } from '../models/spend-budgets';
+import { Budget, BudgetListResponse, SpendComments } from '../models/spend-budgets';
 import {
   InvoiceData,
   InvoiceCommentsRequest,
@@ -226,44 +226,48 @@ export class ApiService {
   }
 
   loadBudgetsForAdmin(startDate: string, endDate: string): Observable<BudgetListResponse[]> {
-    return this.http.get<BudgetListResponse[]>(`/api/spends/admin/budgets/${startDate}/${endDate}`);
+    return this.http.get<BudgetListResponse[]>(`/api/admin/budgets/${startDate}/${endDate}`);
   }
 
   loadBudgetsForUser(startDate: string, endDate: string): Observable<BudgetListResponse[]> {
-    return this.http.get<BudgetListResponse[]>(`/api/spends/user/budgets/${startDate}/${endDate}`);
+    return this.http.get<BudgetListResponse[]>(`/api/user/budgets/${startDate}/${endDate}`);
   }
 
   loadBudgetsForSummryReport(startDate: string, endDate: string): Observable<BudgetListResponse[]> {
-    return this.http.get<BudgetListResponse[]>(`/api/spends/admin/budgets/${startDate}/${endDate}/spendsreport`);
+    return this.http.get<BudgetListResponse[]>(`/api/admin/budgets/${startDate}/${endDate}/spends`);
   }
 
   // returns for user and admin
   loadBudgetByReferenceId(referenceId: string): Observable<Budget> {
-    return this.http.get<Budget>(`/api/spends/user/budgets/${referenceId}`);
+    return this.http.get<Budget>(`/api/user/budgets/${referenceId}`);
   }
 
   createBudget(budget: Budget): Observable<Budget> {
-    return this.http.post<Budget>(`/api/spends/admin/budgets`, budget);
+    return this.http.post<Budget>(`/api/admin/budgets`, budget);
   }
 
   updateBudget(budget: Budget): Observable<Budget> {
-    return this.http.post<Budget>(`/api/spends/admin/budgets/${budget.referenceId}`, budget);
+    return this.http.post<Budget>(`/api/admin/budgets/${budget.referenceId}`, budget);
   }
 
   saveNewAmount(budget: Budget): Observable<Budget> {
-    return this.http.post<Budget>(`/api/spends/admin/budgets/${budget.referenceId}/allocations`, budget);
+    return this.http.post<Budget>(`/api/admin/budgets/${budget.referenceId}/allocations`, budget);
   }
 
   createSpend(spendRequest: SpendRequest): Observable<SpendRequest> {
-    return this.http.post<SpendRequest>(`/api/spends/user/spends`, spendRequest);
+    return this.http.post<SpendRequest>(`/api/user/spends`, spendRequest);
+  }
+
+  createSpendComment(spendComment: SpendComments): Observable<SpendComments> {
+    return this.http.post<SpendComments>(`/api/user/spends/comments`, spendComment);
   }
 
   issueCreditNote(spendRequest: SpendRequest): Observable<SpendRequest> {
-    return this.http.post<SpendRequest>(`/api/spends/admin/spends/creditnote`, spendRequest);
+    return this.http.post<SpendRequest>(`/api/admin/spends/creditnote`, spendRequest);
   }
 
   transferSpend(transferSpendRequest: TransferSpendRequest): Observable<boolean> {
-    return this.http.post<boolean>(`/api/spends/admin/spends/tranferspend`, transferSpendRequest);
+    return this.http.post<boolean>(`/api/admin/spends/tranferspend`, transferSpendRequest);
   }
 
   // === Roles ====

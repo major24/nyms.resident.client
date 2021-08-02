@@ -46,11 +46,42 @@
       </div>
     </div>
 
-    <mdate [dateValue]="budget.dateFrom" [labelDateCtl]="'Date From'" [DateCtlId]="'dateFrom'"
-      (dateCtlSelectedEvent)="onDateFromChange($event)"></mdate>
+    <div class="form-group">
+      <label class="text-primary" for="budgetType">Budget Type</label>
+      <span class="text-danger ml-1">*</span>
+      <div class="input-group">
+        <select id="budgetType" name="budgetType" formControlName="budgetType" class="form-control"
+          (change)="onBudgetTypeChange($event)">
+          <option *ngFor="let bt of BudgetTypes | enumKeyValueAdmin" [value]="bt.value">
+            {{bt.key}}
+          </option>
+        </select>
+      </div>
+    </div>
 
-    <mdate [dateValue]="budget.dateTo" [labelDateCtl]="'Date To'" [DateCtlId]="'dateTo'"
-      (dateCtlSelectedEvent)="onDateToChange($event)"></mdate>
+    <div *ngIf="budget.budgetType === 0">
+      <div class="form-group">
+        <label class="text-primary" for="budgetMonth">Month</label>
+        <span class="text-danger ml-1">*</span>
+        <div class="input-group">
+          <select id="budgetMonth" name="budgetMonth" formControlName="budgetMonth" class="form-control"
+            (change)="onBudgetMonthChange($event)">
+            <option value="">Choose</option>
+            <option *ngFor="let month of months; let index" [value]=month.key>
+              {{month.value}}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="budget.budgetType === 1">
+      <mdate [dateValue]="budget.dateFrom" [labelDateCtl]="'Date From'" [DateCtlId]="'dateFrom'"
+        (dateCtlSelectedEvent)="onDateFromChange($event)"></mdate>
+
+      <mdate [dateValue]="budget.dateTo" [labelDateCtl]="'Date To'" [DateCtlId]="'dateTo'"
+        (dateCtlSelectedEvent)="onDateToChange($event)"></mdate>
+    </div>
 
     <div class="form-group">
       <label class="text-primary" for="poCode">PO Code</label>
@@ -121,29 +152,16 @@
 
 
     <!-- Recurrence section -->
-    <div *ngIf="isAddingNewBudget === true">
+    <div *ngIf="isAddingNewBudget === true && budget.budgetType === 0">
       <hr />
-      <label class="text-danger" for="startMonth">Recurrence Section</label>
-
+      <label class="text-danger" for="recurrenceSection">Recurrence Section</label>
       <div class="row">
-        <div class="col-lg">
-          <div class="form-group">
-            <label class="text-primary" for="startMonth">Start Month</label>
-            <div class="input-group">
-              <select id="startMonth" name="startMonth" formControlName="startMonth" class="form-control" (change)="onStartMonthChange($event)">
-                <option value="">Choose</option>
-                <option *ngFor="let month of months; let index" [value]=month.key>
-                  {{month.value}}
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
         <div class="col-lg">
           <div class="form-group">
             <label class="text-primary" for="numberOfMonths">Number of months</label>
             <div class="input-group">
-              <select id="numberOfMonths" name="numberOfMonths" formControlName="numberOfMonths" class="form-control" (change)="onNumberOfMonthsChange($event)">
+              <select id="numberOfMonths" name="numberOfMonths" formControlName="numberOfMonths" class="form-control"
+                (change)="onNumberOfMonthsChange($event)">
                 <option value="">Choose</option>
                 <option *ngFor="let month of months; let index" [value]=month.key>
                   {{month.key}}
@@ -153,14 +171,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg">
-          <label class="text-danger" for="startMonth">Note: When selecting recurrence, system will ignore [Date From] and [Date To] entered by the user.
-            It will calcuate the start and end dates for each month.</label>
-        </div>
-      </div>
     </div>
-    <!-- endof recurrence section -->
 
   </form>
 

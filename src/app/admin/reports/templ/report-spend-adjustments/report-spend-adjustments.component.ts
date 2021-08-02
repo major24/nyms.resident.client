@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { BudgetListResponse, SpendRequest, createSpendRequest, TransferSpendRequest } from '../../../../models/spend-budgets';
+import { BudgetListResponse, SpendRequest, createSpendRequest, TransferSpendRequest, SpendComments, createSpendComments } from '../../../../models/spend-budgets';
 import { BudgetService } from '../../../../services/budget.service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -21,21 +21,22 @@ export class ReportSpendAdjustmentsComponent implements OnInit {
   selectedBudgetId: number = 0;
   selectedBudget: BudgetListResponse;
   spendRequest: SpendRequest = createSpendRequest();
+  spendComments: SpendComments = createSpendComments();
   originalAmount: number = 0;
   originalPoNumber: string = '';
   transferSpendRequest: TransferSpendRequest = {
     transferFromSpendId: 0,
     transferToBudgetReferenceId: '',
-    notes: ''
+    comments: ''
   };
 
   issueCreditNoteForm = new FormGroup({
     amount: new FormControl(''),
-    notes: new FormControl('')
+    comments: new FormControl('')
   });
 
   transferSpendForm = new FormGroup({
-    notes: new FormControl(''),
+    comments: new FormControl(''),
     transferFrom: new FormControl('')
   });
 
@@ -58,6 +59,7 @@ export class ReportSpendAdjustmentsComponent implements OnInit {
       .subscribe({
         next: (data) => {
           Object.assign(this.budgets, [...data]);
+          console.log('>>>', this.budgets)
           this.loading = false;
         },
         error: (error) => {
@@ -68,25 +70,23 @@ export class ReportSpendAdjustmentsComponent implements OnInit {
   }
 
 
+  // =======================================================================================
   // Issue credit note
   onAmountChange(event: any): void {
-    this.spendRequest = Object.assign(this.spendRequest, { amount: +event.target.value });
+    let amt = +event.target.value;
+    if (amt > 0) {
+      amt = amt * -1;
+    }
+    this.spendRequest = Object.assign(this.spendRequest, { amount: amt });
   }
 
-  onNotesChange(event: any): void {
-    this.spendRequest = Object.assign(this.spendRequest, { notes: event.target.value });
-    this.transferSpendRequest = Object.assign(this.transferSpendRequest, { notes: event.target.value });
-  }
-
-  onTransferSpendFromChange(event: any, spendId: number): void {
-    this.transferSpendRequest = Object.assign(this.transferSpendRequest, {
-      transferFromSpendId: spendId,
-      transferToBudgetReferenceId: ''
-     });
+  onCommentsChange(event: any): void {
+    this.spendComments = Object.assign(this.spendComments, { comments:  event.target.value });
+    this.spendRequest = Object.assign(this.spendRequest, { spendComments: this.spendComments });
   }
 
   issueCreditNote(): void {
-    if (!this.spendRequest.amount || this.spendRequest.notes == '') {
+    if (!this.spendRequest.amount || this.spendRequest.spendComments.comments == '') {
       this.error = 'Amount and notes are required';
       return;
     }
@@ -106,13 +106,50 @@ export class ReportSpendAdjustmentsComponent implements OnInit {
       });
   }
 
+    // open from CR template
+    openModalForCreditNote(content: any, budgetId: number, spendId: number) {
+      this.error = '';
+      this.originalAmount = 0;
+      const bgt = this.budgets.find(b => b.id === budgetId);
+      const spnd = bgt.spends.find(sp => sp.id === spendId);
+      this.originalAmount = spnd.amount;
+      this.originalPoNumber = spnd.poNumber;
+
+      this.issueCreditNoteForm.controls['amount'].setValue('');
+      this.issueCreditNoteForm.controls['comments'].setValue('');
+
+      this.spendRequest = Object.assign(this.spendRequest, {
+        tranType: 'Credit',
+        budgetId: budgetId,
+        poNumber: spnd.poNumber
+      });
+
+      this.open(content);
+    }
+  //==============================================================================
+
+
+
+  //=============================================================================
+  // Transfer amount from one spend to another
+  onTransferSpendFromChange(event: any, spendId: number): void {
+    this.transferSpendRequest = Object.assign(this.transferSpendRequest, {
+      transferFromSpendId: spendId,
+      transferToBudgetReferenceId: ''
+     });
+  }
+
+  onTransferCommentsChange(event: any): void {
+    this.transferSpendRequest = Object.assign(this.transferSpendRequest, { comments:  event.target.value });
+  }
+
   transferSpend(): void {
     if (!this.transferSpendRequest.transferToBudgetReferenceId || this.transferSpendRequest.transferToBudgetReferenceId === '') {
       this.error = 'Transfer To reference id is required. Please select the radio button for the budget.';
       return;
     }
-    if (this.transferSpendRequest.notes == '') {
-      this.error = 'Notes is required';
+    if (this.transferSpendRequest.comments == '') {
+      this.error = 'Comments is required';
       return;
     }
     console.log('rdy to save', this.transferSpendRequest);
@@ -132,15 +169,13 @@ export class ReportSpendAdjustmentsComponent implements OnInit {
       });
   }
 
-
   resetTransferObject(): void {
     this.transferSpendRequest = Object.assign(this.transferSpendRequest, {
       transferFromSpendId: 0,
       transferToBudgetReferenceId: '',
-      notes: ''
+      comments: ''
     });
   }
-
 
   // open from template
   openModalForTransfer(content: any, budgetId: number) {
@@ -149,39 +184,23 @@ export class ReportSpendAdjustmentsComponent implements OnInit {
       return; // dialog will not open. no error msg as well. todo
     }
     const bgt = this.budgets.find(b => b.id === budgetId);
-    const found = bgt.spendResponses.find(sp => sp.id === this.transferSpendRequest.transferFromSpendId);
+    const found = bgt.spends.find(sp => sp.id === this.transferSpendRequest.transferFromSpendId);
     if (found) { // transfering within same id
       return;
     }
-    this.transferSpendForm.controls['notes'].setValue('');
+    this.transferSpendForm.controls['comments'].setValue('');
 
     this.transferSpendRequest = Object.assign(this.transferSpendRequest, {
       transferToBudgetReferenceId: bgt.referenceId,
-      notes: ''
+      comments: ''
     });
 
     this.open(content);
   }
+  //==============================================================================
 
 
 
-  // open from template
-  openModal(content: any, budgetId: number, spendId: number) {
-    this.error = '';
-    this.originalAmount = 0;
-    const bgt = this.budgets.find(b => b.id === budgetId);
-    const spnd = bgt.spendResponses.find(sp => sp.id === spendId);
-    this.originalAmount = spnd.amount;
-    this.originalPoNumber = spnd.poNumber;
-
-    this.spendRequest = Object.assign(this.spendRequest, {
-      tranType: 'Credit',
-      budgetId: budgetId,
-      poNumber: spnd.poNumber
-    });
-
-    this.open(content);
-  }
   // private
   open(content) {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', backdrop: 'static' }).result.then((result) => {

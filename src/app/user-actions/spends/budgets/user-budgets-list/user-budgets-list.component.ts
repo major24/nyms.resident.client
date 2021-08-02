@@ -5,6 +5,8 @@ import { BudgetListResponse, SpendRequest, createSpendRequest } from '../../../.
 import { BudgetService } from '../../../../services/budget.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Util } from '../../../../helpers/utils';
+import * as SpendStatusType from '../../../../models/spend-status';
+import  * as BudgetTypesType from '../../../../models/budget-types';
 
 @Component({
   selector: 'user-budgets-list',
@@ -23,10 +25,13 @@ export class UserBudgetsListComponent implements OnInit {
   poNumber: string = '...';
   startDate: string = '';
   endDate: string = '';
+  SpendStatus = SpendStatusType.SpendStatus;
+  BudgetTypes = BudgetTypesType.BudgetTypes;
 
   createAddSpendForm = new FormGroup({
     amount: new FormControl(''),
-    notes: new FormControl('')
+    comments: new FormControl(''),
+    spendStatusSelect: new FormControl('')
   });
 
   constructor(private router: Router,
@@ -74,8 +79,22 @@ export class UserBudgetsListComponent implements OnInit {
     this.spendRequest = Object.assign(this.spendRequest, { amount: +event.target.value });
   }
 
-  onNotesChange(event: any): void {
-    this.spendRequest = Object.assign(this.spendRequest, { notes: event.target.value });
+  onCommentsChange(event: any): void {
+    let spendComments = this.spendRequest.spendComments;
+    spendComments.comments = event.target.value;
+    this.spendRequest = Object.assign(this.spendRequest, { spendComments: spendComments});
+  }
+
+  onSpendStatusSelectChange(event: any): void {
+    let spendComments = this.spendRequest.spendComments;
+    spendComments.status = event.target.value;
+    this.spendRequest = Object.assign(this.spendRequest, { spendComments: spendComments});
+  }
+
+  setSpendCommentStatus(status: any): void {
+    let spendComments = this.spendRequest.spendComments;
+    spendComments.status = status;
+    this.spendRequest = Object.assign(this.spendRequest, { spendComments: spendComments});
   }
 
   navToSpendList(budgetId: number): void {
@@ -86,7 +105,7 @@ export class UserBudgetsListComponent implements OnInit {
   // ready to save
   createSpend(): void {
     this.error = '';
-    if (this.spendRequest.amount <= 0 || this.spendRequest.notes === '') {
+    if (this.spendRequest.amount <= 0 || this.spendRequest.spendComments.comments === '') {
       this.error = 'All fields are required.';
       return;
     }
@@ -94,6 +113,17 @@ export class UserBudgetsListComponent implements OnInit {
       this.error = 'Budget id not found. Refresh the page and try again.';
       return;
     }
+    // If budgetType == 1, then Project: status is required
+    this.selectedBudget = this.budgets.find(b => b.id === this.selectedBudgetId);
+    if (this.selectedBudget.budgetType === this.BudgetTypes.Project && !this.spendRequest.spendComments.status) {
+      this.error = 'Project types requires spend status';
+      return;
+    }
+    // If budgetType == 0, then Monthly: Set status to Completed.
+    if (this.selectedBudget.budgetType === this.BudgetTypes.Monthly) {
+      this.setSpendCommentStatus(this.SpendStatus.None);
+    }
+
     console.log('rdy to submit', this.spendRequest);
 
     this.saving = true;
@@ -120,17 +150,17 @@ export class UserBudgetsListComponent implements OnInit {
 
   clearAddSpendDialog(): void {
     this.createAddSpendForm.controls['amount'].setValue('');
-    this.createAddSpendForm.controls['notes'].setValue('');
+    this.createAddSpendForm.controls['comments'].setValue('');
   }
 
   disableAddSpendDialog(): void {
     this.createAddSpendForm.controls['amount'].disable();
-    this.createAddSpendForm.controls['notes'].disable();
+    this.createAddSpendForm.controls['comments'].disable();
   }
 
   enableAddSpendDialog(): void {
     this.createAddSpendForm.controls['amount'].enable()
-    this.createAddSpendForm.controls['notes'].enable();
+    this.createAddSpendForm.controls['comments'].enable();
   }
 
   initSpendRequest(budget: BudgetListResponse): void {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../services/api.service';
 import { Observable } from 'rxjs';
-import { Budget, BudgetListResponse, SpendRequest, TransferSpendRequest } from '../models/spend-budgets';
+import { Budget, BudgetListResponse, SpendRequest, TransferSpendRequest, SpendComments } from '../models/spend-budgets';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +40,10 @@ export class BudgetService {
 
   createSpend(spendRequest: SpendRequest): Observable<SpendRequest> {
     return this.apiService.createSpend(spendRequest);
+  }
+
+  createSpendComment(spendComment: SpendComments): Observable<SpendComments> {
+    return this.apiService.createSpendComment(spendComment);
   }
 
   issueCreditNote(spendRequest: SpendRequest): Observable<SpendRequest> {
