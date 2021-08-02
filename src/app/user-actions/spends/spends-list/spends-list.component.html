@@ -53,33 +53,92 @@
   <!-- spends done by user for the budget -->
   <!-- header -->
   <div class="row bg-info text-white mt-3">
-    <div class="col-2">Date</div>
-    <div class="col-2">PO Number</div>
+    <div class="col-3">Date / PO</div>
     <div class="col-1 text-right">Amount</div>
-    <div class="col-4">Notes</div>
-    <div class="col-2">By</div>
+    <div class="col-7">Comments</div>
+    <div class="col-1">&nbsp;</div>
   </div>
   <!-- end of header-->
 
-  <div *ngFor="let spend of budget.spendResponses">
+  <div *ngFor="let spend of budget.spends">
     <div class="row mt-1 mb-1">
-      <div class="col-2">
+      <div class="col-3">
         {{spend.createdDate | date:'dd-MMM-yy'}}
-      </div>
-      <div class="col-2">
-        {{spend.poNumber}}
+        <div>
+          {{spend.poNumber}}
+        </div>
       </div>
       <div class="col-1 text-right">
         {{spend.amount | number : '1.2-2'}}
       </div>
-      <div class="col-4">
-        {{spend.notes}}
+      <div class="col-7">
+
+        <div *ngFor="let sc of spend.spendComments">
+          <div>
+            <span>{{sc.createdDate | date:'dd-MM'}} - {{sc.createdByName}}</span>
+            <span *ngIf="sc.status > 0"> - <b>{{SpendStatus[sc.status]}}</b></span> <!-- only show status other then 'None'-->
+          </div>
+          <div>{{sc.comments}}</div>
+        </div>
       </div>
-      <div class="col-2">
-        {{spend.createdByName}}
+      <div class="col-1" *ngIf="budget.budgetType > 0"> <!-- 0=Monthly: No need insert comments. only for projects -->
+        <button type="button" class="btn btn-outline-dark btn-sm ml-2" [attr.data-cy-budget-ins-spend-comments]="spend.id"
+        (click)="openModal(contentInsertSpendCommentsDialog, spend.id)">+</button>
       </div>
     </div>
+    <div class="h-divider"></div>
   </div>
+
+
+
+
+    <!-- record spent modal -->
+    <ng-template #contentInsertSpendCommentsDialog let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Add Spend Comments</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-primary">ID: {{selectedSpendId}}</h6>
+
+        <form [formGroup]="createAddSpendCommentForm">
+          <div class="form-group">
+            <label class="text-primary" for="comments">Comments</label>
+            <span class="text-danger ml-1">*</span>
+            <div class="input-group">
+              <textarea class="form-control" formControlName="comments" id="comments" name="comments"
+                (change)="onCommentsChange($event)" placeholder=""></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="text-primary" for="spendStatusSelect">Spend Status</label>
+            <span class="text-danger ml-1">*</span>
+            <div class="input-group">
+              <select class="custom-select" name="spendStatusSelect" id="spendStatusSelect" formControlName="spendStatusSelect" (change)="onSpendStatusSelectChange($event)">
+                <option value="">Choose</option>
+                <option *ngFor="let ss of SpendStatus | enumKeyValue" [value]="ss.value">
+                  {{ss.key}}
+                </option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <div *ngIf="error" style="color: red">{{error}}</div>
+        <button type="button" id="create-spend-btn" name="create-spend-btn" [disabled]="saving" class="btn btn-primary"
+          (click)="createSpendComment()">
+          <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+          Submit
+        </button>
+      </div>
+    </ng-template>
+    <!-- endof comfirm modal -->
+
 
 </div>
 

@@ -24,6 +24,7 @@ import { BudgetsListComponent } from './spends/budgets/budgets-list/budgets-list
 import { BudgetsEditComponent } from './spends/budgets/budgets-edit/budgets-edit.component';
 import { BudgetEditDialogComponent } from './templates/budget-edit-dialog/budget-edit-dialog.component';
 import { ReportSpendAdjustmentsComponent } from './reports/templ/report-spend-adjustments/report-spend-adjustments.component';
+import { EnumKeyValueAdminPipe } from './enum-keyvalueAdmin.pipe';
 // import { SplitPipe } from '../common/split.pipe';
 
 @NgModule({
@@ -46,7 +47,7 @@ import { ReportSpendAdjustmentsComponent } from './reports/templ/report-spend-ad
     BudgetsEditComponent,
     BudgetEditDialogComponent,
     ReportSpendAdjustmentsComponent,
-    // MdateComponent,
+    EnumKeyValueAdminPipe,
     // SplitPipe
   ],
   imports: [

@@ -4,12 +4,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { SpendCategory } from '../../../models/index';
 import { Budget, createInstanceOfBudget, createInstanceOfBudgetAllocation } from '../../../../models/spend-budgets';
+import  * as BudgetTypesType from '../../../../models/budget-types';
 import { BudgetService } from '../../../../services/budget.service';
 import { UserService } from '../../../../services/user.service';
 import { SpendCategoryService } from '../../../services/spend-category.service';
 import { CareHome0 } from '../../../../residents/models/carehome';
 import { CarehomeService } from '../../../../residents/services/carehome.service';
 import { KeyPair } from '../../../../models/index';
+// import { EnumKeyValuePipe } from '../../../../../app/enum-keyvalue.pipe';
 
 @Component({
   selector: 'budgets-edit',
@@ -34,12 +36,16 @@ export class BudgetsEditComponent implements OnInit {
   showAddExtraBudgetAmountButton: boolean = false;
   isBudgetEditable: boolean = true;
   closeResult = '';
+  BudgetTypes = BudgetTypesType.BudgetTypes;
+
 
   createBudgetForm = new FormGroup({
     spendCategory: new FormControl(''),
     careHome: new FormControl(''),
     name: new FormControl(''),
     description: new FormControl(''),
+    budgetType: new FormControl(''),
+    budgetMonth: new FormControl(''),
     amount: new FormControl(''),
     dateFrom: new FormControl(''),
     dateTo: new FormControl(''),
@@ -47,7 +53,6 @@ export class BudgetsEditComponent implements OnInit {
     status: new FormControl(''),
     poCode: new FormControl(''),
     reason: new FormControl(''),
-    startMonth: new FormControl(''),
     numberOfMonths: new FormControl('')
   });
 
@@ -102,6 +107,8 @@ export class BudgetsEditComponent implements OnInit {
         this.isAddingNewBudget = true;
       }
     });
+
+    console.log('>>>', this.BudgetTypes)
   } //ngOninit
 
 
@@ -143,6 +150,11 @@ export class BudgetsEditComponent implements OnInit {
           this.budget = Object.assign(this.budget, data);
           this.loading = false;
           console.log('>>>', this.budget);
+          // Conv req for budgetTyps. returns 0 or 1 for Monthy and project. need to convert to angular enum
+          // if (this.budget.budgexxtType === xxBudgTypes.Project) {
+          //   this.budget.budgexxtType = BudgetxxxTypes.Project
+          // }
+          // console.log('>>>1', this.budget);
           this.setupBudgetEditForm(this.budget);
           this.setShowAddExtraBudgetAmountButton(this.budget);
           this.setIsBudgetEditable(this.budget);
@@ -170,14 +182,11 @@ export class BudgetsEditComponent implements OnInit {
         this.errors.push('Amount is required');
       }
     });
-
-    if (this.budget.recurrence.startMonth > 0 && this.budget.recurrence.numberOfMonths === 0) {
-      this.errors.push('If recurrence selected, num of months is required.');
+    if (this.budget.budgetType === this.BudgetTypes.Monthly && this.budget.budgetMonth ===  0) {
+      this.errors.push('If budget type is Monthly, budget month is required.');
     }
-    if (this.budget.recurrence.startMonth === 0) {
-      if (this.budget.dateFrom === '' || this.budget.dateTo === '') {
-        this.errors.push('Budget dates are required');
-      }
+    if (this.budget.budgetType === this.BudgetTypes.Project && (this.budget.dateFrom ===  '' || this.budget.dateTo ===  '')) {
+      this.errors.push('If budget type is Project, budget start and to dates are required.');
     }
     if (this.errors.length > 0) return;
 
@@ -238,6 +247,20 @@ export class BudgetsEditComponent implements OnInit {
     if (budget.status === 'Completed') {
       this.createBudgetForm.controls['status'].disable();
     }
+    // budgetMonth is NOT returned by query. Date is saved into dateFrom and dateTo values for Monthly and Project types
+    // parse month from dateFrom and set budgetMonth control
+    console.log('I am here0', this.budget.budgetType);
+    if (this.budget.budgetType === this.BudgetTypes.Monthly) {
+      console.log('I am here1', this.budget.budgetType);
+      this.createBudgetForm.controls['budgetType'].setValue(this.BudgetTypes.Monthly);
+      this.budget = Object.assign(this.budget, {
+        budgetMonth: new Date(this.budget.dateFrom).getMonth()+1
+      });
+      this.createBudgetForm.controls['budgetMonth'].setValue(this.budget.budgetMonth);
+    } else if (this.budget.budgetType == this.BudgetTypes.Project) {
+      console.log('I am here2', this.budget.budgetType);
+      this.createBudgetForm.controls['budgetType'].setValue(this.BudgetTypes.Project);
+    }
   }
 
 
@@ -266,18 +289,6 @@ export class BudgetsEditComponent implements OnInit {
   onDescriptionChange(event: any): void {
     this.budget = Object.assign(this.budget, {
       description: event.target.value,
-    });
-  }
-
-  onDateFromChange(date: any): void {
-    this.budget = Object.assign(this.budget, {
-      dateFrom: date,
-    });
-  }
-
-  onDateToChange(date: any): void {
-    this.budget = Object.assign(this.budget, {
-      dateTo: date,
     });
   }
 
@@ -321,18 +332,53 @@ export class BudgetsEditComponent implements OnInit {
     });
   }
 
-  onStartMonthChange(event: any): void {
-    let recr = {
-      ...this.budget.recurrence, startMonth: +event.target.value,
-    };
-    this.budget = Object.assign(this.budget, { recurrence: recr });
+  onBudgetTypeChange(event: any): void {
+    console.log('>>UUU', event.target.value);
+    // this._budgetType = event.target.value;
+    this.budget = Object.assign(this.budget, {
+      budgetType: +event.target.value,
+    });
+
+    if (this.budget.budgetType === this.BudgetTypes.Project) {
+      // Reset budget month and numOfMonth (recurrsion)
+      this.budget = Object.assign(this.budget, {
+        budgetMonth: 0,
+        numberOfMonths: 0
+      });
+      this.createBudgetForm.controls['budgetMonth'].setValue('');
+      this.createBudgetForm.controls['numberOfMonths'].setValue('');
+    } else {
+      // Monthly. reset dateFrom and dateTo
+      this.budget = Object.assign(this.budget, {
+        dateFrom: '',
+        dateTo: ''
+      });
+      this.createBudgetForm.controls['budgetMonth'].setValue(this.budget.budgetMonth);
+    }
+  }
+
+  onDateFromChange(date: any): void {
+    this.budget = Object.assign(this.budget, {
+      dateFrom: date,
+    });
+  }
+
+  onDateToChange(date: any): void {
+    this.budget = Object.assign(this.budget, {
+      dateTo: date,
+    });
+  }
+
+  onBudgetMonthChange(event: any): void {
+    this.budget = Object.assign(this.budget, {
+      budgetMonth: +event.target.value,
+    });
   }
 
   onNumberOfMonthsChange(event: any): void {
-    let recr = {
-      ...this.budget.recurrence, numberOfMonths: +event.target.value,
-    };
-    this.budget = Object.assign(this.budget, { recurrence: recr });
+    this.budget = Object.assign(this.budget, {
+      numberOfMonths: +event.target.value,
+    });
   }
 
 
