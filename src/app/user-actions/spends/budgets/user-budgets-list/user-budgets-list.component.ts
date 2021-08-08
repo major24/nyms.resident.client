@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { BudgetListResponse, SpendRequest, createSpendRequest } from '../../../../models/spend-budgets';
+import { BudgetListResponse, SpendRequest, createSpendRequest, Budget } from '../../../../models/spend-budgets';
 import { BudgetService } from '../../../../services/budget.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Util } from '../../../../helpers/utils';
@@ -15,6 +15,7 @@ import  * as BudgetTypesType from '../../../../models/budget-types';
 })
 export class UserBudgetsListComponent implements OnInit {
   budgets: BudgetListResponse[] = []
+  budgetNames: Budget[] = [];
   loading: boolean = false;
   saving: boolean = false;
   error: string = '';
@@ -27,12 +28,17 @@ export class UserBudgetsListComponent implements OnInit {
   endDate: string = '';
   SpendStatus = SpendStatusType.SpendStatus;
   BudgetTypes = BudgetTypesType.BudgetTypes;
+  referenceId: string = '';
 
   createAddSpendForm = new FormGroup({
     amount: new FormControl(''),
     comments: new FormControl(''),
     spendStatusSelect: new FormControl('')
   });
+
+  budgetListForm = new FormGroup({
+    projectTypes: new FormControl('')
+  })
 
   constructor(private router: Router,
     private budgetService: BudgetService,
@@ -42,7 +48,7 @@ export class UserBudgetsListComponent implements OnInit {
   ngOnInit(): void {
     this.startDate = this.util.getFirstDayOfTheMonth();
     this.endDate = this.util.getLastDayOfTheMonth();
-    this.loadBudgetsForUser(this.startDate, this.endDate);
+    this.loadBudgetNamesForUser();
   }
 
   loadBudgetsForUser(startDate: string, endDate: string): void {
@@ -53,6 +59,42 @@ export class UserBudgetsListComponent implements OnInit {
         next: (data) => {
           Object.assign(this.budgets, [...data]);
           console.log(this.budgets);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.log('Error fetching budgets', error);
+          this.loading = false;
+        }
+      });
+  }
+
+  loadBudgetNamesForUser(): void {
+    this.loading = true;
+    this.budgetNames = Object.assign([], []);
+    // default to string
+    this.budgetService.loadBudgetNamesForUser(BudgetTypesType.BudgetTypes.Project.toString())
+      .subscribe({
+        next: (data) => {
+          Object.assign(this.budgetNames, [...data]);
+          console.log('>>budNames', this.budgetNames);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.log('Error fetching budget names', error);
+          this.loading = false;
+        }
+      });
+  }
+
+  loadBudgetByReferenceId(refereneId: string): void {
+    this.loading = true;
+    this.budgets = Object.assign([], []);
+    this.budgetService.loadBudgetByReferenceId(refereneId)
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          this.budgets = Object.assign(this.budgets, [data]);
+          console.log('>>', this.budgets);
           this.loading = false;
         },
         error: (error) => {
@@ -73,6 +115,16 @@ export class UserBudgetsListComponent implements OnInit {
   getBudgetsByDate(): void {
     if (this.endDate === '' || this.startDate === '') return;
     this.loadBudgetsForUser(this.startDate, this.endDate);
+    // reset referenceid, so it will not fetch on createSpend..
+    this.referenceId = '';
+    this.budgetListForm.controls['projectTypes'].setValue('');
+  }
+
+  onProjectTypesChange(event: any): void {
+    this.referenceId = event.target.value;
+    if (this.referenceId) {
+      this.loadBudgetByReferenceId(this.referenceId);
+    }
   }
 
   onAmountChange(event: any): void {
@@ -134,7 +186,11 @@ export class UserBudgetsListComponent implements OnInit {
           this.poNumber = data.poNumber; // to display to user
           this.clearAddSpendDialog();
           this.disableAddSpendDialog();
-          this.loadBudgetsForUser(this.startDate, this.endDate);
+          if (this.referenceId) {
+            this.loadBudgetByReferenceId(this.referenceId);
+          } else {
+            this.loadBudgetsForUser(this.startDate, this.endDate);
+          }
           this.saving = false;
           // reset spend request with current bud id.
           // Incase user wants to submit more items for the same bud id
@@ -151,16 +207,19 @@ export class UserBudgetsListComponent implements OnInit {
   clearAddSpendDialog(): void {
     this.createAddSpendForm.controls['amount'].setValue('');
     this.createAddSpendForm.controls['comments'].setValue('');
+    this.createAddSpendForm.controls['spendStatusSelect'].setValue('');
   }
 
   disableAddSpendDialog(): void {
     this.createAddSpendForm.controls['amount'].disable();
     this.createAddSpendForm.controls['comments'].disable();
+    this.createAddSpendForm.controls['spendStatusSelect'].disable();
   }
 
   enableAddSpendDialog(): void {
     this.createAddSpendForm.controls['amount'].enable()
     this.createAddSpendForm.controls['comments'].enable();
+    this.createAddSpendForm.controls['spendStatusSelect'].enable();
   }
 
   initSpendRequest(budget: BudgetListResponse): void {

@@ -49,7 +49,7 @@ export class SpendsListComponent implements OnInit {
         next: (data) => {
           console.log(data);
           this.budget = Object.assign(this.budget, data);
-          console.log('>>', data);
+          console.log('>>budget', data);
           this.loading = false;
         },
         error: (error) => {
@@ -58,8 +58,6 @@ export class SpendsListComponent implements OnInit {
         }
       });
   }
-
-
 
   onCommentsChange(event: any): void {
     this.spendComments = Object.assign(this.spendComments, { comments:  event.target.value });

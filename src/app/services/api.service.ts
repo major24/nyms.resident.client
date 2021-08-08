@@ -233,6 +233,10 @@ export class ApiService {
     return this.http.get<BudgetListResponse[]>(`/api/user/budgets/${startDate}/${endDate}`);
   }
 
+  loadBudgetNamesForUser(budgetType: string): Observable<Budget[]> {
+    return this.http.get<Budget[]>(`/api/user/budgetnames/${budgetType}`);
+  }
+
   loadBudgetsForSummryReport(startDate: string, endDate: string): Observable<BudgetListResponse[]> {
     return this.http.get<BudgetListResponse[]>(`/api/admin/budgets/${startDate}/${endDate}/spends`);
   }
