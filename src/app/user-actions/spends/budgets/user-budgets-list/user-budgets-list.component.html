@@ -1,43 +1,70 @@
 <div class="container mt-4">
 
   <h1 class="display-4">Budgets</h1>
-  <div class="row">
-    <div class="col-3">
-      <mdate
-      [dateValue]="startDate"
-      [labelDateCtl]="'Start Date'"
-      [DateCtlId]="'startDate'"
-      (dateCtlSelectedEvent)="onStartDateChange($event)"
-      ></mdate>
-    </div>
+  <form [formGroup]="budgetListForm">
+    <div class="row">
+      <div class="col-3">
+        <!-- <mdate
+        [dateValue]="startDate"
+        [labelDateCtl]="'Start Date'"
+        [DateCtlId]="'startDate'"
+        (dateCtlSelectedEvent)="onStartDateChange($event)"
+        ></mdate> -->
+        <div class="form-group">
+          <label class="text-primary" for="budgetMonth">Month</label>
+          <span class="text-danger ml-1">*</span>
+          <div class="input-group">
+            <select id="budgetMonth" name="budgetMonth" formControlName="budgetMonth" class="form-control"
+              (change)="onBudgetMonthChange($event)">
+              <option value="">Choose</option>
+              <option *ngFor="let month of months; let index" [value]=month.key>
+                {{month.value}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-    <div class="col-3">
-      <mdate
-      [dateValue]="endDate"
-      [labelDateCtl]="'End Date'"
-      [DateCtlId]="'endDate'"
-      (dateCtlSelectedEvent)="onEndDateChange($event)"
-      ></mdate>
-    </div>
+      <div class="col-3">
+        <!-- <mdate
+        [dateValue]="endDate"
+        [labelDateCtl]="'End Date'"
+        [DateCtlId]="'endDate'"
+        (dateCtlSelectedEvent)="onEndDateChange($event)"
+        ></mdate> -->
+        <div class="form-group">
+          <label class="text-primary" for="budgetYear">Year</label>
+          <span class="text-danger ml-1">*</span>
+          <div class="input-group">
+            <select id="budgetMonth" name="budgetYear" formControlName="budgetYear" class="form-control"
+              (change)="onBudgetYearChange($event)">
+              <option *ngFor="let year of years; let index" [value]=year.key>
+                {{year.value}}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-    <div class="col-2 mt-2">
-      <div>&nbsp;</div>
-      <button class="btn btn-primary btn-sm mt-1" id="go-btn"  (click)="getBudgetsByDate()">Go</button>
-    </div>
+      <div class="col-2 mt-2">
+        <div>&nbsp;</div>
+        <button class="btn btn-primary btn-sm mt-1" id="go-btn"  (click)="getBudgetsByDate()">Go</button>
+      </div>
 
-    <div class="col-4">
-      <form [formGroup]="budgetListForm">
-        <label class="text-primary">Project Types</label>
-        <select class="custom-select" name="projectTypes" id="projectTypes" formControlName="projectTypes" (change)="onProjectTypesChange($event)">
-          <option value="">Choose...</option>
-          <option *ngFor="let bn of budgetNames;" [value]="bn.referenceId">
-            {{bn.name}}
-          </option>
-        </select>
-      </form>
+      <div class="col-4">
+        <!-- <form [formGroup]="budgetListForm"> -->
+          <label class="text-primary">Project Types</label>
+          <select class="custom-select" name="projectTypes" id="projectTypes" formControlName="projectTypes" (change)="onProjectTypesChange($event)">
+            <option value="">Choose...</option>
+            <option *ngFor="let bn of budgetNames;" [value]="bn.referenceId">
+              {{bn.name}}
+            </option>
+          </select>
+        <!-- </form> -->
+      </div>
     </div>
+  </form>
 
-  </div>
 
 
   <div *ngIf="loading" class="spinner-border"></div>

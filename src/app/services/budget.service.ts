@@ -18,6 +18,10 @@ export class BudgetService {
     return this.apiService.loadBudgetsForUser(startDate, endDate);
   }
 
+  loadBudgetsForUserByMonth(month: number, year: number): Observable<BudgetListResponse[]> {
+    return this.apiService.loadBudgetsForUserByMonth(month, year);
+  }
+
   loadBudgetNamesForUser(budgetType: string): Observable<Budget[]> {
     return this.apiService.loadBudgetNamesForUser(budgetType);
   }

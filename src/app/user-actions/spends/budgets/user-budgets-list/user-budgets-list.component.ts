@@ -7,6 +7,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Util } from '../../../../helpers/utils';
 import * as SpendStatusType from '../../../../models/spend-status';
 import  * as BudgetTypesType from '../../../../models/budget-types';
+import { KeyPair } from '../../../../models/index';
+import Months from '../../../../helpers/months';
+import Years from '../../../../helpers/years';
 
 @Component({
   selector: 'user-budgets-list',
@@ -24,11 +27,13 @@ export class UserBudgetsListComponent implements OnInit {
   selectedBudget: BudgetListResponse;
   spendRequest: SpendRequest = createSpendRequest();
   poNumber: string = '...';
-  startDate: string = '';
-  endDate: string = '';
   SpendStatus = SpendStatusType.SpendStatus;
   BudgetTypes = BudgetTypesType.BudgetTypes;
   referenceId: string = '';
+  // startDate: string = '';
+  // endDate: string = '';
+  month: number = 0;
+  year: number = 2021;
 
   createAddSpendForm = new FormGroup({
     amount: new FormControl(''),
@@ -37,8 +42,13 @@ export class UserBudgetsListComponent implements OnInit {
   });
 
   budgetListForm = new FormGroup({
+    budgetMonth: new FormControl(''),
+    budgetYear: new FormControl(''),
     projectTypes: new FormControl('')
   })
+
+  months: KeyPair[] = Months;
+  years: KeyPair[] = Years;
 
   constructor(private router: Router,
     private budgetService: BudgetService,
@@ -46,15 +56,18 @@ export class UserBudgetsListComponent implements OnInit {
     private modalService: NgbModal) { }
 
   ngOnInit(): void {
-    this.startDate = this.util.getFirstDayOfTheMonth();
-    this.endDate = this.util.getLastDayOfTheMonth();
+    // this.startDate = this.util.getFirstDayOfTheMonth();
+    // this.endDate = this.util.getLastDayOfTheMonth();
+    // load Project type budgets..
     this.loadBudgetNamesForUser();
+    // set default year
+    this.budgetListForm.controls['budgetYear'].setValue(this.year);
   }
 
-  loadBudgetsForUser(startDate: string, endDate: string): void {
+  loadBudgetsForUser(month: number, year: number): void {
     this.loading = true;
     this.budgets = Object.assign([], []);
-    this.budgetService.loadBudgetsForUser(startDate, endDate)
+    this.budgetService.loadBudgetsForUserByMonth(month, year)
       .subscribe({
         next: (data) => {
           Object.assign(this.budgets, [...data]);
@@ -104,17 +117,23 @@ export class UserBudgetsListComponent implements OnInit {
       });
   }
 
-  onStartDateChange(event: any): void {
-    this.startDate = event;
+  // onStartDateChange(event: any): void {
+  //   this.startDate = event;
+  // }
+  // onEndDateChange(event: any): void {
+  //   this.endDate = event;
+  // }
+  onBudgetMonthChange(event: any): void {
+    this.month = event.target.value;
   }
 
-  onEndDateChange(event: any): void {
-    this.endDate = event;
+  onBudgetYearChange(event: any): void {
+    this.year = event.target.value;
   }
 
   getBudgetsByDate(): void {
-    if (this.endDate === '' || this.startDate === '') return;
-    this.loadBudgetsForUser(this.startDate, this.endDate);
+    if (this.month <= 0 || this.year <= 0) return;
+    this.loadBudgetsForUser(this.month, this.year);
     // reset referenceid, so it will not fetch on createSpend..
     this.referenceId = '';
     this.budgetListForm.controls['projectTypes'].setValue('');
@@ -189,7 +208,7 @@ export class UserBudgetsListComponent implements OnInit {
           if (this.referenceId) {
             this.loadBudgetByReferenceId(this.referenceId);
           } else {
-            this.loadBudgetsForUser(this.startDate, this.endDate);
+            this.loadBudgetsForUser(this.month, this.year);
           }
           this.saving = false;
           // reset spend request with current bud id.

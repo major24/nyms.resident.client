@@ -11,7 +11,7 @@ import { SpendCategoryService } from '../../../services/spend-category.service';
 import { CareHome0 } from '../../../../residents/models/carehome';
 import { CarehomeService } from '../../../../residents/services/carehome.service';
 import { KeyPair } from '../../../../models/index';
-// import { EnumKeyValuePipe } from '../../../../../app/enum-keyvalue.pipe';
+import Months from '../../../../helpers/months';
 
 @Component({
   selector: 'budgets-edit',
@@ -68,21 +68,7 @@ export class BudgetsEditComponent implements OnInit {
     { "key": 'Cancelled', "value": "Cancelled" }
   ];
 
-  months: KeyPair[] = [
-    { "key": 1, "value": "January" },
-    { "key": 2, "value": "February" },
-    { "key": 3, "value": "March" },
-    { "key": 4, "value": "April" },
-    { "key": 5, "value": "May" },
-    { "key": 6, "value": "June" },
-    { "key": 7, "value": "July" },
-    { "key": 8, "value": "August" },
-    { "key": 9, "value": "September" },
-    { "key": 10, "value": "October" },
-    { "key": 11, "value": "November" },
-    { "key": 12, "value": "December" }
-  ];
-
+  months: KeyPair[] = Months;
 
   constructor(private router: Router,
     private _Activatedroute: ActivatedRoute,
