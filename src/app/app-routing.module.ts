@@ -23,6 +23,11 @@ import { BudgetsListComponent } from './admin/spends/budgets/budgets-list/budget
 import { SpendsListComponent } from './user-actions/spends/spends-list/spends-list.component';
 import { BudgetsEditComponent } from './admin/spends/budgets/budgets-edit/budgets-edit.component';
 import { UserBudgetsListComponent } from './user-actions/spends/budgets/user-budgets-list/user-budgets-list.component';
+import { MeetingCategoryListComponent } from './admin/meetings/categories/meeting-category-list/meeting-category-list.component';
+// import { MeetingAgendaListComponent } from './admin/meetings/agendas/meeting-agenda-list/meeting-agenda-list.component';
+import { MeetingsEditComponent } from './user-actions/meetings/meetings-edit/meetings-edit.component';
+import { MeetingsListComponent } from './user-actions/meetings/meetings-list/meetings-list.component';
+import { MeetingActionItemListComponent } from './admin/meetings/actions/meeting-action-item-list/meeting-action-item-list.component';
 const routes: Routes = [
     {
         path: '',
@@ -116,12 +121,32 @@ const routes: Routes = [
         component: BudgetsEditComponent
     },
     {
+        path: 'admin/meeting-category-list',
+        component: MeetingCategoryListComponent,
+        canActivate: [AuthAdminGuard]
+    },
+    {
+        path: 'admin/meeting-action-item-list',
+        component: MeetingActionItemListComponent,
+        canActivate: [AuthAdminGuard]
+    },
+    {
         path: 'user/spends-list/:referenceId',
         component: SpendsListComponent
     },
     {
         path: 'user/budgets-list',
         component: UserBudgetsListComponent
+    },
+    {
+        path: 'user/meetings-list',
+        component: MeetingsListComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'user/meetings-edit/:referenceId',
+        component: MeetingsEditComponent,
+        canActivate: [AuthGuard]
     },
     {
         path: 'server-error',

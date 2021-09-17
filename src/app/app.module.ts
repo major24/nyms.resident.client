@@ -40,6 +40,11 @@ import { DashboardUserActionsComponent } from './user-actions/dashboard-user-act
 import { SpendsListComponent } from './user-actions/spends/spends-list/spends-list.component';
 import { UserBudgetsListComponent } from './user-actions/spends/budgets/user-budgets-list/user-budgets-list.component';
 import { EnumKeyValuePipe } from './enum-keyvalue.pipe';
+import { MeetingsListComponent } from './user-actions/meetings/meetings-list/meetings-list.component';
+import { MeetingsEditComponent } from './user-actions/meetings/meetings-edit/meetings-edit.component';
+import { MeetingAgendaEditTmplComponent } from './common/templates/meeting-agenda-edit-tmpl/meeting-agenda-edit-tmpl.component';
+import { MeetingAgendaViewTmplComponent } from './common/templates/meeting-agenda-view-tmpl/meeting-agenda-view-tmpl.component';
+import { Mdatev2Component } from './common/templates/mdatev2/mdatev2.component';
 // import { SplitPipe } from './common/split.pipe';
 // import { ModalSetExitComponent } from './common/modal-set-exit/modal-set-exit.component';
 
@@ -91,7 +96,12 @@ export function tokenGetter() {
     DashboardUserActionsComponent,
     SpendsListComponent,
     UserBudgetsListComponent,
-    EnumKeyValuePipe
+    EnumKeyValuePipe,
+    MeetingsListComponent,
+    MeetingsEditComponent,
+    MeetingAgendaEditTmplComponent,
+    MeetingAgendaViewTmplComponent,
+    Mdatev2Component
     // SplitPipe
   ],
   providers: [

@@ -3,9 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser, Role, SpendRequest, TransferSpendRequest } from '../models/index';
 import { EnquiryResident, CareHome, CareHome0, Resident, EnquiryAction } from '../residents/models/index';
-import { ResidentSchedule, Schedule } from '../admin/models/index';
 import { Budget, BudgetListResponse, SpendComments } from '../models/spend-budgets';
+import { MeetingCategory, MeetingActionItem, Meeting } from '../../app/models/index';
+
 import {
+  ResidentSchedule,
+  Schedule,
   InvoiceData,
   InvoiceCommentsRequest,
   BillingCycle,
@@ -284,7 +287,45 @@ export class ApiService {
   }
 
 
+  // Meeting and agendas
+  loadMeetingCategories(): Observable<MeetingCategory[]> {
+    return this.http.get<MeetingCategory[]>(`/api/meetings/categories`);
+  }
 
+  loadMeetingCategoriesAndActionItems(): Observable<MeetingCategory[]> {
+    return this.http.get<MeetingCategory[]>(`/api/meetings/categories/action-items`);
+  }
 
+  createMeetingCategory(meetingCategory: MeetingCategory): Observable<MeetingCategory> {
+    return this.http.post<MeetingCategory>(`/api/meetings/categories`, meetingCategory);
+  }
+
+  updateMeetingCategory(meetingCategory: MeetingCategory): Observable<MeetingCategory> {
+    return this.http.post<MeetingCategory>(`/api/meetings/categories/${meetingCategory.id}`, meetingCategory);
+  }
+
+  createMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+    return this.http.post<MeetingActionItem>(`/api/meetings/action-items`, meetingActionItem);
+  }
+
+  updateMeetingAgenda(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+    return this.http.post<MeetingActionItem>(`/api/meetings/action-items/${meetingActionItem.id}`, meetingActionItem);
+  }
+
+  loadMeetings(): Observable<Meeting[]> {
+    return this.http.get<Meeting[]>(`/api/meetings/meetings`);
+  }
+
+  loadMeeting(referenceId: string): Observable<Meeting> {
+    return this.http.get<Meeting>(`/api/meetings/meetings/${referenceId}`);
+  }
+
+  createMeeting(meeting: Meeting): Observable<Meeting> {
+    return this.http.post<Meeting>(`/api/meetings/meetings`, meeting);
+  }
+
+  updateMeeting(meeting: Meeting): Observable<Meeting> {
+    return this.http.post<Meeting>(`/api/meetings/meetings/${meeting.referenceId}`, meeting);
+  }
 
 }

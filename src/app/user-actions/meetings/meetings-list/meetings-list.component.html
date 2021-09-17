@@ -1,0 +1,59 @@
+<div class="container mt-4">
+
+  <h1 class="display-4">Meetings</h1>
+  <div *ngIf="loading" class="spinner-border"></div>
+
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-md text-right">
+        <button id="add-category" class="btn btn-primary btn-sm" (click)="navigateToMeetingEdit()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3" *ngIf="meetings.length === 0">
+    <div class="col-5">
+      Meetings not found.
+    </div>
+  </div>
+
+    <!-- header -->
+    <div class="row bg-info text-white mb-3" *ngIf="meetings.length > 0">
+      <div class="col-5">
+        Title
+      </div>
+      <div class="col-3">
+        Date
+      </div>
+      <div class="col-1">
+        Owner
+      </div>
+      <div class="col-1">
+
+      </div>
+    </div>
+    <!-- end of header-->
+
+    <div *ngFor="let meeting of meetings">
+      <div class="row mt-1">
+        <div class="col-5">
+          {{meeting.title}}
+          <div>
+            {{meeting.description}}
+          </div>
+        </div>
+        <div class="col-3">
+          {{meeting.meetingDate}}
+        </div>
+        <div class="col-2">
+          {{meeting.ownerId}}
+        </div>
+        <div class="col-1">
+            <a [attr.data-cy-meeting-edit]="meeting.referenceId" [routerLink]="['/user/meetings-edit/', meeting.referenceId]">Edit</a>
+        </div>
+      </div>
+    </div>
+    <!-- end of meetings loop-->
+
+
+</div>

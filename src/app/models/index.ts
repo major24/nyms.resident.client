@@ -5,3 +5,7 @@ export * from './role';
 export * from './spend-budgets';
 export * from './spend-status';
 export * from './budget-types';
+export * from './meeting-category';
+export * from './meeting-action-item';
+export * from './meeting-action-request';
+export * from './meeting';

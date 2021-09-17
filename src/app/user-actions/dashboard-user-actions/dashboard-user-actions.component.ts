@@ -21,4 +21,8 @@ export class DashboardUserActionsComponent implements OnInit {
     this.router.navigate(['/user/spends-list', {}]);
   }
 
+  navToUserMeetings(): void {
+    this.router.navigate(['/user/meetings-list', {}])
+  }
+
 }

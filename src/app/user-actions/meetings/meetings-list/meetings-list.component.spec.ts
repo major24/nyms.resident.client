@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BudgetEditDialogComponent } from './budget-edit-dialog.component';
+import { MeetingsListComponent } from './meetings-list.component';
 
-describe('BudgetEditDialogComponent', () => {
-  let component: BudgetEditDialogComponent;
-  let fixture: ComponentFixture<BudgetEditDialogComponent>;
+describe('MeetingsListComponent', () => {
+  let component: MeetingsListComponent;
+  let fixture: ComponentFixture<MeetingsListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BudgetEditDialogComponent ]
+      declarations: [ MeetingsListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BudgetEditDialogComponent);
+    fixture = TestBed.createComponent(MeetingsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
