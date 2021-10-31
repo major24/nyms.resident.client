@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-// import { FormGroup, FormControl } from '@angular/forms';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MeetingCategory, MeetingActionItem, MeetingActionRequest, Meeting } from '../../../../../src/app/models/index';
+import { MeetingCategory, MeetingActionRequest, Meeting, MeetingActionItem } from '../../../../../src/app/models/index';
 import { MeetingService } from '../../../../app/services/meeting.service';
 import { Util } from '../../../helpers/';
 import { Observable } from 'rxjs';
@@ -17,10 +17,11 @@ export class MeetingsEditComponent implements OnInit {
   loading: boolean = false;
   errors: string[] = [];
   saving: boolean = false;
+  closeResult = '';
   routePath: string = '';
   isAddingNewMeeting: boolean = false;
   pageHeaderForMeetingType = 'Create';
-  priorities = ['High', 'Medium', 'Low'];
+  // priorities = ['High', 'Medium', 'Low'];
   actionOwners: any[] = [
     { id: 1, name: 'Yogi Yogen' },
     { id: 2, name: 'Kumarn Dran' }
@@ -32,8 +33,10 @@ export class MeetingsEditComponent implements OnInit {
   // For add new meetings: As soon as the categories and act items fetched
   // convert them to Actions array. Use this arr show on UI, add new items etc and send it back to server...
   meetingActionRequests: MeetingActionRequest[] = [];
-  initMeetingActionRequest: MeetingActionRequest = { id: 0, meetingCategoryId: 0, meetingActionItemId: 0, ownerId: 0, startDate: '', completionDate: '', priority: '', isAdhoc: '', checked: false, name: '', description: '' }
-  newMeeting: Meeting = { id: 0, referenceId: '', title: '', description: '', meetingDate: '', ownerId: 0, status: '', meetingActions: [], deletedIds: [] }
+  // selectedMeetingActionRequests: MeetingActionRequest[] = [];
+  initMeetingActionRequest: MeetingActionRequest = { id: 0, meetingCategoryId: 0, meetingActionItemId: 0, ownerId: 0, startDate: '', completionDate: '', priority: '', isAdhoc: false, checked: false, name: '', description: '', frequency: '', repetition: 0 }
+  newMeeting: Meeting = { id: 0, referenceId: '', title: '', meetingDate: '', ownerId: 0, status: '', meetingActions: [] }
+  selectedActionItem: MeetingActionItem = { id: 0, meetingCategoryId: 0, name: '', description: '', isAdhoc: false };
 
   // meeting: Meeting = this.newMeeting;
 
@@ -41,7 +44,8 @@ export class MeetingsEditComponent implements OnInit {
     private _Activatedroute: ActivatedRoute,
     private _router: Router,
     private meetingService: MeetingService,
-    private readonly util: Util) { }
+    private readonly util: Util,
+    private modalService: NgbModal) { }
 
   ngOnInit(): void {
     // this.routePath = this._Activatedroute.snapshot.routeConfig.path;
@@ -49,19 +53,13 @@ export class MeetingsEditComponent implements OnInit {
     // console.log(this._router.url); // /user/meetings-edit/add OR /user/meetings-edit/c0f4f811-caa4-4800-80d7-c93456e5c9ea
 
     this._Activatedroute.paramMap.subscribe((params) => {
-      // console.log('>>', params);
       if (params && params.get('referenceId')) {
         this.referenceId = params.get('referenceId');
         if (this.referenceId === 'add') {
           this.isAddingNewMeeting = true;
-          // this.loadMeetingCategoriesAndActionItems();
-          // this.loadMeetingCategoriesAndActionItems();
           this.newMeeting = Object.assign(this.newMeeting, { meetingDate: { year: this.todayDate.getFullYear(), month: this.todayDate.getMonth() + 1, day: this.todayDate.getDate() } })
         } else {
           this.pageHeaderForMeetingType = 'Edit';
-          // console.log('>>>>', referenceId);
-          // this.loadMeetingCategories();
-          // this.loadMeeting(referenceId);
         }
         this.loadMeetingCategoriesAndActionItems();
       }
@@ -115,11 +113,13 @@ export class MeetingsEditComponent implements OnInit {
     categories.map(c => {
       c.meetingActionItems.map(a => {
         const x = Object.assign({}, this.initMeetingActionRequest, {
+          id: -1,
           meetingCategoryId: a.meetingCategoryId,
-          id: a.id, // MN meetingActionItemId
+          meetingActionItemId: a.id, // MN meetingActionItemId
           name: a.name,
           description: a.description,
-          startDate: { year: this.todayDate.getFullYear(), month: this.todayDate.getMonth() + 1, day: this.todayDate.getDate() }
+          startDate: { year: this.todayDate.getFullYear(), month: this.todayDate.getMonth() + 1, day: this.todayDate.getDate() },
+          checked: true,  // Defalut to true. all actions are checked to goto db, unless uncheck by user
         });
         // console.log(x);
         this.meetingActionRequests.push(x);
@@ -203,16 +203,16 @@ export class MeetingsEditComponent implements OnInit {
       });
   }
 
-  addNewMeetingAction(): void {
-    if (this.selectedCategoryId === 0) return;
-    const x = Object.assign({}, this.initMeetingActionRequest, {
-      meetingCategoryId: this.selectedCategoryId,
-      id: -1, // MN meetingActionItemId
-      name: '',
-      description: ''
-    });
-    this.meetingActionRequests.push(x);
-  }
+  // addNewMeetingAction(): void {
+  //   if (this.selectedCategoryId === 0) return;
+  //   const x = Object.assign({}, this.initMeetingActionRequest, {
+  //     id: -1, // MN meetingActionItemId
+  //     meetingCategoryId: +this.selectedCategoryId,
+  //     name: '',
+  //     description: ''
+  //   });
+  //   this.meetingActionRequests.push(x);
+  // }
 
   onCancel(): void {
     this._router.navigate(['/user/meetings-list', {}]);
@@ -225,7 +225,8 @@ export class MeetingsEditComponent implements OnInit {
     meetingToBeSend.meetingDate = this.util.convertAngDateToString(meetingToBeSend.meetingDate);
 
     let meetingActionReqToBeSend: MeetingActionRequest[] = [];
-    this.meetingActionRequests.filter(a => a.checked) // take only checked ones..
+
+    this.meetingActionRequests.filter(a => a.meetingCategoryId === +this.selectedCategoryId && a.checked === true) // take only checked ones..
       .map(a => {
         const x = Object.assign({}, a);
         x.startDate = this.util.convertAngDateToString(a.startDate);
@@ -233,19 +234,28 @@ export class MeetingsEditComponent implements OnInit {
         meetingActionReqToBeSend.push(x);
       });
 
+    if (!meetingToBeSend.title) {
+      this.errors.push('Meeting title is required.');
+      return;
+    }
     // validate atleast one item is checked?
     if (meetingActionReqToBeSend.length <= 0) {
       this.errors.push('Atleast one action item to be checked before submitting.');
       return;
     }
-
     // if NEW ACTION is added, validate act.name is submitted?
     const newItemsWithMissingNames = meetingActionReqToBeSend.filter(a => a.id === -1 && a.name === ''); // MN meetingActionItemId
     if (newItemsWithMissingNames.length > 0) {
       this.errors.push('Newly added action items should have a name.');
       return;
     }
-
+    // ensure completion date is included
+    meetingActionReqToBeSend.map(a => {
+      if (!a.completionDate) {
+        this.errors.push('Completion date is required');
+        return;
+      }
+    });
     // if completion date added, then ensure the date is later than start date.
     meetingActionReqToBeSend.map(a => {
       let stDate = (a.startDate != '') ? new Date(a.startDate) : '';
@@ -258,7 +268,7 @@ export class MeetingsEditComponent implements OnInit {
     });
 
     // find deleted actions
-    meetingToBeSend.deletedIds = this.meetingActionRequests.filter(a => !a.checked && a.id > 0).map(v => v.id);
+    //meetingToBeSend.deletedIds = this.meetingActionRequests.filter(a => !a.checked && a.id > 0).map(v => v.id);
     if (this.errors.length > 0) return;
 
     console.log('>>rdy to submit', meetingToBeSend);
@@ -336,6 +346,62 @@ export class MeetingsEditComponent implements OnInit {
         },
       });
   }
+
+  updatedNewActionItem(eventData: any): void {
+    console.log('>>>evet', eventData);
+    const x = Object.assign({}, this.initMeetingActionRequest, {
+      id: -1, // MN meetingActionItemId
+      meetingCategoryId: +this.selectedCategoryId,
+      name: eventData.name,
+      description: eventData.description,
+      startDate: { year: this.todayDate.getFullYear(), month: this.todayDate.getMonth() + 1, day: this.todayDate.getDate() },
+      checked: true,  // Defalut to true. all actions are checked to goto db, unless uncheck by user
+    });
+    // console.log(x);
+    this.meetingActionRequests.push(x);
+    this.modalService.dismissAll();
+  }
+
+  // open from template
+  openModal(contentAdd: any, id: number, meetingCategoryId: number) {
+    if (this.selectedCategoryId === 0) return;
+    // this.selectedActionId = +id;
+    // this.error = '';
+    // if (this.selectedActionId > 0) {
+    //   this.meetingCategories.map(c => {
+    //     c.meetingActionItems.map(a => {
+    //       if (a.id === this.selectedActionId) {
+    //         this.selectedActionItem = Object.assign(this.selectedActionItem, a);
+    //         return;
+    //       }
+    //     });
+    //   });
+    // } else if (this.selectedActionId === -1 && meetingCategoryId > 0) {
+    //   this.selectedActionItem = Object.assign({}, this.initActionItem, {
+    //     id: id,
+    //     meetingCategoryId: meetingCategoryId
+    //   });
+    // }
+    this.open(contentAdd);
+  }
+  // private
+  open(content) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', backdrop: 'static' }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
 
 
 }

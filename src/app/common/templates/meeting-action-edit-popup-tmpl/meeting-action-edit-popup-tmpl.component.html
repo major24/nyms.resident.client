@@ -1,0 +1,29 @@
+<div class="modal-body">
+  <div class="form-group">
+    <label class="text-primary" for="name">Name</label>
+    <span class="text-danger ml-1">*</span>
+    <div class="input-group">
+      <input type="text" class="form-control" id="name" name="name" [(ngModel)]="selectedOrNewActionItem.name" placeholder="">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="text-primary" for="description">Description</label>
+    <div class="input-group">
+      <textarea class="form-control"  id="description" name="description" [(ngModel)]="selectedOrNewActionItem.description" placeholder=""></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="text-primary" for="description">Description</label>
+    <div class="input-group">
+      <input type="checkbox" [checked]="selectedOrNewActionItem.isAdhoc === true"  id="isAdhoc" name="isAdhoc" [(ngModel)]="selectedOrNewActionItem.isAdhoc" />
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <div *ngIf="error" style="color: red">{{error}}</div>
+  <button type="button" id="update-action-item" class="btn btn-primary" (click)="updateActionItem()">
+    <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+    Save
+  </button>
+</div>

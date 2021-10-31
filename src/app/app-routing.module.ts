@@ -28,6 +28,7 @@ import { MeetingCategoryListComponent } from './admin/meetings/categories/meetin
 import { MeetingsEditComponent } from './user-actions/meetings/meetings-edit/meetings-edit.component';
 import { MeetingsListComponent } from './user-actions/meetings/meetings-list/meetings-list.component';
 import { MeetingActionItemListComponent } from './admin/meetings/actions/meeting-action-item-list/meeting-action-item-list.component';
+import { MeetingCategoryEditComponent } from './admin/meetings/categories/meeting-category-edit/meeting-category-edit.component';
 const routes: Routes = [
     {
         path: '',
@@ -124,6 +125,10 @@ const routes: Routes = [
         path: 'admin/meeting-category-list',
         component: MeetingCategoryListComponent,
         canActivate: [AuthAdminGuard]
+    },
+    {
+        path: 'admin/meeting-category-edit',
+        component: MeetingCategoryEditComponent
     },
     {
         path: 'admin/meeting-action-item-list',

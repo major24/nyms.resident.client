@@ -1,40 +1,34 @@
 <div class="container mt-4">
+
   <h1 class="display-4">{{pageHeaderForMeetingType}} Meetings</h1>
-  <div class="container">
-    <p>===isAddingNewMeeting {{isAddingNewMeeting}}</p>
-    <div class="form-group">
-      <label for="title">
-        <h6 class="text-primary">Title<span class="text-danger ml-1">*</span></h6>
-      </label>
-      <input type="text" class="form-control" id="title" name="title" [(ngModel)]="newMeeting.title"
-      placeholder="">
-    </div>
 
-    <div class="form-group">
-      <label for="description">
-        <h6 class="text-primary">Description</h6>
-      </label>
-      <textarea class="form-control" id="description" name="description" [(ngModel)]="newMeeting.description"
-      placeholder=""></textarea>
-    </div>
-
-    <div>
-      <label class="text-primary" for="meetingDate">Meeting Date</label>
-      <div class="input-group" style="width: 16rem;">
-        <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="newMeeting.meetingDate"
-          id="meetingDate" name="meetingDate" ngbDatepicker #d1="ngbDatepicker" [readonly]="true">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
+  <div class="container"> <!--1st container title, date -->
+    <div class="row">
+      <div class="col-8">
+        <div class="form-group">
+          <label for="title">
+            <h6 class="text-primary">Title<span class="text-danger ml-1">*</span></h6>
+          </label>
+          <input type="text" class="form-control" id="title" name="title" [(ngModel)]="newMeeting.title"
+          placeholder="">
+        </div>
+      </div>
+      <div class="col-4">
+        <div>
+          <label class="text-primary" for="meetingDate">Meeting Date</label>
+          <div class="input-group" style="width: 16rem;">
+            <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="newMeeting.meetingDate"
+              id="meetingDate" name="meetingDate" ngbDatepicker #d1="ngbDatepicker" [readonly]="true">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+  </div> <!--1st container title, date -->
 
-
-    <p>===newMeeting= {{newMeeting|json}}</p>
-    <hr />
-    <p>===meetingActionRequests= {{meetingActionRequests|json}}</p>
-    <hr />
-    <!-- meeting category select box-->
+  <div class="container"> <!--1st category dropbox -->
     <div class="row">
       <div class="col-8">
         <label class="text-primary" for="meetingCategory">Meeting Category</label>
@@ -51,23 +45,56 @@
       </div>
       <div class="col-4">
         <div>&nbsp;</div>
-        <div class="mt-1 text-right"><button type="button" class="btn btn-outline-dark btn-sm mr-1" (click)="addNewMeetingAction()">+</button></div>
+        <button type="button" class="btn btn-primary btn-md" (click)="openModal(contentAdd, -1, selectedCategoryId)" style='font-size:14px;'>+</button>
       </div>
     </div>
+  </div>
 
-    <div class="mt-1">&nbsp;</div>
+  <div class="mt-1">&nbsp;</div>
 
-    <!-- actions grid - draw based on category selection id -->
-    <ng-container class="row" *ngFor="let act of meetingActionRequests">
+  <meeting-action-edit-tmpl
+    [meetingActionRequests]="meetingActionRequests"
+    [selectedCategoryId]="selectedCategoryId"
+    [actionOwners]="actionOwners">
+  </meeting-action-edit-tmpl>
+
+  <!-- set dialog modal -->
+  <ng-template #contentAdd let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Action Item</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <meeting-action-edit-popup-tmpl
+      [selectedOrNewActionItem]="selectedActionItem"
+      [saving]="saving"
+      (selectedOrNewActionItemUpdatedEvent)="updatedNewActionItem($event)"></meeting-action-edit-popup-tmpl>
+
+  </ng-template>
+  <!-- end of dialog-->
+
+
+
+
+
+<div class="container">
+    <hr /><hr />
+    <p>===newMeeting= {{newMeeting|json}}</p>
+    <hr />
+    <p>===meetingActionRequests= {{meetingActionRequests|json}}</p>
+    <hr />
+
+    <!-- <ng-container class="row" *ngFor="let act of meetingActionRequests">
       <div *ngIf="selectedCategoryId==act.meetingCategoryId">
         <div class="col-12">
           <div class="row">
-            <div class="col-4"> <!--first col-->
+            <div class="col-4">
               <h5 *ngIf="!act.checked" class="text-primary">{{act.name}}</h5>
               <h5 *ngIf="act.checked" class="p-1 mb-2 bg-success text-white">{{act.name}}</h5>
               <div>{{act.description}}</div>
 
-              <div *ngIf="act.id === -1">  <!--MN meetingActionItemId-->
+              <div *ngIf="act.id === -1">
                 <div class="text-primary mt-1">Name and Description</div>
                 <div>
                   <input type="text" class="form-control" id="title2" name="title2" [(ngModel)]="act.name"
@@ -78,9 +105,9 @@
                   placeholder=""></textarea>
                 </div>
               </div>
-            </div> <!--endof first col-->
+            </div>
 
-            <div class="col-4"> <!--second col-->
+            <div class="col-4">
               <div>
                 <label class="text-primary" for="startDate">Start Date</label>
                 <div class="input-group">
@@ -101,9 +128,9 @@
                   </div>
                 </div>
               </div>
-            </div> <!--endof second col-->
+            </div>
 
-            <div class="col-3"> <!--third col-->
+            <div class="col-3">
               <div class="ml-5">
                 <div>
                   <label class="text-primary" for="priority">Priority</label>
@@ -124,7 +151,7 @@
                   </select>
                 </div>
               </div>
-            </div> <!--endof third col-->
+            </div>
 
             <div class="col-1">
               <div class="text-right">
@@ -136,8 +163,8 @@
         </div>
 
         <div class="h-divider"></div>
-      </div> <!-- endof if stmt for matching cat ids-->
-    </ng-container>
+      </div>
+    </ng-container> -->
 
     <!-- save button -->
     <div class="container">

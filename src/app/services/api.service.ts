@@ -287,30 +287,35 @@ export class ApiService {
   }
 
 
-  // Meeting and agendas
-  loadMeetingCategories(): Observable<MeetingCategory[]> {
-    return this.http.get<MeetingCategory[]>(`/api/meetings/categories`);
-  }
-
+  // Meeting categories and action items
   loadMeetingCategoriesAndActionItems(): Observable<MeetingCategory[]> {
-    return this.http.get<MeetingCategory[]>(`/api/meetings/categories/action-items`);
+    return this.http.get<MeetingCategory[]>(`/api/meetings/categories-and-actions-items`);
   }
 
   createMeetingCategory(meetingCategory: MeetingCategory): Observable<MeetingCategory> {
-    return this.http.post<MeetingCategory>(`/api/meetings/categories`, meetingCategory);
+    return this.http.post<MeetingCategory>(`/api/meetings/categories-and-actions-items`, meetingCategory);
   }
 
-  updateMeetingCategory(meetingCategory: MeetingCategory): Observable<MeetingCategory> {
-    return this.http.post<MeetingCategory>(`/api/meetings/categories/${meetingCategory.id}`, meetingCategory);
+  updateMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+    return this.http.post<MeetingActionItem>(`/api/meetings/categories/action-items/${meetingActionItem.id}`, meetingActionItem);
   }
 
-  createMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
-    return this.http.post<MeetingActionItem>(`/api/meetings/action-items`, meetingActionItem);
+  insertMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+    return this.http.post<MeetingActionItem>(`/api/meetings/categories/action-items`, meetingActionItem);
   }
 
-  updateMeetingAgenda(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
-    return this.http.post<MeetingActionItem>(`/api/meetings/action-items/${meetingActionItem.id}`, meetingActionItem);
-  }
+
+  // loadMeetingCategoriesAndActionItems(): Observable<MeetingCategory[]> {
+  //   return this.http.get<MeetingCategory[]>(`/api/meetings/categories/action-items`);
+  // }
+  // updateMeetingCategory(meetingCategory: MeetingCategory): Observable<MeetingCategory> {
+  //   return this.http.post<MeetingCategory>(`/api/meetings/categories/${meetingCategory.id}`, meetingCategory);
+  // }
+  // createMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+  //   return this.http.post<MeetingActionItem>(`/api/meetings/action-items`, meetingActionItem);
+  // }
+
+
 
   loadMeetings(): Observable<Meeting[]> {
     return this.http.get<Meeting[]>(`/api/meetings/meetings`);

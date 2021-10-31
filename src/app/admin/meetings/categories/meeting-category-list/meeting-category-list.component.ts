@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { FormGroup, FormControl } from '@angular/forms';
-import { MeetingCategory } from '../../../../models/index';
+import { Router } from '@angular/router';
+import { MeetingCategory, MeetingActionItem } from '../../../../models/index';
 import { MeetingService } from '../../../../services/meeting.service';
 
 @Component({
@@ -11,29 +11,28 @@ import { MeetingService } from '../../../../services/meeting.service';
 })
 export class MeetingCategoryListComponent implements OnInit {
   loading: boolean = false;
-  selectedCategoryId: number;
+  selectedActionId: number;
   error: string = '';
   saving: boolean = false;
   closeResult = '';
   meetingCategories: MeetingCategory[] = [];
-  newMeetingCategory: MeetingCategory = { id: 0, name: '', description: '', meetingActionItems: [] };  // meetingAgendas: [] }
-  initMeetingCategory: MeetingCategory = { id: 0, name: '', description: '', meetingActionItems: [] }; // meetingAgendas: [] }
+  initActionItem: MeetingActionItem = { id: 0, meetingCategoryId: 0, name: '', description: '', isAdhoc: false};
+  selectedActionItem: MeetingActionItem = { id: 0, meetingCategoryId: 0, name: '', description: '', isAdhoc: false};
 
-  createMeetingCategoryForm = new FormGroup({
-    name: new FormControl(''),
-    description: new FormControl('')
-  });
-
-  constructor(private meetingService: MeetingService,
+  constructor(private meetingService: MeetingService, private router: Router,
     private modalService: NgbModal) { }
 
   ngOnInit(): void {
-    this.loadMeetingCategories();
+    this.loadMeetingCategoriesAndActionItems();
   }
 
-  loadMeetingCategories(): void {
+  navToMeetingCategoryActionItemsEdit(): void {
+    this.router.navigate(['/admin/meeting-category-edit', {}]);
+  }
+
+  loadMeetingCategoriesAndActionItems(): void {
     this.loading = true;
-    this.meetingService.loadMeetingCategories()
+    this.meetingService.loadMeetingCategoriesAndActionItems()
     .subscribe({
       next: (data) => {
         Object.assign(this.meetingCategories, [...data]);
@@ -47,65 +46,43 @@ export class MeetingCategoryListComponent implements OnInit {
     });
   }
 
-  onNameChange(event: any): void {
-    if (event.target.value) {
-      this.newMeetingCategory = Object.assign(this.newMeetingCategory, { name: event.target.value });
-    }
+  updateActionItem(actionItem :MeetingActionItem): void {
+    this.saving = true;
+    this.meetingService.updateMeetingActionItem(actionItem)
+      .subscribe({
+        next: (data) => {
+          this.modalService.dismissAll();
+          this.saving = false;
+          // reload data
+          this.loadMeetingCategoriesAndActionItems();
+        },
+        error: (error) => {
+          console.log('Error updating meeting action item', error);
+          this.saving = false;
+        }
+      });
   }
 
-  onDescriptionChange(event: any): void {
-    if (event.target.value) {
-      this.newMeetingCategory = Object.assign(this.newMeetingCategory, { description: event.target.value });
-    }
+  insertActionItem(actionItem :MeetingActionItem): void {
+    this.saving = true;
+    this.meetingService.insertMeetingActionItem(actionItem)
+      .subscribe({
+        next: (data) => {
+          this.modalService.dismissAll();
+          this.saving = false;
+          // reload data
+          this.loadMeetingCategoriesAndActionItems();
+        },
+        error: (error) => {
+          console.log('Error updating meeting action item', error);
+          this.saving = false;
+        }
+      });
   }
 
-  saveCategory(): void {
-    this.error = '';
-    if (this.newMeetingCategory.name == '') {
-      this.error = 'Please fill in all required fields.';
-      return;
-    }
-
-    if (this.newMeetingCategory.id === 0) {
-      this.saving = true;
-      this.meetingService.createMeetingCategory(this.newMeetingCategory)
-        .subscribe({
-          next: (data) => {
-            this.modalService.dismissAll();
-            this.saving = false;
-            // reload data
-            this.loadMeetingCategories();
-            this.clearCategoryDialog();
-          },
-          error: (error) => {
-            console.log('Error creating category ', error);
-            this.saving = false;
-          }
-        });
-    } else {
-      this.saving = true;
-      this.meetingService.updateMeetingCategory(this.newMeetingCategory)
-        .subscribe({
-          next: (data) => {
-            this.modalService.dismissAll();
-            this.saving = false;
-            // reload data
-            this.loadMeetingCategories();
-            this.clearCategoryDialog();
-          },
-          error: (error) => {
-            console.log('Error creating category ', error);
-            this.saving = false;
-          }
-        });
-    }
+  updatedSelectedOrNewActionItem(eventData: any): void {
+    eventData.id > 0 ? this.updateActionItem(eventData) : this.insertActionItem(eventData);
   }
-
-  clearCategoryDialog(): void {
-    this.createMeetingCategoryForm.controls['name'].setValue('');
-    this.createMeetingCategoryForm.controls['description'].setValue('');
-  }
-
 
 
 
@@ -114,18 +91,24 @@ export class MeetingCategoryListComponent implements OnInit {
 
 
   // open from template
-  openModal(contentAdd: any, id: number) {
-    this.selectedCategoryId = +id;
+  openModal(contentAdd: any, id: number, meetingCategoryId: number) {
+    this.selectedActionId = +id;
     this.error = '';
-    if (this.selectedCategoryId > 0) {
-      const selectedCategory = this.meetingCategories.find(c => c.id === this.selectedCategoryId);
-      this.newMeetingCategory = Object.assign(this.newMeetingCategory, selectedCategory);
-    } else {
-      this.newMeetingCategory = Object.assign(this.newMeetingCategory, this.initMeetingCategory);
+    if (this.selectedActionId > 0) {
+      this.meetingCategories.map(c => {
+        c.meetingActionItems.map(a => {
+          if (a.id === this.selectedActionId) {
+            this.selectedActionItem = Object.assign(this.selectedActionItem, a);
+            return;
+          }
+        });
+      });
+    } else if (this.selectedActionId === -1 && meetingCategoryId > 0) {
+      this.selectedActionItem = Object.assign({}, this.initActionItem, {
+        id: id,
+        meetingCategoryId: meetingCategoryId
+      });
     }
-    this.createMeetingCategoryForm.controls['name'].setValue(this.newMeetingCategory.name);
-    this.createMeetingCategoryForm.controls['description'].setValue(this.newMeetingCategory.description);
-
     this.open(contentAdd);
   }
   // private
@@ -145,8 +128,5 @@ export class MeetingCategoryListComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
-
-
-
 
 }

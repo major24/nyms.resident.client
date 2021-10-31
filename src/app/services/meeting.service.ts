@@ -9,11 +9,7 @@ import { MeetingCategory, MeetingActionItem, Meeting } from '../../app/models/in
 export class MeetingService {
 
   constructor(private apiService: ApiService) { }
-
-  loadMeetingCategories(): Observable<MeetingCategory[]> {
-    return this.apiService.loadMeetingCategories();
-  }
-
+  // categories and action items (not Actions)
   loadMeetingCategoriesAndActionItems(): Observable<MeetingCategory[]> {
     return this.apiService.loadMeetingCategoriesAndActionItems();
   }
@@ -22,17 +18,28 @@ export class MeetingService {
     return this.apiService.createMeetingCategory(meetingCategory);
   }
 
-  updateMeetingCategory(meetingCategory: MeetingCategory): Observable<MeetingCategory> {
-    return this.apiService.updateMeetingCategory(meetingCategory);
+  updateMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+    return this.apiService.updateMeetingActionItem(meetingActionItem);
   }
 
-  createMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
-    return this.apiService.createMeetingActionItem(meetingActionItem);
+  insertMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+    return this.apiService.insertMeetingActionItem(meetingActionItem);
   }
 
-  updateMeetingActionItems(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
-    return this.apiService.updateMeetingAgenda(meetingActionItem);
-  }
+
+  // loadMeetingCategoriesAndActionItems(): Observable<MeetingCategory[]> {
+  //   return this.apiService.loadMeetingCategoriesAndActionItems();
+  // }
+  // updateMeetingCategory(meetingCategory: MeetingCategory): Observable<MeetingCategory> {
+  //   return this.apiService.updateMeetingCategory(meetingCategory);
+  // }
+  // createMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+  //   return this.apiService.createMeetingActionItem(meetingActionItem);
+  // }
+  // updateMeetingActionItems(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+  //   return this.apiService.updateMeetingAgenda(meetingActionItem);
+  // }
+
 
   loadMeetings(): Observable<Meeting[]> {
     return this.apiService.loadMeetings();

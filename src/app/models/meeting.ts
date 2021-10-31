@@ -5,10 +5,10 @@ export interface Meeting {
   referenceId: string,
   // meetingCategoryId: number,
   title: string,
-  description: string,
+  // description: string,
   meetingDate: string,
   ownerId: number,
   status: string,
   meetingActions: MeetingActionRequest[],
-  deletedIds: number[]
+  // deletedIds: number[]
 }

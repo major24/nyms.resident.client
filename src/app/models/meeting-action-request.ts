@@ -7,8 +7,10 @@ export interface MeetingActionRequest {
   startDate: string,
   completionDate: string,
   priority: string,
-  isAdhoc: string,
+  isAdhoc: boolean,
   checked: boolean,
   name: string,
-  description: string
+  description: string,
+  frequency: string,
+  repetition: number
 }

@@ -3,5 +3,5 @@ export interface MeetingActionItem {
   meetingCategoryId: number,
   name: string,
   description: string,
-  isAdhoc: string
+  isAdhoc: boolean
 }

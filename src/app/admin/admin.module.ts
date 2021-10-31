@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { routes } from './admin-routing.module';
 import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.component';
@@ -26,9 +27,10 @@ import { ReportSpendAdjustmentsComponent } from './reports/templ/report-spend-ad
 import { EnumKeyValueAdminPipe } from './enum-keyvalueAdmin.pipe';
 import { MeetingCategoryEditComponent } from './meetings/categories/meeting-category-edit/meeting-category-edit.component';
 import { MeetingCategoryListComponent } from './meetings/categories/meeting-category-list/meeting-category-list.component';
-// import { MeetingAgendaListComponent } from './meetings/agendas/meeting-agenda-list/meeting-agenda-list.component';
 import { MeetingActionItemListComponent } from './meetings/actions/meeting-action-item-list/meeting-action-item-list.component';
+// import { MeetingActionItemEditTmplComponent } from '../common/templates/meeting-action-item-edit-tmpl/meeting-action-item-edit-tmpl.component';
 // import { SplitPipe } from '../common/split.pipe';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -52,16 +54,19 @@ import { MeetingActionItemListComponent } from './meetings/actions/meeting-actio
     EnumKeyValueAdminPipe,
     MeetingCategoryEditComponent,
     MeetingCategoryListComponent,
-    // MeetingAgendaListComponent,
+    // MeetingActionItemEditTmplComponent,
     MeetingActionItemListComponent,
+
     // SplitPipe
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     NgbModule,
     MdateModule,
     ChartsModule,
+    SharedModule,
     RouterModule.forChild(routes)
   ],
   providers: []
