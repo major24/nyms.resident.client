@@ -32,21 +32,6 @@ export class MeetingService {
     return this.apiService.updateMeetingAction(meetingAction);
   }
 
-
-  // loadMeetingCategoriesAndActionItems(): Observable<MeetingCategory[]> {
-  //   return this.apiService.loadMeetingCategoriesAndActionItems();
-  // }
-  // updateMeetingCategory(meetingCategory: MeetingCategory): Observable<MeetingCategory> {
-  //   return this.apiService.updateMeetingCategory(meetingCategory);
-  // }
-  // createMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
-  //   return this.apiService.createMeetingActionItem(meetingActionItem);
-  // }
-  // updateMeetingActionItems(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
-  //   return this.apiService.updateMeetingAgenda(meetingActionItem);
-  // }
-
-
   loadMeetings(): Observable<Meeting[]> {
     return this.apiService.loadMeetings();
   }

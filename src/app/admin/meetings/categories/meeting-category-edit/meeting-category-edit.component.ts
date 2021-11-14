@@ -32,9 +32,7 @@ export class MeetingCategoryEditComponent implements OnInit {
   }
 
   updatedNewActionItem(eventData: any): void {
-    console.log('>>>', eventData);
     this.meetingActionItems.push(eventData);
-    console.log('>>=', this.meetingActionItems);
     this.meetingCategory.meetingActionItems = this.meetingActionItems;
     this.modalService.dismissAll();
   }
@@ -48,7 +46,7 @@ export class MeetingCategoryEditComponent implements OnInit {
       return;
     }
     if (this.meetingActionItems.length === 0) {
-      this.errors.push('Atleast one actions(s) is required.');
+      this.errors.push('Atleast one action is required.');
       return;
     }
     const emptyActions = this.meetingActionItems.filter(a => !a.name);

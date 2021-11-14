@@ -318,18 +318,6 @@ export class ApiService {
     return this.http.post<MeetingActionRequest>(`/api/meetings/actions/${meetingAction.id}`, meetingAction);
   }
 
-  // loadMeetingCategoriesAndActionItems(): Observable<MeetingCategory[]> {
-  //   return this.http.get<MeetingCategory[]>(`/api/meetings/categories/action-items`);
-  // }
-  // updateMeetingCategory(meetingCategory: MeetingCategory): Observable<MeetingCategory> {
-  //   return this.http.post<MeetingCategory>(`/api/meetings/categories/${meetingCategory.id}`, meetingCategory);
-  // }
-  // createMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
-  //   return this.http.post<MeetingActionItem>(`/api/meetings/action-items`, meetingActionItem);
-  // }
-
-
-
   loadMeetings(): Observable<Meeting[]> {
     return this.http.get<Meeting[]>(`/api/meetings/meetings`);
   }
