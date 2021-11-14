@@ -9,3 +9,5 @@ export * from './meeting-category';
 export * from './meeting-action-item';
 export * from './meeting-action-request';
 export * from './meeting';
+export * from './meeting-action-pending-jobs-response';
+export * from './meeting-action-completed-response';

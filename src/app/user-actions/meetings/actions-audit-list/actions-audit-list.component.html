@@ -1,0 +1,89 @@
+<div class="container mt-4">
+  <h1 class="display-4">Completed Actions</h1>
+
+  <div class="container"> <!--1st owners drop box -->
+    <div class="row">
+      <!-- <div class="col-3">
+        <select class="input-group" style="height:2rem;" id='owner' [(ngModel)]="selectedOwnerId">
+          <option value=0>Choose...</option>
+          <option *ngFor="let owner of actionOwners" [value]="owner.userId">
+            {{owner.forename}}
+          </option>
+          <option value=-1>All Owners</option>
+        </select>
+      </div> -->
+      <!-- <div class="col-1 text-left">
+        <button id="load-actions-by-user-id" class="btn btn-primary btn-sm" (click)="go()">Go</button>
+      </div> -->
+      <!-- <div class="col-4 text-right">
+        <select class="input-group" style="height:2rem;" id='categories' (change)="onCategoryChange($event)">
+          <option value=0>Choose...</option>
+          <option *ngFor="let cate of distinctMeetingCategories" [value]="cate">
+            {{cate}}
+          </option>
+          <option value='All'>All Categories</option>
+        </select>
+      </div>
+    </div>
+  </div> 1st -->
+
+  <hr />
+  <div class="container">
+    <div class="row">
+      <div class="col-lg"><label class="text-primary">Action</label></div>
+      <div class="col-sm"><label class="text-primary">Completion Date</label></div>
+      <div class="col-sm"><label class="text-primary">Owner</label></div>
+      <div class="col-sm"><label class="text-primary">Priority</label></div>
+      <div class="col-sm"><label class="text-primary">Completed</label></div>
+      <div class="col-sm"><label class="text-primary">Completed Date</label></div>
+      <div class="col-sm"><label class="text-primary"></label></div>
+    </div>
+      <action-view-audit-tmpl *ngFor="let action of actions"
+      [meetingAction]="action"
+      (actionAuditedEvent)="actionAudited($event)"></action-view-audit-tmpl>
+  </div>
+
+
+
+  <!-- set dialog modal -->
+  <ng-template #contentAdd let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Audit Action</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <h5><span class="text-primary">{{selectedAction.name}}</span></h5>
+
+      <label class="text-primary" for="audited">Audited</label>
+      <div >
+        <input type="radio" [(ngModel)]="selectedAction.audited" value="Pass" id="audit-pass" name="audited">
+        <label>Pass</label>
+      </div>
+      <div >
+        <input type="radio" [(ngModel)]="selectedAction.audited" value="Fail" id="audit-fail" name="audited">
+        <label>Fail</label>
+      </div>
+
+      <div class="form-group">
+        <label class="text-primary" for="comment">Comment</label>
+        <span class="text-danger ml-1">*</span>
+        <div class="input-group">
+          <input type="text" class="form-control"  id="comment" name="comment" [(ngModel)]="selectedAction.comment">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div *ngIf="error" style="color: red">{{error}}</div>
+      <button type="button" id="save-audited-action" [disabled]="saving" class="btn btn-primary" (click)="updateAuditedAction()">
+        <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+        Save
+      </button>
+    </div>
+  </ng-template>
+  <!-- endof dialog modal -->
+
+</div>

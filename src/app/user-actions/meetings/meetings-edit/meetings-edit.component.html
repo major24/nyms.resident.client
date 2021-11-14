@@ -1,196 +1,35 @@
 <div class="container mt-4">
 
-  <h1 class="display-4">{{pageHeaderForMeetingType}} Meetings</h1>
+  <h1 class="display-4">Edit Meetings</h1>
 
   <div class="container"> <!--1st container title, date -->
     <div class="row">
       <div class="col-8">
-        <div class="form-group">
-          <label for="title">
-            <h6 class="text-primary">Title<span class="text-danger ml-1">*</span></h6>
-          </label>
-          <input type="text" class="form-control" id="title" name="title" [(ngModel)]="newMeeting.title"
-          placeholder="">
-        </div>
+        <h5 class="text-primary">{{newMeeting.title}}</h5>
       </div>
       <div class="col-4">
-        <div>
-          <label class="text-primary" for="meetingDate">Meeting Date</label>
-          <div class="input-group" style="width: 16rem;">
-            <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="newMeeting.meetingDate"
-              id="meetingDate" name="meetingDate" ngbDatepicker #d1="ngbDatepicker" [readonly]="true">
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
-            </div>
-          </div>
-        </div>
+        <h6 class="text-primary">{{newMeeting.meetingDate | date:'dd-MMM-yy'}}</h6>
       </div>
     </div>
   </div> <!--1st container title, date -->
 
-  <div class="container"> <!--1st category dropbox -->
-    <div class="row">
-      <div class="col-8">
-        <label class="text-primary" for="meetingCategory">Meeting Category</label>
-        <span class="text-danger ml-1">*</span>
-        <div>
-          <select class="input-group" style="height:2rem" id="meetingCategory" name="meetingCategory"
-            [(ngModel)]="selectedCategoryId">
-            <option value=0>Choose Category</option>
-            <option *ngFor="let mc of meetingCategories"
-              [value]=mc.id>{{mc.name}}
-            </option>
-          </select>
-        </div>
-      </div>
-      <div class="col-4">
-        <div>&nbsp;</div>
-        <button type="button" class="btn btn-primary btn-md" (click)="openModal(contentAdd, -1, selectedCategoryId)" style='font-size:14px;'>+</button>
-      </div>
-    </div>
-  </div>
-
   <div class="mt-1">&nbsp;</div>
 
   <meeting-action-edit-tmpl
-    [meetingActionRequests]="meetingActionRequests"
-    [selectedCategoryId]="selectedCategoryId"
-    [actionOwners]="actionOwners">
+    [meetingActionRequests]="newMeeting.meetingActions"
+    [actionOwners]="actionOwners"
+    [showFrequencyCtls]=false
+    [showActionSelectCheckboxCtl]=false
+    [showSaveButtonCtl]=true
+    (updatedActionEvent)="updatedAction($event)">
   </meeting-action-edit-tmpl>
 
-  <!-- set dialog modal -->
-  <ng-template #contentAdd let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Action Item</h4>
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
+  <div *ngIf="errors.length > 0">
+    <div *ngFor="let error of errors" style="color: red">
+      {{ error }}
     </div>
-    <meeting-action-edit-popup-tmpl
-      [selectedOrNewActionItem]="selectedActionItem"
-      [saving]="saving"
-      (selectedOrNewActionItemUpdatedEvent)="updatedNewActionItem($event)"></meeting-action-edit-popup-tmpl>
-
-  </ng-template>
-  <!-- end of dialog-->
-
-
-
-
-
-<div class="container">
-    <hr /><hr />
-    <p>===newMeeting= {{newMeeting|json}}</p>
-    <hr />
-    <p>===meetingActionRequests= {{meetingActionRequests|json}}</p>
-    <hr />
-
-    <!-- <ng-container class="row" *ngFor="let act of meetingActionRequests">
-      <div *ngIf="selectedCategoryId==act.meetingCategoryId">
-        <div class="col-12">
-          <div class="row">
-            <div class="col-4">
-              <h5 *ngIf="!act.checked" class="text-primary">{{act.name}}</h5>
-              <h5 *ngIf="act.checked" class="p-1 mb-2 bg-success text-white">{{act.name}}</h5>
-              <div>{{act.description}}</div>
-
-              <div *ngIf="act.id === -1">
-                <div class="text-primary mt-1">Name and Description</div>
-                <div>
-                  <input type="text" class="form-control" id="title2" name="title2" [(ngModel)]="act.name"
-                  placeholder="" />
-                </div>
-                <div>
-                  <textarea class="form-control" id="description2" name="description2" [(ngModel)]="act.description"
-                  placeholder=""></textarea>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-4">
-              <div>
-                <label class="text-primary" for="startDate">Start Date</label>
-                <div class="input-group">
-                  <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="act.startDate"
-                    id="startDate" name="startDate" ngbDatepicker #d24="ngbDatepicker" [readonly]="true">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="d24.toggle()" type="button"></button>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label class="text-primary" for="completionDate">Completion Date</label>
-                <div class="input-group">
-                  <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="act.completionDate"
-                    id="completionDate" name="completionDate" ngbDatepicker #d25="ngbDatepicker" [readonly]="true">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary calendar" (click)="d25.toggle()" type="button"></button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-3">
-              <div class="ml-5">
-                <div>
-                  <label class="text-primary" for="priority">Priority</label>
-                  <select class="input-group" style="height:2rem; width: 12rem;" id='priority' [(ngModel)]="act.priority">
-                    <option value=''>Choose...</option>
-                    <option *ngFor="let priority of priorities" [value]="priority">
-                      {{priority}}
-                    </option>
-                  </select>
-                </div>
-                <div>
-                  <label class="text-primary" for="owner">Owner</label>
-                  <select class="input-group" style="height:2rem; width: 12rem;" id='owner' [(ngModel)]="act.ownerId">
-                    <option value=0>Choose...</option>
-                    <option *ngFor="let owner of actionOwners" [value]="owner.id">
-                      {{owner.name}}
-                    </option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-1">
-              <div class="text-right">
-                <input style="width: 20px; height: 20px;" type="checkbox" value="" [(ngModel)]="act.checked"
-                  id="isActionSelected" name="isActionSelected">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="h-divider"></div>
-      </div>
-    </ng-container> -->
-
-    <!-- save button -->
-    <div class="container">
-      <div class="row">
-        <div class="col-md">
-          <div *ngIf="errors.length > 0">
-            <div *ngFor="let error of errors" style="color: red">
-              {{ error }}
-            </div>
-          </div>
-        </div>
-        <div class="col-md">
-          <div class="form-group mt-3 float-right">
-            <button id="cancel" class="btn btn-secondary" (click)="onCancel()">
-              Cancel
-            </button>
-            <button id="save" (click)="onSubmit()" [disabled]="saving" class="btn btn-primary ml-3">
-              <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
-              Save
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mb-5">&nbsp;</div>
-
   </div>
+
+  <div class="mb-5">&nbsp;</div>
+
 </div>

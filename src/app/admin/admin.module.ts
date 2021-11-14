@@ -27,8 +27,6 @@ import { ReportSpendAdjustmentsComponent } from './reports/templ/report-spend-ad
 import { EnumKeyValueAdminPipe } from './enum-keyvalueAdmin.pipe';
 import { MeetingCategoryEditComponent } from './meetings/categories/meeting-category-edit/meeting-category-edit.component';
 import { MeetingCategoryListComponent } from './meetings/categories/meeting-category-list/meeting-category-list.component';
-import { MeetingActionItemListComponent } from './meetings/actions/meeting-action-item-list/meeting-action-item-list.component';
-// import { MeetingActionItemEditTmplComponent } from '../common/templates/meeting-action-item-edit-tmpl/meeting-action-item-edit-tmpl.component';
 // import { SplitPipe } from '../common/split.pipe';
 import { SharedModule } from '../shared/shared.module';
 
@@ -54,9 +52,6 @@ import { SharedModule } from '../shared/shared.module';
     EnumKeyValueAdminPipe,
     MeetingCategoryEditComponent,
     MeetingCategoryListComponent,
-    // MeetingActionItemEditTmplComponent,
-    MeetingActionItemListComponent,
-
     // SplitPipe
   ],
   imports: [

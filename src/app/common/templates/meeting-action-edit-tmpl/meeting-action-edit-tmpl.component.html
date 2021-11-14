@@ -1,31 +1,18 @@
-<div *ngIf="selectedCategoryId > 0">
-  <div class="row">
-    <div class="col-5"><label class="text-primary">Action</label></div>
-    <div class="col-3"><label class="text-primary">completion Date</label></div>
-    <div class="col-2"><label class="text-primary">Owner</label></div>
-    <div class="col-2"><label class="text-primary">Priority</label></div>
-  </div>
+<div class="row">
+  <div class="col-5"><label class="text-primary">Action</label></div>
+  <div class="col-3"><label class="text-primary">completion Date</label></div>
+  <div class="col-2"><label class="text-primary">Owner</label></div>
+  <div class="col-2"><label class="text-primary">Priority</label></div>
 </div>
 
 <ng-container class="row" *ngFor="let act of meetingActionRequests">
-  <div *ngIf="selectedCategoryId==act.meetingCategoryId">
+  <div *ngIf="!act.completed">
     <div class="row">
       <div class="col-5">
-        <span>
+        <span *ngIf="showActionSelectCheckboxCtl">
           <input style="width: 20px; height: 20px;" type="checkbox" value="" [(ngModel)]="act.checked" id="isActionSelected" name="isActionSelected">
         </span>
-        <span class="text-primary ml-2">{{act.name}} may be longer</span>
-        <!-- <div *ngIf="act.id === -1">
-          <div class="text-primary mt-1">Name and Description</div>
-          <div>
-            <input type="text" class="form-control" id="title2" name="title2" [(ngModel)]="act.name"
-            placeholder="" />
-          </div>
-          <div>
-            <textarea class="form-control" id="description2" name="description2" [(ngModel)]="act.description"
-            placeholder=""></textarea>
-          </div>
-        </div> -->
+        <span class="text-primary ml-2">{{act.name}}</span>
       </div>
       <div class="col-3">
         <div class="input-group">
@@ -37,16 +24,32 @@
         </div>
       </div>
       <div class="col-2">
-        <div>
-          <select class="input-group" style="height:2rem; width: 10rem;" id='owner' [(ngModel)]="act.ownerId">
-            <option value=0>Choose...</option>
-            <option *ngFor="let owner of actionOwners" [value]="owner.id">
-              {{owner.name}}
-            </option>
-          </select>
-        </div>
-        <div>
-          <!-- <label class="text-primary for="frequency">Frequency</label> -->
+        <select class="input-group" style="height:2rem; width: 10rem;" id='owner' [(ngModel)]="act.ownerId">
+          <option value=0>Choose...</option>
+          <option *ngFor="let owner of actionOwners" [value]="owner.userId">
+            {{owner.forename}}
+          </option>
+        </select>
+      </div>
+      <div class="col-2">
+        <select class="input-group" style="height:2rem; width: 10rem;" id='priority' [(ngModel)]="act.priority">
+          <option value=''>Choose...</option>
+          <option *ngFor="let priority of priorities" [value]="priority">
+            {{priority}}
+          </option>
+        </select>
+      </div>
+    </div> <!-- end of 1st row -->
+    <div class="row"> <!-- 2nd row -->
+      <div class="col-5">
+        <textarea class="form-control" rows="1" id="description" name="description" [(ngModel)]="act.description"
+        placeholder=""></textarea>
+      </div>
+      <div class="col-3">
+
+      </div>
+      <div class="col-2">
+        <div *ngIf="showFrequencyCtls">
           <select class="input-group mt-2" style="height:2rem; width: 10rem;" id='frequency' [(ngModel)]="act.frequency">
             <option value="">Choose...</option>
             <option *ngFor="let fq of frequency" [value]="fq">
@@ -56,26 +59,42 @@
         </div>
       </div>
       <div class="col-2">
-        <div>
-          <select class="input-group" style="height:2rem; width: 10rem;" id='priority' [(ngModel)]="act.priority">
-            <option value=''>Choose...</option>
-            <option *ngFor="let priority of priorities" [value]="priority">
-              {{priority}}
-            </option>
-          </select>
-        </div>
-        <div>
-          <!--  <label class="text-primary mt-2" for="repetition">Repetition</label> -->
-          <select class="input-group mt-2" style="height:2rem; width: 10rem;" id='repetition' [(ngModel)]="act.repetition">
+        <div *ngIf="showFrequencyCtls">
+          <select class="input-group mt-2" style="height:2rem; width: 10rem;" id='repetition' [(ngModel)]="act.repetitive">
             <option value=0>Choose...</option>
             <option *ngFor="let rep of repetition" [value]="rep">
               {{rep}}
             </option>
           </select>
         </div>
+        <div class="text-right" *ngIf="showSaveButtonCtl">
+          <button id="save" (click)="updateAction(act.id)" [disabled]="saving" class="btn btn-outline-dark">
+            <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+            Save
+          </button>
+        </div>
       </div>
     </div>
-    <div class="h-divider"></div>
-
   </div>
+
+  <!-- if completed, show readonly text-->
+  <div *ngIf="act.completed">
+    <div class="row">
+      <div class="col-5">
+        <span class="text-primary ml-2">{{act.name}}</span>
+      </div>
+      <div class="col-3">
+        <span class="text-primary ml-2">{{act.completionDate.year}}-{{act.completionDate.month}}-{{act.completionDate.day}}</span>
+      </div>
+      <div class="col-2">
+        <span class="text-primary ml-2">{{act.forename}}</span>
+      </div>
+      <div class="col-2">
+        <span class="text-primary ml-2">{{act.priority}}</span>
+      </div>
+    </div>
+  </div>
+ <!-- endof of show readonly text-->
+
+  <div class="h-divider"></div>
 </ng-container>

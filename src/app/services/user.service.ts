@@ -90,6 +90,14 @@ export class UserService extends Store<CareHomeUser> {
     return this.apiService.loadRoles();
   }
 
+  public loadUsersByRoleId(roleId: number): Observable<CareHomeUser[]> {
+    return this.apiService.loadUsersByRoleId(roleId);
+  }
+
+  hasAccessToRole(roleId: number): Observable<boolean> {
+    return this.apiService.hasAccessToRole(roleId);
+  }
+
 
 }
 

@@ -17,14 +17,16 @@
     </div>
 
     <div class="col-md">
-      <div class="card" style="width: 18rem; height: 15rem;">
+      <div class="card" style="width: 18rem; height: 18rem;">
         <div class="card-header bg-info text-white" >
           <h5 class="card-title">Meetings</h5>
         </div>
         <div class="card-body bg-light">
           <p class="card-text">Manage meetings</p>
           <div>
-            <button id="user-spends-btn" class="btn btn-primary" style="width: 12rem;" (click)="navToUserMeetings()">Create Meetings</button>
+            <button id="user-meeting-btn" class="btn btn-primary" style="width: 12rem;" (click)="navToUserMeetings()">Manage Meetings</button>
+            <button id="user-meeting-btn" class="btn btn-primary mt-3" style="width: 12rem;" (click)="navToUserPendingActions()">Manage Actions</button>
+            <button *ngIf="showAuditActionsButton" id="user-meeting-btn" class="btn btn-primary mt-3" style="width: 12rem;" (click)="navToUserAuditActions()">Audit Actions</button>
           </div>
         </div>
       </div>

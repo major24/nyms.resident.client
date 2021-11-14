@@ -11,11 +11,19 @@
             <span class="text-danger ml-1">*</span>
             <div class="input-group">
               <input type="text" class="form-control" formControlName="categoryName"  id="categoryName" name="categoryName" placeholder="" [(ngModel)]="meetingCategory.name">
-              <button id="add-meeting-category" class="btn btn-primary btn-sm ml-5" (click)="openModal(contentAdd, -1, -1)">Add Action</button>
+              <button [disabled]="meetingCategory.name == ''" id="add-meeting-cat-action" class="btn btn-primary btn-sm ml-5" (click)="openModal(contentAdd, -1, -1)">Add Action</button>
             </div>
           </div>
         </form>
       </div>
+    </div>
+  </div>
+
+  <div class="container mt-2">
+    <div class="row" *ngFor="let act of meetingCategory.meetingActionItems">
+      <div class="col-lg">{{act.name}}</div>
+      <div class="col-lg">{{act.description}}</div>
+      <div class="col-lg">{{act.isAdhoc}}</div>
     </div>
   </div>
 

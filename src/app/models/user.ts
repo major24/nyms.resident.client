@@ -11,6 +11,7 @@ export interface User {
 }
 
 export interface CareHomeUser {
+  userId: number,
   referenceId: string;
   foreName: string;
   surName: string;

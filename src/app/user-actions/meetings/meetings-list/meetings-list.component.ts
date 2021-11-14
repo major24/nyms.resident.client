@@ -20,7 +20,7 @@ export class MeetingsListComponent implements OnInit {
   }
 
   navigateToMeetingEdit(): void {
-    this.router.navigate(['/user/meetings-edit/add', {}]);
+    this.router.navigate(['/user/meetings-create', {}]);
   }
 
   loadMeetings(): void {
@@ -32,13 +32,10 @@ export class MeetingsListComponent implements OnInit {
         this.loading = false;
       },
       error: (error) => {
-        console.log('Error fetching master categories ', error);
+        console.log('Error fetching meetings ', error);
         this.loading = false;
       }
     });
   }
-
-
-
 
 }

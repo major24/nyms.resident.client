@@ -24,11 +24,13 @@ import { SpendsListComponent } from './user-actions/spends/spends-list/spends-li
 import { BudgetsEditComponent } from './admin/spends/budgets/budgets-edit/budgets-edit.component';
 import { UserBudgetsListComponent } from './user-actions/spends/budgets/user-budgets-list/user-budgets-list.component';
 import { MeetingCategoryListComponent } from './admin/meetings/categories/meeting-category-list/meeting-category-list.component';
-// import { MeetingAgendaListComponent } from './admin/meetings/agendas/meeting-agenda-list/meeting-agenda-list.component';
 import { MeetingsEditComponent } from './user-actions/meetings/meetings-edit/meetings-edit.component';
 import { MeetingsListComponent } from './user-actions/meetings/meetings-list/meetings-list.component';
-import { MeetingActionItemListComponent } from './admin/meetings/actions/meeting-action-item-list/meeting-action-item-list.component';
 import { MeetingCategoryEditComponent } from './admin/meetings/categories/meeting-category-edit/meeting-category-edit.component';
+import { MeetingCreateComponent } from './user-actions/meetings/meeting-create/meeting-create.component';
+import { ActionsPendingListComponent } from './user-actions/meetings/actions-pending-list/actions-pending-list.component';
+import { ActionsAuditListComponent } from './user-actions/meetings/actions-audit-list/actions-audit-list.component';
+
 const routes: Routes = [
     {
         path: '',
@@ -131,9 +133,12 @@ const routes: Routes = [
         component: MeetingCategoryEditComponent
     },
     {
-        path: 'admin/meeting-action-item-list',
-        component: MeetingActionItemListComponent,
-        canActivate: [AuthAdminGuard]
+        path: 'user/actions-pending-list',
+        component: ActionsPendingListComponent,
+    },
+    {
+        path: 'user/actions-audit-list',
+        component: ActionsAuditListComponent
     },
     {
         path: 'user/spends-list/:referenceId',
@@ -146,6 +151,11 @@ const routes: Routes = [
     {
         path: 'user/meetings-list',
         component: MeetingsListComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'user/meetings-create',
+        component: MeetingCreateComponent,
         canActivate: [AuthGuard]
     },
     {

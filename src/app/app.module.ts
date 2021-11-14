@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { JwtInterceptor, ErrorInterceptorNoRefresh } from './helpers';
 
-// import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HomeComponent } from './common/home/home.component';
 import { LoginComponent } from './common/login/login.component';
 
@@ -42,15 +41,11 @@ import { UserBudgetsListComponent } from './user-actions/spends/budgets/user-bud
 import { EnumKeyValuePipe } from './enum-keyvalue.pipe';
 import { MeetingsListComponent } from './user-actions/meetings/meetings-list/meetings-list.component';
 import { MeetingsEditComponent } from './user-actions/meetings/meetings-edit/meetings-edit.component';
-import { MeetingAgendaEditTmplComponent } from './common/templates/meeting-agenda-edit-tmpl/meeting-agenda-edit-tmpl.component';
-import { MeetingAgendaViewTmplComponent } from './common/templates/meeting-agenda-view-tmpl/meeting-agenda-view-tmpl.component';
 import { Mdatev2Component } from './common/templates/mdatev2/mdatev2.component';
 import { SharedModule } from '../app/shared/shared.module';
-// import { MeetingActionEditPopupTmplComponent } from './common/templates/meeting-action-edit-popup-tmpl/meeting-action-edit-popup-tmpl.component';
-// import { MeetingActionEditTmplComponent } from './common/templates/meeting-action-edit-tmpl/meeting-action-edit-tmpl.component';
-// import { MeetingActionItemEditTmplComponent } from './common/templates/meeting-action-item-edit-tmpl/meeting-action-item-edit-tmpl.component';
-// import { SplitPipe } from './common/split.pipe';
-// import { ModalSetExitComponent } from './common/modal-set-exit/modal-set-exit.component';
+import { MeetingCreateComponent } from './user-actions/meetings/meeting-create/meeting-create.component';
+import { ActionsPendingListComponent } from './user-actions/meetings/actions-pending-list/actions-pending-list.component';
+import { ActionsAuditListComponent } from './user-actions/meetings/actions-audit-list/actions-audit-list.component';
 
 export function tokenGetter() {
   return localStorage.getItem('id_token');
@@ -59,7 +54,6 @@ export function tokenGetter() {
 @NgModule({
   imports: [
     BrowserModule,
-    // NgbModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
@@ -104,13 +98,10 @@ export function tokenGetter() {
     EnumKeyValuePipe,
     MeetingsListComponent,
     MeetingsEditComponent,
-    MeetingAgendaEditTmplComponent,
-    MeetingAgendaViewTmplComponent,
     Mdatev2Component,
-    // MeetingActionEditPopupTmplComponent,
-    // MeetingActionEditTmplComponent,
-    // MeetingActionItemEditTmplComponent
-    // SplitPipe
+    MeetingCreateComponent,
+    ActionsPendingListComponent,
+    ActionsAuditListComponent,
   ],
   providers: [
     //{ provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

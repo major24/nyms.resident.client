@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MeetingActionRequest } from '../../../models/meeting-action-request';
 
 @Component({
@@ -7,10 +7,13 @@ import { MeetingActionRequest } from '../../../models/meeting-action-request';
   styleUrls: ['./meeting-action-edit-tmpl.component.css']
 })
 export class MeetingActionEditTmplComponent implements OnInit {
-  // MEETING ACTION
   @Input() meetingActionRequests: MeetingActionRequest[] = [];
-  @Input() selectedCategoryId: number = 0;
   @Input() actionOwners: any = [];
+  @Input() showFrequencyCtls: boolean = false;
+  @Input() showActionSelectCheckboxCtl: boolean = false;
+  @Input() showSaveButtonCtl: boolean = false;
+  @Output() updatedActionEvent = new EventEmitter<any>();
+
   priorities = ['High', 'Medium', 'Low'];
   frequency = ['Weekly', 'Fortnight', 'Monthly'];
   repetition = [1,2,3,4,5,6,7,8,9,10]
@@ -20,7 +23,8 @@ export class MeetingActionEditTmplComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  updateAction(actionId: number): void {
+    this.updatedActionEvent.emit(actionId);
   }
 
 }

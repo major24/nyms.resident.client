@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { MeetingActionItemEditTmplComponent } from '../common/templates/meeting-action-item-edit-tmpl/meeting-action-item-edit-tmpl.component';
 import { MeetingActionEditTmplComponent } from '../common/templates/meeting-action-edit-tmpl/meeting-action-edit-tmpl.component';
 import { MeetingActionEditPopupTmplComponent } from '../common/templates/meeting-action-edit-popup-tmpl/meeting-action-edit-popup-tmpl.component';
+import { ActionViewTmplComponent } from '../common/templates/action-view-tmpl/action-view-tmpl.component';
+import { ActionViewAuditTmplComponent } from '../common/templates/action-view-audit-tmpl/action-view-audit-tmpl.component';
 
 @NgModule({
   imports: [
@@ -13,17 +14,19 @@ import { MeetingActionEditPopupTmplComponent } from '../common/templates/meeting
     NgbModule
   ],
   declarations:[
-    MeetingActionItemEditTmplComponent,
     MeetingActionEditTmplComponent,
-    MeetingActionEditPopupTmplComponent
+    MeetingActionEditPopupTmplComponent,
+    ActionViewTmplComponent,
+    ActionViewAuditTmplComponent
   ],
   exports: [
     CommonModule,
     FormsModule,
     NgbModule,
-    MeetingActionItemEditTmplComponent,
     MeetingActionEditTmplComponent,
-    MeetingActionEditPopupTmplComponent
+    MeetingActionEditPopupTmplComponent,
+    ActionViewTmplComponent,
+    ActionViewAuditTmplComponent
   ]
 })
 export class SharedModule { }

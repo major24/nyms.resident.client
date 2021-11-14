@@ -32,7 +32,10 @@ export class MeetingCategoryEditComponent implements OnInit {
   }
 
   updatedNewActionItem(eventData: any): void {
+    console.log('>>>', eventData);
     this.meetingActionItems.push(eventData);
+    console.log('>>=', this.meetingActionItems);
+    this.meetingCategory.meetingActionItems = this.meetingActionItems;
     this.modalService.dismissAll();
   }
 
@@ -81,6 +84,7 @@ export class MeetingCategoryEditComponent implements OnInit {
 
    // open from template
   openModal(contentAdd: any, id: number, meetingCategoryId: number) {
+    if (!this.meetingCategory.name) return;
     this.selectedActionId = +id;
     this.errors = [];
     this.selectedActionItem = Object.assign({}, this.initActionItem, {
