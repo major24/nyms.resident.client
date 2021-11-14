@@ -33,4 +33,12 @@ export class DashboardAdminComponent implements OnInit {
     this.router.navigate(['/admin/budgets-list', {}]);
   }
 
+  navToMeetings(): void {
+    this.router.navigate(['/admin/meeting-category-list', {}]);
+  }
+
+  navToActionItems(): void {
+    this.router.navigate(['/admin/meeting-action-item-list', {}]);
+  }
+
 }

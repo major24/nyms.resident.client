@@ -3,9 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User, CareHomeUser, Role, SpendRequest, TransferSpendRequest } from '../models/index';
 import { EnquiryResident, CareHome, CareHome0, Resident, EnquiryAction } from '../residents/models/index';
-import { ResidentSchedule, Schedule } from '../admin/models/index';
 import { Budget, BudgetListResponse, SpendComments } from '../models/spend-budgets';
+import { MeetingCategory, MeetingActionItem, Meeting, MeetingActionRequest, MeetingActionPendingJobsResponse, MeetingActionCompletedResponse } from '../../app/models/index';
+
 import {
+  ResidentSchedule,
+  Schedule,
   InvoiceData,
   InvoiceCommentsRequest,
   BillingCycle,
@@ -36,12 +39,22 @@ export class ApiService {
       `/api/users/carehomeusers/${referenceId}`,
       { withCredentials: true }
     );
-    // return this.http.get<CareHomeUser>(
-    //   `${environment.apiDomainUrl}/api/users/carehomeusers/${referenceId}`,
-    //   { withCredentials: true }
-    // );
   }
   //=== endof user related ===
+
+  // === Security Role related ===
+  loadUsersByRoleId(roleId: number): Observable<CareHomeUser[]> {
+    return this.http.get<CareHomeUser[]>(`/api/security/users/roles/${roleId}`,
+      { withCredentials: true }
+    );
+  }
+
+  hasAccessToRole(roleId: number): Observable<boolean> {
+    return this.http.get<boolean>(`/api/security/users/roles/${roleId}/hasaccess`,
+      { withCredentials: true }
+    );
+  }
+
 
   // === enquires related ===
   // All records for ADMIN, SUPER
@@ -284,7 +297,62 @@ export class ApiService {
   }
 
 
+  // Meeting categories and action items
+  loadMeetingCategoriesAndActionItems(): Observable<MeetingCategory[]> {
+    return this.http.get<MeetingCategory[]>(`/api/meetings/categories-and-actions-items`);
+  }
 
+  createMeetingCategory(meetingCategory: MeetingCategory): Observable<MeetingCategory> {
+    return this.http.post<MeetingCategory>(`/api/meetings/categories-and-actions-items`, meetingCategory);
+  }
 
+  updateMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+    return this.http.post<MeetingActionItem>(`/api/meetings/categories/action-items/${meetingActionItem.id}`, meetingActionItem);
+  }
+
+  insertMeetingActionItem(meetingActionItem: MeetingActionItem): Observable<MeetingActionItem> {
+    return this.http.post<MeetingActionItem>(`/api/meetings/categories/action-items`, meetingActionItem);
+  }
+
+  updateMeetingAction(meetingAction: MeetingActionRequest): Observable<MeetingActionRequest> {
+    return this.http.post<MeetingActionRequest>(`/api/meetings/actions/${meetingAction.id}`, meetingAction);
+  }
+
+  loadMeetings(): Observable<Meeting[]> {
+    return this.http.get<Meeting[]>(`/api/meetings/meetings`);
+  }
+
+  loadMeeting(referenceId: string): Observable<Meeting> {
+    return this.http.get<Meeting>(`/api/meetings/meetings/${referenceId}`);
+  }
+
+  createMeeting(meeting: Meeting): Observable<Meeting> {
+    return this.http.post<Meeting>(`/api/meetings/meetings`, meeting);
+  }
+
+  updateMeeting(meeting: Meeting): Observable<Meeting> {
+    return this.http.post<Meeting>(`/api/meetings/meetings/${meeting.referenceId}`, meeting);
+  }
+
+  // load all owners with their pending actions
+  loadPendingActions(): Observable<MeetingActionPendingJobsResponse[]> {
+    return this.http.get<MeetingActionPendingJobsResponse[]>(`api/meetings/actions/pending/owners`);
+  }
+
+  loadPendingActionsByOwnerId(userRefId: string): Observable<MeetingActionPendingJobsResponse[]> {
+    return this.http.get<MeetingActionPendingJobsResponse[]>(`api/meetings/actions/pending/owners/${userRefId}`);
+  }
+
+  updateActionCompleted(selectedAction: any): Observable<any> {
+    return this.http.post<Meeting>(`/api/meetings/actions/complete/${selectedAction.id}`, selectedAction);
+  }
+
+  loadCompletedActions(): Observable<MeetingActionCompletedResponse[]> {
+    return this.http.get<MeetingActionCompletedResponse[]>(`api/meetings/actions/completed/unaudited`);
+  }
+
+  updateActionAudited(selectedAction: any): Observable<any> {
+    return this.http.post<Meeting>(`/api/meetings/actions/audit/${selectedAction.id}`, selectedAction);
+  }
 
 }

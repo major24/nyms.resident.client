@@ -38,4 +38,18 @@ export class Util {
     return new Date(date);
   }
 
+  convertAngDateToString(event: any): string {
+    if (!event) return '';
+    return `${event.year}-${event.month}-${event.day}`;
+  }
+
+  convertIsoDateStringToAngDate(date: string): any {
+    if (!date) return;
+    // 2021-09-14 // expected
+    const parts = date.split('-');
+    return {
+      year: +parts[0], month: +parts[1], day: +parts[2]
+    }
+  }
+
 }

@@ -1,0 +1,68 @@
+<div class="container mt-4">
+
+  <h1 class="display-4">Create Category/Actions</h1>
+
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-lg">
+        <form [formGroup]="createMeetingCategoryForm">
+          <div class="form-group">
+            <label class="text-primary" for="name">Category Name</label>
+            <span class="text-danger ml-1">*</span>
+            <div class="input-group">
+              <input type="text" class="form-control" formControlName="categoryName"  id="categoryName" name="categoryName" placeholder="" [(ngModel)]="meetingCategory.name">
+              <button [disabled]="meetingCategory.name == ''" id="add-meeting-cat-action" class="btn btn-primary btn-sm ml-5" (click)="openModal(contentAdd, -1, -1)">Add Action</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-2">
+    <div class="row" *ngFor="let act of meetingCategory.meetingActionItems">
+      <div class="col-lg">{{act.name}}</div>
+      <div class="col-lg">{{act.description}}</div>
+      <div class="col-lg">{{act.isAdhoc}}</div>
+    </div>
+  </div>
+
+  <!-- save cancel buttons-->
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-md">
+        <span *ngIf="errors">
+          <div *ngFor="let error of errors" style="color: red;">{{errors}}</div>
+        </span>
+      </div>
+      <div>
+        <div class="text-right">
+          <button id="cancel" (click)="navToMeetingCategoryList()" class="btn btn-secondary ml-3">Cancel</button>
+
+          <button id="save" (click)="onSubmit()" [disabled]="saving" class="btn btn-primary ml-3">
+            <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- set dialog modal -->
+  <ng-template #contentAdd let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Action Item</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <meeting-action-edit-popup-tmpl
+      [selectedOrNewActionItem]="selectedActionItem"
+      [saving]="saving"
+      (selectedOrNewActionItemUpdatedEvent)="updatedNewActionItem($event)"></meeting-action-edit-popup-tmpl>
+
+  </ng-template>
+  <!-- end of dialog-->
+
+
+</div>

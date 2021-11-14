@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { JwtInterceptor, ErrorInterceptorNoRefresh } from './helpers';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HomeComponent } from './common/home/home.component';
 import { LoginComponent } from './common/login/login.component';
 
@@ -40,8 +39,13 @@ import { DashboardUserActionsComponent } from './user-actions/dashboard-user-act
 import { SpendsListComponent } from './user-actions/spends/spends-list/spends-list.component';
 import { UserBudgetsListComponent } from './user-actions/spends/budgets/user-budgets-list/user-budgets-list.component';
 import { EnumKeyValuePipe } from './enum-keyvalue.pipe';
-// import { SplitPipe } from './common/split.pipe';
-// import { ModalSetExitComponent } from './common/modal-set-exit/modal-set-exit.component';
+import { MeetingsListComponent } from './user-actions/meetings/meetings-list/meetings-list.component';
+import { MeetingsEditComponent } from './user-actions/meetings/meetings-edit/meetings-edit.component';
+import { Mdatev2Component } from './common/templates/mdatev2/mdatev2.component';
+import { SharedModule } from '../app/shared/shared.module';
+import { MeetingCreateComponent } from './user-actions/meetings/meeting-create/meeting-create.component';
+import { ActionsPendingListComponent } from './user-actions/meetings/actions-pending-list/actions-pending-list.component';
+import { ActionsAuditListComponent } from './user-actions/meetings/actions-audit-list/actions-audit-list.component';
 
 export function tokenGetter() {
   return localStorage.getItem('id_token');
@@ -50,13 +54,13 @@ export function tokenGetter() {
 @NgModule({
   imports: [
     BrowserModule,
-    NgbModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     MainPipe,
     MdateModule,
+    SharedModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
@@ -91,8 +95,13 @@ export function tokenGetter() {
     DashboardUserActionsComponent,
     SpendsListComponent,
     UserBudgetsListComponent,
-    EnumKeyValuePipe
-    // SplitPipe
+    EnumKeyValuePipe,
+    MeetingsListComponent,
+    MeetingsEditComponent,
+    Mdatev2Component,
+    MeetingCreateComponent,
+    ActionsPendingListComponent,
+    ActionsAuditListComponent,
   ],
   providers: [
     //{ provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthenticationService] },

@@ -1,9 +1,9 @@
 <div class="container mt-5">
 
+  <!-- row 1-->
   <div class="row">
-
     <div class="col-md">
-      <div class="card" style="width: 18rem; height: 14rem;">
+      <div class="card" style="width: 18rem; height: 15rem;">
         <div class="card-header bg-info text-white">
           <h5 class="card-title">Invoice Report</h5>
         </div>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="col-md">
-      <div class="card" style="width: 18rem; height: 11rem;">
+      <div class="card" style="width: 18rem; height: 15rem;">
         <div class="card-header bg-info text-white">
           <h5 class="card-title">Schedules</h5>
         </div>
@@ -29,8 +29,10 @@
           <button class="btn btn-primary" id="schedules-btn" (click)="navToSchedules()">Schedules</button>
         </div>
       </div>
+    </div>
 
-      <div class="card mt-4" style="width: 18rem; height: 15rem;">
+    <div class="col-md">
+      <div class="card" style="width: 18rem; height: 15rem;">
         <div class="card-header bg-info text-white">
           <h5 class="card-title">Spends</h5>
         </div>
@@ -45,7 +47,28 @@
         </div>
       </div>
     </div>
+  </div>
 
+  <!-- row 2-->
+  <div class="row mt-3">
+    <div class="col-md">
+      &nbsp;
+    </div>
+    <div class="col-md">
+      &nbsp;
+    </div>
+    <div class="col-md">
+      <div class="card" style="width: 18rem; height: 15rem;">
+        <div class="card-header bg-info text-white">
+          <h5 class="card-title">Meetings</h5>
+        </div>
+        <div class="card-body bg-light">
+          <p class="card-text">Manage meeting categories and action items</p>
+          <div>
+            <button class="btn btn-primary" style="width: 12rem;" id="categories-btn" (click)="navToMeetings()">Categories</button>
+          </div>
+        </div>
+    </div>
   </div>
 
 </div>

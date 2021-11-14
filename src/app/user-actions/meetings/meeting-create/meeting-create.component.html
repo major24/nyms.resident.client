@@ -1,0 +1,115 @@
+<div class="container mt-4">
+  <h1 class="display-4">Create Meetings</h1>
+
+  <div *ngIf="loading" class="spinner-border"></div>
+
+  <div class="container" *ngIf="!showCreateMeeting"> <!--1st category dropbox -->
+    <div class="row">
+      <div class="col-8">
+        <label class="text-primary" for="meetingCategory">Meeting Category</label>
+        <span class="text-danger ml-1">*</span>
+        <div>
+          <select class="input-group" style="height:2rem" id="meetingCategory" name="meetingCategory"
+            [(ngModel)]="selectedCategoryId">
+            <option value=0>Choose Category</option>
+            <option *ngFor="let mc of meetingCategories"
+              [value]=mc.id>{{mc.name}}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-4">
+        <button type="button" class="btn btn-primary btn-md mt-4" (click)="goDisplaySelectedCategory()" style='font-size:14px;'>Go</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- create meetings section -->
+  <div class="container" *ngIf="showCreateMeeting">
+
+    <div class="row"> <!-- title and meeting date-->
+      <div class="col-8">
+        <div class="form-group">
+          <label for="title">
+            <h6 class="text-primary">Title<span class="text-danger ml-1">*</span></h6>
+          </label>
+          <input type="text" class="form-control" id="title" name="title" [(ngModel)]="newMeeting.title"
+          placeholder="">
+        </div>
+      </div>
+      <div class="col-4">
+        <div>
+          <label class="text-primary" for="meetingDate">Meeting Date</label>
+          <div class="input-group" style="width: 16rem;">
+            <input class="form-control" placeholder="yyyy-mm-dd" [(ngModel)]="newMeeting.meetingDate"
+              id="meetingDate" name="meetingDate" ngbDatepicker #d1="ngbDatepicker" [readonly]="true">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> <!-- title and meeting date-->
+
+    <div class="row">
+      <div class="col-8">
+        <h5 class="text-primary">{{selectedCategoryName}}</h5>
+      </div>
+      <div class="col-4">
+        <button type="button" class="btn btn-primary btn-md" (click)="openModal(contentAdd, -1, selectedCategoryId)" style='font-size:14px;'>+</button>
+      </div>
+    </div>
+
+    <meeting-action-edit-tmpl
+      [meetingActionRequests]="meetingActionRequests"
+      [actionOwners]="actionOwners"
+      [showFrequencyCtls]=true
+      [showActionSelectCheckboxCtl]=true
+      [showSaveButtonCtl]=false>
+    </meeting-action-edit-tmpl>
+
+    <!-- save button -->
+    <div class="container">
+      <div class="row">
+        <div class="col-md">
+          <div *ngIf="errors.length > 0">
+            <div *ngFor="let error of errors" style="color: red">
+              {{ error }}
+            </div>
+          </div>
+        </div>
+        <div class="col-md">
+          <div class="form-group mt-3 float-right">
+            <button id="cancel" class="btn btn-secondary" (click)="onCancel()">
+              Cancel
+            </button>
+            <button id="save" (click)="onSubmit()" [disabled]="saving" class="btn btn-primary ml-3">
+              <span *ngIf="saving" class="spinner-border spinner-border-sm mr-1"></span>
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-5">&nbsp;</div>
+
+    <!-- set dialog modal -->
+    <ng-template #contentAdd let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Action Item</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <meeting-action-edit-popup-tmpl
+        [selectedOrNewActionItem]="selectedActionItem"
+        [saving]="saving"
+        (selectedOrNewActionItemUpdatedEvent)="addNewActionItemToList($event)"></meeting-action-edit-popup-tmpl>
+    </ng-template>
+    <!-- end of dialog-->
+
+  </div> <!-- create meetings section -->
+
+</div>

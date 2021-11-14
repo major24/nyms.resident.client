@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { routes } from './admin-routing.module';
 import { DashboardAdminComponent } from './dashboard-admin/dashboard-admin.component';
@@ -22,10 +23,12 @@ import { ChartsModule } from 'ng2-charts';
 import { CategoriesListComponent } from './spends/categories/categories-list/categories-list.component';
 import { BudgetsListComponent } from './spends/budgets/budgets-list/budgets-list.component';
 import { BudgetsEditComponent } from './spends/budgets/budgets-edit/budgets-edit.component';
-import { BudgetEditDialogComponent } from './templates/budget-edit-dialog/budget-edit-dialog.component';
 import { ReportSpendAdjustmentsComponent } from './reports/templ/report-spend-adjustments/report-spend-adjustments.component';
 import { EnumKeyValueAdminPipe } from './enum-keyvalueAdmin.pipe';
+import { MeetingCategoryEditComponent } from './meetings/categories/meeting-category-edit/meeting-category-edit.component';
+import { MeetingCategoryListComponent } from './meetings/categories/meeting-category-list/meeting-category-list.component';
 // import { SplitPipe } from '../common/split.pipe';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -45,17 +48,20 @@ import { EnumKeyValueAdminPipe } from './enum-keyvalueAdmin.pipe';
     CategoriesListComponent,
     BudgetsListComponent,
     BudgetsEditComponent,
-    BudgetEditDialogComponent,
     ReportSpendAdjustmentsComponent,
     EnumKeyValueAdminPipe,
+    MeetingCategoryEditComponent,
+    MeetingCategoryListComponent,
     // SplitPipe
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     NgbModule,
     MdateModule,
     ChartsModule,
+    SharedModule,
     RouterModule.forChild(routes)
   ],
   providers: []

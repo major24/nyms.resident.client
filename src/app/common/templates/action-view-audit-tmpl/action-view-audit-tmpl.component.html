@@ -1,0 +1,25 @@
+<div class="row mb-3">
+  <div class="col-lg">
+    <span placement="bottom" ngbTooltip={{meetingAction.description}}>
+      &#10069;
+    </span>
+    <span>{{meetingAction.id}} - </span>
+    <span>{{meetingAction.name}}</span>
+    <div>
+      {{meetingAction.comment}}
+    </div>
+  </div>
+  <div class="col-sm">{{meetingAction.completionDate | date:'dd-MMM-yy'}}</div>
+  <div class="col-sm">{{meetingAction.forename}}</div>
+  <div class="col-sm">{{meetingAction.priority}}</div>
+  <div class="col-sm">
+    <span *ngIf="meetingAction.completed == '0'">Yes</span>
+    <span *ngIf="meetingAction.completed == '1'">No</span>
+  </div>
+  <div class="col-sm">{{meetingAction.completedDate | date:'dd-MMM-yy'}}</div>
+
+  <div class="col-sm">
+    <button id="show-audit-dialog" class="btn btn-primary btn-sm" (click)="showActionAuditedDialog(meetingAction.id)">Audit</button>
+  </div>
+</div>
+<hr />
